@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Barber Pro — Нэвтрэх</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input{color:inherit;font-family:inherit}
+body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:40px 32px;width:100%;max-width:380px;text-align:center;backdrop-filter:blur(20px)}
+.logo{font-size:1.1rem;font-weight:900;letter-spacing:3px;margin-bottom:32px}.logo span{color:#d4a017}
+h1{font-size:1rem;font-weight:600;margin-bottom:4px}
+.sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:24px}
+.field{margin-bottom:12px;text-align:left}
+.field label{font-size:.65rem;color:rgba(255,255,255,.4);margin-bottom:4px;display:block}
+input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.88rem;outline:none;font-family:inherit}input:focus{border-color:#d4a017}input::placeholder{color:rgba(255,255,255,.2)}
+.btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#d4a017,#b8922e);color:#0a0a0a;margin-top:8px;font-family:inherit}.btn:hover{opacity:.9}
+.err{color:#e74c3c;font-size:.72rem;margin-top:8px;display:none}
+.demo{font-size:.65rem;color:rgba(255,255,255,.3);margin-top:16px}.demo strong{color:rgba(255,255,255,.5)}
+.back{display:inline-block;margin-top:16px;color:rgba(255,255,255,.3);font-size:.7rem;text-decoration:none}.back:hover{color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Barber<span>.</span>Pro</div>
+  <h1>Админ самбарт нэвтрэх</h1>
+  <p class="sub">Таны холбоос</p>
+  <div class="field"><label>Холбоос</label><input type="text" id="slug" placeholder="barber-pro"></div>
+  <div class="field"><label>Нууц үг</label><input type="password" id="password" placeholder="········" onkeydown="if(event.key==='Enter')login()"></div>
+  <div class="err" id="error"></div>
+  <button class="btn" id="loginBtn" onclick="login()">Нэвтрэх →</button>
+  <div class="demo">Демо: <strong>barber-pro</strong> / <strong>admin123</strong></div>
+  <div style="text-align:center;margin-top:10px"><a href="#" onclick="alert('Нууц үгээ мартсан бол 85279299 утас руу холбогдоно уу.')" style="color:rgba(255,255,255,.4);font-size:.72rem;text-decoration:none">Нууц үг мартсан?</a></div>
+  <a href="/" class="back">← Буцах</a>
+</div>
+<script>
+const params=new URLSearchParams(location.search);
+const prefill=params.get('slug');
+const slugInput=document.getElementById('slug');
+if(prefill){slugInput.value=prefill;slugInput.readOnly=true;slugInput.style.opacity='0.7';document.getElementById('password').focus();document.querySelector('.demo').style.display='none'}
+function showErr(m){const e=document.getElementById('error');e.textContent=m;e.style.display='block'}
+async function login(){const slug=document.getElementById('slug').value.trim(),pw=document.getElementById('password').value;if(!slug||!pw)return showErr('Холбоос болон нууц үгээ оруулна уу');const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='Шалгаж байна...';try{const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug,password:pw})});const d=await r.json();if(!r.ok){showErr(d.error);btn.disabled=false;btn.textContent='Нэвтрэх →';return}localStorage.setItem('barber_token',d.token);localStorage.setItem('barber_shop',d.slug);localStorage.setItem('barber_shop_name',d.shop_name);const red=params.get('redirect');const barberId=params.get('barber_id')||'',barberName=params.get('barber_name')||'';let u=red||'/admin?shop='+d.slug+'&token='+d.token;if(red)u+='?token='+d.token;if(barberId)u+=(u.includes('?')?'&':'?')+'barber_id='+encodeURIComponent(barberId);if(barberName)u+='&barber_name='+encodeURIComponent(barberName);location=u}catch(e){showErr('Серверт холбогдоход алдаа гарлаа');btn.disabled=false;btn.textContent='Нэвтрэх →'}}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Цаг захиалга</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:28px 20px;width:100%;max-width:420px}
+h1{font-size:1.1rem;text-align:center;margin-bottom:20px}
+h1 span{color:#d4a017}
+.step{display:none}.step.active{display:block}
+.barbers{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.barber-btn{border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;text-align:center;cursor:pointer;background:transparent;color:rgba(255,255,255,.6);font-size:.8rem;min-width:80px;font-family:inherit}
+.barber-btn:hover{border-color:#d4a017}
+.barber-btn.sel{background:rgba(212,160,23,.1);border-color:#d4a017;color:#d4a017;font-weight:600}
+select,input{width:100%;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.85rem;outline:none;margin-bottom:10px;font-family:inherit;text-align:center}
+select:focus,input:focus{border-color:#d4a017}
+.btn{width:100%;padding:14px;background:#d4a017;color:#0a0a0a;border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit}
+.btn:disabled{opacity:.5}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.slot-btn{padding:8px;border:1px solid rgba(255,255,255,.08);border-radius:6px;text-align:center;font-size:.8rem;cursor:pointer;color:rgba(255,255,255,.5);font-family:inherit;background:transparent}
+.slot-btn:hover{border-color:#d4a017;color:#d4a017}
+.slot-btn.sel{background:rgba(212,160,23,.15);border-color:#d4a017;color:#d4a017;font-weight:600}
+.err{color:#e74c3c;font-size:.72rem;text-align:center;margin-top:8px}
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div id="loading" class="loading">⏳ Ачаалж байна...</div>
+  <div id="steps" style="display:none">
+    <h1 id="shopTitle"></h1>
+    <div class="step active" id="step-barber"><div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:8px">Барбер сонгох</div><div class="barbers" id="barberList"></div></div>
+    <div class="step" id="step-service"><div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:8px">Үйлчилгээ сонгох</div><select id="svcPick"><option value="">Сонгох...</option></select></div>
+    <div class="step" id="step-date"><div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:8px">Огноо, цаг сонгох</div><input type="date" id="datePick"><div class="slots" id="slotList"></div></div>
+    <div class="step" id="step-info"><input type="text" id="custName" placeholder="Таны нэр"><input type="tel" id="custPhone" placeholder="Утасны дугаар"><button class="btn" id="bookBtn">Захиалах</button></div>
+    <div class="step" id="step-done" style="text-align:center"><div style="font-size:3rem;margin-bottom:12px">✅</div><h2 style="font-size:1rem;margin-bottom:8px">Захиалга баталгаажлаа</h2><p id="doneMsg" style="font-size:.78rem;color:rgba(255,255,255,.5)"></p></div>
+    <div class="err" id="error"></div>
+  </div>
+</div>
+<script>
+var SLUG=location.pathname.split('/')[2];
+var API=location.origin;
+var barbers=[],selBarber=null,selSvc=null,selDate=null,selTime=null;
+
+function showErr(msg){document.getElementById('error').textContent=msg}
+function showStep(s){
+  document.querySelectorAll('.step').forEach(function(x){x.classList.remove('active')});
+  var el=document.getElementById('step-'+s);
+  if(el)el.classList.add('active');
+  showErr('');
+}
+
+async function init(){
+  try{
+    var sr=await fetch(API+'/api/shop/'+SLUG);
+    if(!sr.ok){showErr('Дэлгүүр олдсонгүй');return}
+    var sd=await sr.json();
+    document.getElementById('shopTitle').innerHTML='<span style="color:#d4a017">'+sd.name+'</span> · Цаг захиалга';
+
+    var br=await fetch(API+'/api/shop/'+SLUG+'/barbers');
+    if(!br.ok){showErr('Барберууд ачаалахад алдаа гарлаа');return}
+    barbers=await br.json();
+    if(!barbers.length){showErr('Барбер байхгүй');return}
+    var bh='';
+    barbers.forEach(function(b){
+      bh+='<button class="barber-btn" data-id="'+b.id+'">✂️ '+b.name+'<br><span style="font-size:.6rem;color:rgba(255,255,255,.3)">'+(b.title||'')+'</span></button>';
+    });
+    document.getElementById('barberList').innerHTML=bh;
+    document.querySelectorAll('.barber-btn').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.barber-btn').forEach(function(x){x.classList.remove('sel')});
+        this.classList.add('sel');
+        selBarber=this.dataset.id;
+        showStep('service');
+      };
+    });
+
+    var svr=await fetch(API+'/api/shop/'+SLUG+'/services');
+    if(!svr.ok){showErr('Үйлчилгээ ачаалахад алдаа гарлаа');return}
+    var svd=await svr.json();
+    var svh='<option value="">Үйлчилгээ сонгох</option>';
+    svd.forEach(function(s){
+      svh+='<option value="'+s.id+'">'+s.name+' · '+s.price.toLocaleString()+'₮ · '+s.duration+' мин</option>';
+    });
+    document.getElementById('svcPick').innerHTML=svh;
+
+    var td=new Date().toLocaleDateString('en-CA');
+    document.getElementById('datePick').value=td;
+    document.getElementById('datePick').min=td;
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('steps').style.display='block';
+  }catch(e){
+    showErr('Алдаа: '+e.message);
+  }
+}
+
+document.getElementById('svcPick').onchange=function(){
+  if(this.value){selSvc=this.value;showStep('date')}
+};
+document.getElementById('datePick').onchange=function(){
+  selDate=this.value;loadSlots()
+};
+
+async function loadSlots(){
+  if(!selBarber||!selDate)return;
+  try{
+    var r=await fetch(API+'/api/shop/'+SLUG+'/slots?date='+selDate+'&barber_id='+selBarber);
+    var d=await r.json();
+    if(d.message){document.getElementById('slotList').innerHTML='<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">'+d.message+'</div>';return}
+    var h='';
+    d.slots.forEach(function(s){
+      h+='<button class="slot-btn">'+s+'</button>';
+    });
+    document.getElementById('slotList').innerHTML=h||'<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Цаг байхгүй</div>';
+    document.querySelectorAll('.slot-btn').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.slot-btn').forEach(function(x){x.classList.remove('sel')});
+        this.classList.add('sel');
+        selTime=this.textContent;
+        showStep('info');
+      };
+    });
+  }catch(e){showErr('Цаг ачаалахад алдаа: '+e.message)}
+}
+
+document.getElementById('bookBtn').onclick=async function(){
+  var n=document.getElementById('custName').value.trim();
+  var p=document.getElementById('custPhone').value.trim();
+  if(!n||!p){showErr('Нэр болон утасны дугаараа оруулна уу');return}
+  try{
+    var r=await fetch(API+'/api/shop/'+SLUG+'/book',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({barber_id:selBarber,service_id:selSvc,customer_name:n,customer_phone:p,booking_date:selDate,booking_time:selTime})
+    });
+    var d=await r.json();
+    if(!r.ok){showErr(d.error);return}
+    document.getElementById('doneMsg').textContent=selDate+' · '+selTime+' цагт';
+    showStep('done');
+  }catch(e){showErr('Захиалга хийхэд алдаа: '+e.message)}
+};
+
+init();
+</script>
+</body>
+</html>

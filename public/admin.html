@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Админ</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+:root{--bg:#0a0a0a;--card:#111;--border:rgba(255,255,255,.06);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--accent:#d4a017;--accent-dim:rgba(212,160,23,.1);--red:#e74c3c;--green:#2ecc71}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
+.header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:0 16px;height:56px;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.header h1{font-size:.95rem;font-weight:800}.header .sub{font-size:.65rem;color:var(--dim)}
+.header .btn{padding:8px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:transparent;color:var(--text);font-size:.7rem;cursor:pointer;font-family:inherit}
+#sub-banner{display:none;padding:10px 16px;margin:0 16px 8px;border-radius:8px;font-size:.72rem;text-align:center;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 16px;margin-bottom:4px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.stat .num{font-size:1.1rem;font-weight:800;color:var(--accent)}.stat .lbl{font-size:.6rem;color:var(--dim);margin-top:1px}
+.nav-wrap{overflow-x:auto;padding:0 16px;margin-bottom:8px}.nav-wrap::-webkit-scrollbar{height:0}
+#tabs{display:flex;gap:6px;min-width:max-content}
+#tabs a{flex-shrink:0;padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.7rem;color:var(--dim);text-decoration:none;cursor:pointer;white-space:nowrap}
+#tabs a:hover{border-color:var(--accent);color:var(--text)}
+#tabs a.act{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);font-weight:600}
+.main{padding:0 16px 40px}.page{display:none}.page.act{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.card h3{font-size:.8rem;font-weight:700;margin-bottom:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.inp{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:#1a1a1a;color:var(--text);font-size:.78rem;outline:none;font-family:inherit}.inp:focus{border-color:var(--accent)}
+.btn{padding:10px 20px;background:var(--accent);color:#0a0a0a;border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer;font-family:inherit}.btn:hover{opacity:.9}
+.btn-s{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.7rem;cursor:pointer;font-family:inherit}
+.btn-sm{padding:4px 8px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:.65rem;cursor:pointer;font-family:inherit}
+.sched{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--card);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:3px;font-size:.75rem}
+.sched .tm{font-weight:600;min-width:44px;color:var(--accent)}.sched .nm{flex:1;font-weight:600}.sched .sv{color:var(--dim);font-size:.65rem}
+table{width:100%;border-collapse:collapse;font-size:.72rem}th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--dim);font-size:.65rem}td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.03)}
+.barber-card{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:4px}
+.barber-card .av{width:36px;height:36px;border-radius:8px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.barber-card .info{flex:1}.barber-card .name{font-weight:600;font-size:.8rem}.barber-card .title{font-size:.65rem;color:var(--dim)}
+.status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600}
+.status.ok{background:rgba(46,204,113,.12);color:var(--green)}.status.no{background:rgba(231,76,60,.12);color:var(--red)}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="header"><div><h1>Barber<span style="color:var(--accent)">.</span>Pro</h1><div class="sub">Дэлгүүр: <strong id="shop-name" style="color:var(--accent)">Админ</strong></div></div><button class="btn" onclick="localStorage.clear();location='/admin-login'">Гарах</button></div>
+<div id="sub-banner"></div>
+<div class="stats" id="stats"></div>
+<div class="nav-wrap"><div id="tabs">
+<a data-tab="queue" class="act">🚶 Дараалал</a><a data-tab="today">📋 Өнөөдөр</a><a data-tab="bookings">📅 Захиалга</a><a data-tab="barbers">💈 Барберууд</a><a data-tab="services">💇 Үйлчилгээ</a><a data-tab="customers">👥 Харилцагчид</a><a data-tab="settings">⚙️ Тохиргоо</a><a data-tab="sms">📨 SMS</a><a data-tab="analytics">📊 Тоон мэдээ</a><a data-tab="commission">💰 Комисс</a>
+</div></div>
+<div class="main">
+<div class="page act" id="page-queue">
+<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px"><div class="stat"><div class="num" id="q-waiting-num">0</div><div class="lbl">Хүлээж байгаа</div></div><div class="stat"><div class="num" id="q-serving-num">0</div><div class="lbl">Үйлчилгээнд</div></div><div class="stat"><div class="num" id="q-done-num">0</div><div class="lbl">Өнөөдөр үйлчилсэн</div></div></div>
+<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center"><select class="inp" id="queue-barber" onchange="loadQueue()" style="width:auto;min-width:100px;padding:6px 10px;font-size:.7rem"><option value="">Бүгд</option></select><select class="inp" id="queue-svc" style="width:auto;min-width:120px;padding:6px 10px;font-size:.7rem"><option value="">Үйлчилгээ сонгох</option></select><button class="btn-s" onclick="showAddForm()" style="font-size:.72rem">+ Дараалалд нэмэх</button></div>
+<button class="btn" onclick="queueNext()" style="width:100%;font-size:1.1rem;padding:14px;font-weight:700;margin-bottom:8px">▶️ Дараагийнх</button>
+<div id="queue-list"></div>
+<div style="margin-top:10px"><div style="font-size:.65rem;font-weight:600;color:var(--dim);margin-bottom:4px">📅 Өнөөдрийн захиалгууд</div><div id="today-bookings" style="font-size:.68rem;color:var(--dim)"></div></div>
+<div class="card" id="q-add-form" style="display:none;margin-top:8px"><h3>➕ Дараалалд нэмэх</h3><div class="row"><input class="inp" id="qa-phone" placeholder="Утасны дугаар *"><button class="btn" onclick="queueAdd()" style="flex:0">Нэмэх</button></div></div>
+</div>
+<div class="page" id="page-today"><div id="today-sched"></div></div>
+<div class="page" id="page-bookings"><div class="row" style="margin-bottom:8px"><input class="inp" type="date" id="book-filter" onchange="loadBookings()" style="width:auto"><button class="btn-s" onclick="document.getElementById('book-filter').value='';loadBookings()">Бүгд</button></div><table><thead><tr><th>Огноо</th><th>Цаг</th><th>Нэр</th><th>Утас</th><th>Барбер</th><th>Үйлчилгээ</th><th>Үнэ</th><th>Төлөв</th></tr></thead><tbody id="bt"></tbody></table></div>
+<div class="page" id="page-barbers"><div id="barber-grid"></div><button class="btn-s" onclick="showBarberForm()" style="margin-bottom:8px;font-size:.72rem">+ Шинэ барбер</button><div class="card" id="barber-form" style="display:none"><h3>Шинэ барбер</h3><input class="inp" id="bf-name" placeholder="Нэр *" style="margin-bottom:6px"><input class="inp" id="bf-title" placeholder="Цол" style="margin-bottom:6px"><input class="inp" id="bf-spec" placeholder="Чиглэл" style="margin-bottom:6px"><input class="inp" id="bf-exp" placeholder="Туршлага" style="margin-bottom:6px"><input class="inp" id="bf-desc" placeholder="Тайлбар" style="margin-bottom:6px"><div style="margin-bottom:6px"><span style="font-size:.7rem">Комисс %:</span> <input class="inp" id="bf-comm" type="number" value="50" style="width:60px"></div><button class="btn" onclick="saveBarber()" style="margin-right:6px">Хадгалах</button><button class="btn-s" onclick="document.getElementById('barber-form').style.display='none'">Болих</button></div></div>
+<div class="page" id="page-services"><div id="svc-grid"></div><div class="card" id="svc-form" style="display:none"><h3>Шинэ үйлчилгээ</h3><input class="inp" id="sv-name" placeholder="Нэр *" style="margin-bottom:6px"><input class="inp" id="sv-price" type="number" placeholder="Үнэ ₮ *" style="margin-bottom:6px"><input class="inp" id="sv-dur" type="number" placeholder="Хугацаа (мин) *" style="margin-bottom:6px"><input class="inp" id="sv-desc" placeholder="Тайлбар"><div style="margin-top:8px"><button class="btn" onclick="saveService()">Хадгалах</button><button class="btn-s" onclick="document.getElementById('svc-form').style.display='none'">Болих</button></div></div></div>
+<div class="page" id="page-customers"><table><thead><tr><th>Нэр</th><th>Утас</th><th>Айлчлал</th><th>Сүүлд</th><th>Тэмдэглэл</th></tr></thead><tbody id="ct"></tbody></table></div>
+<div class="page" id="page-settings">
+<div style="margin-bottom:6px"><input class="inp" id="s-name" placeholder="Дэлгүүрийн нэр"></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-tag" placeholder="Тайлбар"></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-phone" placeholder="Утас"></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-addr" placeholder="Хаяг"></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-ig" placeholder="Instagram"></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-pc" type="color" style="width:44px;height:32px;padding:2px"> <span style="font-size:.65rem;color:var(--dim)">Гол өнгө</span></div>
+<div style="margin-bottom:6px"><input class="inp" id="s-ac" type="color" style="width:44px;height:32px;padding:2px"> <span style="font-size:.65rem;color:var(--dim)">Акцент өнгө</span></div>
+<button class="btn" onclick="saveSettings()">Хадгалах</button><span id="set-msg" style="font-size:.7rem;margin-left:8px"></span>
+<div class="card" style="margin-top:10px"><h3>📱 QR Кодууд & Холбоосууд</h3><div class="row" style="gap:16px"><div style="text-align:center"><div style="font-size:.65rem;color:var(--dim);margin-bottom:4px">Үйлчлүүлэгч</div><img id="qr-customer" src="" width="100" height="100" style="border-radius:6px"><br><div style="display:flex;gap:4px;justify-content:center;margin-top:4px"><button class="btn-sm" onclick="copyQRLink('customer')">📋 Хуулах</button><button class="btn-sm" onclick="downloadQR('customer')">💾 Татах</button></div></div><div style="text-align:center"><div style="font-size:.65rem;color:var(--dim);margin-bottom:4px">Барбер</div><img id="qr-barber" src="" width="100" height="100" style="border-radius:6px"><br><div style="display:flex;gap:4px;justify-content:center;margin-top:4px"><button class="btn-sm" onclick="copyQRLink('barber')">📋 Хуулах</button><button class="btn-sm" onclick="downloadQR('barber')">💾 Татах</button></div></div></div><div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:.65rem;color:var(--dim);margin-bottom:3px">🔗 Instagram био холбоос</div><div style="display:flex;gap:4px"><input class="inp" id="set-iglink" readonly style="font-size:.62rem;flex:1"><button class="btn-sm" onclick="copyIGLink()">📋 Хуулах</button></div></div></div>
+</div>
+<div class="page" id="page-sms"></div>
+<div class="page" id="page-analytics">
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px"><div class="stat"><div class="num" id="a-rev">0</div><div class="lbl">Өнөөдрийн орлого</div></div><div class="stat"><div class="num" id="a-bk">0</div><div class="lbl">Өнөөдрийн захиалга</div></div><div class="stat"><div class="num" id="a-avg">0</div><div class="lbl">Дундаж чек</div></div><div class="stat"><div class="num" id="a-q">0</div><div class="lbl">Дараалалаар үйлчилсэн</div></div></div>
+<div class="card"><h3>📈 7 хоногийн орлого</h3><div id="week-chart" style="display:flex;align-items:flex-end;gap:4px;height:100px;margin-top:8px"></div><div id="week-labels" style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--dim);margin-top:4px"></div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><div class="card" style="flex:1;min-width:180px"><h3>🔥 Шилдэг үйлчилгээ</h3><div id="top-svcs"></div></div><div class="card" style="flex:1;min-width:180px"><h3>⏰ Завгүй цагууд</h3><div id="peak-hours"></div></div></div>
+<div class="card" style="margin-top:8px"><h3>✂️ Барберийн гүйцэтгэл (7 хоног)</h3><div id="barber-perf"></div></div>
+<div class="card" style="margin-top:8px"><h3>🏆 Нийт</h3><div style="display:flex;gap:16px;margin-top:4px;flex-wrap:wrap"><div><span style="font-size:.65rem;color:var(--dim)">Нийт захиалга: </span><span style="font-weight:600" id="a-total-bk">0</span></div><div><span style="font-size:.65rem;color:var(--dim)">Нийт орлого: </span><span style="font-weight:600" id="a-total-rev">0</span></div><div><span style="font-size:.65rem;color:var(--dim)">Нийт харилцагч: </span><span style="font-weight:600" id="a-total-cust">0</span></div></div></div>
+</div>
+<div class="page" id="page-commission">
+<div class="row" style="gap:6px;margin-bottom:10px"><button class="btn-s" onclick="loadCommission('today')" id="cr-today" style="background:var(--text);color:white">Өнөөдөр</button><button class="btn-s" onclick="loadCommission('week')" id="cr-week">Энэ 7 хоног</button><button class="btn-s" onclick="loadCommission('month')" id="cr-month">Энэ сар</button></div>
+<div id="commission-data"></div>
+</div>
+</div>
+<script src="/admin.js"></script>
+</body>
+</html>

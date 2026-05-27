@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mongolian Barbers — Цаг захиалга</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#ffffff;--card:#f8f8f8;--accent:#222;--text:#111;--dim:#999;--border:#eee;--shadow:0 4px 20px rgba(0,0,0,.03);--font:'Inter',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-weight:300;letter-spacing:.2px}
+.container{max-width:960px;margin:0 auto;padding:0 32px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:.85rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text);text-decoration:none}
+.nav-logo span{font-weight:200}
+.nav-cta{background:var(--accent);color:white;padding:8px 24px;font-weight:400;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+.hero{min-height:90vh;display:flex;align-items:center;padding:80px 0 0}
+.hero-in{max-width:720px;margin:0 auto;text-align:center;padding:0 32px}
+.hero-t{font-size:.55rem;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:var(--dim);margin-bottom:20px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:200;letter-spacing:-2px;line-height:1;margin-bottom:16px}
+.hero h1 span{font-weight:600}
+.hero .divider{width:40px;height:1px;background:var(--accent);margin:20px auto}
+.hero p{color:var(--dim);font-size:.85rem;line-height:1.8;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;font-weight:400;font-size:.75rem;text-decoration:none;cursor:pointer;font-family:inherit;border:none;letter-spacing:1px;text-transform:uppercase;transition:all .3s}
+.btn-solid{background:var(--accent);color:white}
+.btn-solid:hover{opacity:.9}
+.btn-outline{border:1px solid var(--accent);color:var(--accent);background:transparent}
+.sec{padding:80px 0}
+.sec-in{max-width:640px;margin:0 auto;padding:0 32px}
+.sec .sl{font-size:.55rem;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;text-align:center}
+.sec h2{font-size:1.6rem;font-weight:200;text-align:center;margin-bottom:32px;letter-spacing:-1px}
+.sec h2 span{font-weight:600}
+.booking-card{background:var(--card);padding:40px;border:1px solid var(--border)}
+.booking-card .st{font-size:.55rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;margin-top:20px;color:var(--dim)}
+.booking-card select,.booking-card input{width:100%;padding:12px 16px;border:1px solid var(--border);font-size:.8rem;font-family:inherit;background:var(--bg);color:var(--text);margin-bottom:8px;font-weight:300}
+.booking-card select:focus,.booking-card input:focus{outline:none;border-color:var(--accent)}
+.booking-card .r{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:500px){.booking-card .r{grid-template-columns:1fr}}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}@media(max-width:500px){.slots{grid-template-columns:repeat(4,1fr)}}
+.slots button{padding:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:.75rem;cursor:pointer;font-family:inherit;font-weight:300}
+.slots button:hover{border-color:var(--accent)}
+.slots .sel{background:var(--accent);color:white;border-color:var(--accent)}
+.slots .na{opacity:.25;cursor:not-allowed;text-decoration:line-through}
+.price-sum{text-align:center;padding:16px;background:var(--bg);margin:16px 0;font-weight:300;font-size:.85rem}
+.price-sum strong{font-weight:600;font-size:1.1rem}
+.booking-card .btn{width:100%;justify-content:center;padding:14px}
+.conf{display:none;text-align:center;padding:40px}
+.conf h2{margin-bottom:6px}
+.conf .det{background:var(--card);border:1px solid var(--border);padding:24px;max-width:360px;margin:20px auto;text-align:left}
+.conf .det .rw{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.conf .det .rw:last-child{border:none}.conf .det .l{color:var(--dim)}
+.notif{display:none;position:fixed;top:72px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;padding:10px 24px;z-index:200;font-size:.78rem;letter-spacing:.5px}.notif.show{display:block}
+footer{padding:40px 24px;text-align:center;border-top:1px solid var(--border);color:var(--dim);font-size:.7rem;font-weight:300}
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+<nav><a href="#" class="nav-logo">THE MONGOLIAN <span>BARBERS</span></a><a href="#book" class="nav-cta">Цаг</a></nav>
+<section class="hero"><div class="hero-in">
+  <div class="hero-t">Улаанбаатар</div>
+  <h1>The Mongolian<br><span>Barbers</span></h1>
+  <div class="divider"></div>
+  <p>Монголын шилдэг барберуудын гар хөдөлгөөн. Чанар, нарийн хийц, хүндэтгэл. Таны хэв маягийг тодорхойлоход бид туслах болно.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a href="#book" class="btn btn-solid">Цаг захиалах</a>
+  </div>
+</div></section>
+<section class="sec" id="book"><div class="sec-in">
+  <div class="sl">Цаг захиалах</div>
+  <h2>Өөрийн <span>цагаа</span> сонго</h2>
+  <div class="booking-card" id="form">
+    <div class="st">Барбер</div>
+    <select id="barber"><option>Барбер сонгох...</option></select>
+    <div class="st">Үйлчилгээ</div>
+    <select id="service"><option>Үйлчилгээ сонгох...</option></select>
+    <div class="st">Цаг</div>
+    <div class="r">
+      <div><label style="font-size:.7rem;font-weight:400;letter-spacing:1px;text-transform:uppercase;color:var(--dim)">Өдөр</label><select id="date"></select></div>
+      <div><label style="font-size:.7rem;font-weight:400;letter-spacing:1px;text-transform:uppercase;color:var(--dim)">Цаг</label><div class="slots" id="slots"><p style="font-size:.75rem;color:var(--dim);grid-column:1/-1;text-align:center;font-weight:300">Эхлээд өдөр сонго</p></div></div>
+    </div>
+    <div class="st">Холбогдох мэдээлэл</div>
+    <div class="r"><div><input type="text" id="name" placeholder="Таны нэр"></div><div><input type="tel" id="phone" placeholder="Утасны дугаар"></div></div>
+    <div class="price-sum">Нийт: <strong id="total">0₮</strong></div>
+    <button class="btn btn-solid" onclick="book()">📅 Захиалгыг баталгаажуулах</button>
+  </div>
+  <div class="conf" id="conf">
+    <div class="check">✅</div>
+    <h2 style="font-weight:200">Захиалга амжилттай!</h2>
+    <p style="color:var(--dim);font-weight:300;margin-bottom:16px">Танд SMS илгээгдэх болно</p>
+    <div class="det" id="conf-det"></div>
+    <button class="btn btn-solid" onclick="resetForm()">Дахиж захиалах</button>
+  </div>
+</div></section>
+<footer>© 2026 The Mongolian Barbers. Powered by <strong>Bolor Digital</strong></footer>
+<script>
+const A=window.location.origin,slug='barber-pro';
+async function init(){
+  try{
+    const[b,sv]=await Promise.all([
+      fetch(A+'/api/shop/'+slug+'/barbers').then(r=>r.json()),
+      fetch(A+'/api/shop/'+slug+'/services').then(r=>r.json())
+    ]);
+    b.forEach(x=>{document.getElementById('barber').innerHTML+='<option value="'+x.id+'">'+x.name+'</option>'});
+    const s=document.getElementById('service');
+    sv.forEach(x=>{s.innerHTML+='<option value="'+x.id+'" data-price="'+x.price+'">'+x.name+' — '+x.price.toLocaleString()+'₮</option>'});
+    s.onchange=function(){const o=s.options[s.selectedIndex];document.getElementById('total').textContent=o.dataset.price?parseInt(o.dataset.price).toLocaleString()+'₮':'0₮';};
+    const d=document.getElementById('date');
+    for(let i=0;i<=7;i++){const dt=new Date();dt.setDate(dt.getDate()+i);const days=['Ням','Дав','Мяг','Лха','Пүр','Баа','Бям'];d.innerHTML+='<option value="'+dt.toLocaleDateString('en-CA')+'"'+(i===0?' selected':'')+'>'+days[dt.getDay()]+', '+(dt.getMonth()+1)+'/'+dt.getDate()+'</option>';}
+    d.onchange=loadSlots;document.getElementById('barber').onchange=loadSlots;
+  }catch(e){showNotif('Ачаалахад алдаа',true);}
+}
+async function loadSlots(){
+  const d=document.getElementById('date').value,bar=document.getElementById('barber').value,s=document.getElementById('slots');
+  if(!d||!bar){s.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--dim);font-weight:300">Эхлээд барбер, өдөр сонгоно уу</p>';return;}
+  try{
+    const r=await fetch(A+'/api/shop/'+slug+'/slots?date='+d+'&barber_id='+bar);
+    const slots=await r.json();
+    s.innerHTML='';
+    slots.forEach(sl=>{const b=document.createElement('button');b.textContent=sl.time;b.className=sl.available?'':'na';if(!sl.available)b.disabled=true;b.onclick=()=>{s.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));if(sl.available)b.classList.add('sel');};s.appendChild(b);});
+  }catch(e){}
+}
+function showNotif(m,e){const n=document.getElementById('notif');n.textContent=m;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),3000);}
+async function book(){
+  const bar=document.getElementById('barber').value,sv=document.getElementById('service').value,d=document.getElementById('date').value,n=document.getElementById('name').value.trim(),p=document.getElementById('phone').value.trim(),sl=document.querySelector('#slots .sel');
+  if(!bar||!sv||!d||!sl||!n||!p||p.replace(/[\s-]/g,'').length!==8)return showNotif('Бүгдийг бөглөнө үү',true);
+  const r=await fetch(A+'/api/shop/'+slug+'/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({barber_id:bar,service_id:sv,customer_name:n,customer_phone:p,booking_date:d,booking_time:sl.textContent})});
+  const data=await r.json();
+  if(!data.success)return showNotif(data.error||'Алдаа',true);
+  document.getElementById('form').style.display='none';document.getElementById('conf').style.display='block';
+  document.getElementById('conf-det').innerHTML='<div class="rw"><span class="l">Барбер</span><span>'+document.querySelector('#barber option:checked').text+'</span></div><div class="rw"><span class="l">Үйлчилгээ</span><span>'+document.querySelector('#service option:checked').text+'</span></div><div class="rw"><span class="l">Өдөр</span><span>'+d+'</span></div><div class="rw"><span class="l">Цаг</span><span>'+sl.textContent+'</span></div><div class="rw"><span class="l">ID</span><span>#'+data.booking_id+'</span></div>';
+}
+function resetForm(){document.getElementById('form').style.display='block';document.getElementById('conf').style.display='none';}
+init();
+</script>
+</body>
+</html>

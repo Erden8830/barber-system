@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>Цаг захиалга</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px}
+.shop-header{text-align:center;padding:8px 0 20px}
+.shop-header .logo{font-size:.68rem;font-weight:700;letter-spacing:2.5px;color:rgba(255,255,255,.15);text-transform:uppercase;margin-bottom:8px}
+.shop-header .logo span{color:#d4a017}
+.shop-header h1{font-size:1.2rem;font-weight:700}
+.card{background:linear-gradient(180deg,#141414 0%,#111 100%);border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:28px 22px;width:100%;max-width:380px;box-shadow:0 1px 0 rgba(255,255,255,.02),0 8px 32px rgba(0,0,0,.3)}
+
+/* Progress */
+.progress{display:flex;justify-content:center;gap:28px;margin-bottom:28px;position:relative}
+.progress::before{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);width:calc(100% - 56px);height:1px;background:rgba(255,255,255,.06);z-index:0}
+.progress-dot{width:12px;height:12px;border-radius:50%;background:#1a1a1a;border:2px solid rgba(255,255,255,.08);position:relative;z-index:1;transition:all .3s}
+.progress-dot.done{background:#d4a017;border-color:#d4a017;box-shadow:0 0 8px rgba(212,160,23,.3)}
+.progress-dot.active{border-color:#d4a017;box-shadow:0 0 6px rgba(212,160,23,.15)}
+.step-label{font-size:.62rem;font-weight:600;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:18px;text-align:center}
+.step{display:none}.step.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Barber cards */
+.barber-grid{display:flex;flex-direction:column;gap:7px}
+.barber-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid rgba(255,255,255,.05);border-radius:12px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.01);position:relative;overflow:hidden}
+.barber-card::after{content:'';position:absolute;inset:0;border-radius:12px;opacity:0;transition:opacity .2s;background:linear-gradient(135deg,rgba(212,160,23,.04),transparent 60%)}
+.barber-card:active{transform:scale(.985)}
+.barber-card.sel{border-color:rgba(212,160,23,.3);background:rgba(212,160,23,.04)}
+.barber-card.sel::after{opacity:1}
+.barber-card .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(212,160,23,.04));display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;border:1px solid rgba(212,160,23,.1)}
+.barber-card.sel .av{border-color:rgba(212,160,23,.25);background:linear-gradient(135deg,rgba(212,160,23,.2),rgba(212,160,23,.08))}
+.barber-card .info{flex:1;min-width:0}
+.barber-card .nm{font-weight:600;font-size:.88rem;letter-spacing:-.2px}
+.barber-card .tl{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:2px}
+.barber-card .arr{color:rgba(255,255,255,.1);font-size:.85rem;transition:all .2s}
+.barber-card.sel .arr{color:#d4a017;transform:translateX(2px)}
+
+/* Service picker */
+.svc-list{display:flex;flex-direction:column;gap:6px}
+.svc-item{display:flex;justify-content:space-between;align-items:center;padding:16px 16px;border:1px solid rgba(255,255,255,.05);border-radius:12px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.01);position:relative}
+.svc-item:active{transform:scale(.985)}
+.svc-item.sel{border-color:rgba(212,160,23,.3);background:rgba(212,160,23,.04)}
+.svc-item .svc-left{display:flex;align-items:center;gap:12px}
+.svc-item .svc-icon{font-size:1.1rem;opacity:.5;transition:opacity .2s}
+.svc-item.sel .svc-icon{opacity:1}
+.svc-item .svc-name{font-weight:600;font-size:.85rem}
+.svc-item .svc-meta{font-size:.68rem;color:rgba(255,255,255,.28);margin-top:1px}
+.svc-item .svc-price{font-weight:700;font-size:.95rem;color:#d4a017;white-space:nowrap}
+
+/* Date */
+.date-row{position:relative}
+.date-input{width:100%;padding:15px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02);color:#fff;font-size:.9rem;font-family:inherit;text-align:center;-webkit-appearance:none;transition:border-color .2s}
+.date-input:focus{outline:none;border-color:rgba(212,160,23,.3)}
+
+/* Slots */
+.slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.slot-btn{padding:13px 8px;border:1px solid rgba(255,255,255,.06);border-radius:10px;text-align:center;font-size:.8rem;cursor:pointer;color:rgba(255,255,255,.45);font-family:inherit;background:rgba(255,255,255,.01);transition:all .15s;font-weight:500}
+.slot-btn:active{transform:scale(.95)}
+.slot-btn.sel{background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(212,160,23,.06));border-color:rgba(212,160,23,.35);color:#d4a017;font-weight:700;box-shadow:0 0 12px rgba(212,160,23,.08)}
+
+/* Inputs */
+.input-row{display:flex;flex-direction:column;gap:10px}
+.input-row input{width:100%;padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02);color:#fff;font-size:.9rem;font-family:inherit;-webkit-appearance:none;transition:border-color .2s}
+.input-row input:focus{outline:none;border-color:rgba(212,160,23,.3)}
+.input-row input::placeholder{color:rgba(255,255,255,.15)}
+
+/* Button */
+.btn-wrap{margin-top:18px}
+.btn{width:100%;padding:16px;background:linear-gradient(135deg,#d4a017,#c49014);color:#0a0a0a;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;transition:all .15s;box-shadow:0 4px 16px rgba(212,160,23,.15),0 1px 2px rgba(0,0,0,.3);letter-spacing:-.2px}
+.btn:active{transform:scale(.98);box-shadow:0 2px 8px rgba(212,160,23,.1)}
+.btn:disabled{opacity:.35;pointer-events:none;box-shadow:none}
+
+/* Confirmation */
+.confirm{text-align:center;padding:12px 0 4px;animation:fadeUp .3s ease}
+.confirm .check-wrap{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(212,160,23,.04));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid rgba(212,160,23,.15)}
+.confirm .check{font-size:2.2rem}
+.confirm h2{font-size:1.15rem;font-weight:700;margin-bottom:4px}
+.confirm .sub{font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:20px}
+.confirm .details{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;overflow:hidden}
+.confirm .details .row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:.8rem;border-bottom:1px solid rgba(255,255,255,.03)}
+.confirm .details .row:last-child{border:0}
+.confirm .details .lbl{color:rgba(255,255,255,.3);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+.confirm .details .val{font-weight:600}
+
+/* Error & loading */
+.err{color:#e74c3c;font-size:.75rem;text-align:center;margin-top:14px}
+.loading{text-align:center;padding:40px 20px;color:rgba(255,255,255,.2)}
+.loading .spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,.06);border-top-color:rgba(212,160,23,.5);border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Back */
+.back-row{margin-bottom:14px}
+.back-btn{background:none;border:none;color:rgba(255,255,255,.2);font-size:.72rem;cursor:pointer;font-family:inherit;padding:4px 0;display:flex;align-items:center;gap:4px;transition:color .15s}
+.back-btn:active{color:#d4a017}
+
+/* Summary bar on info step */
+.summary-bar{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.72rem;color:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:space-between}
+.summary-bar .sum-price{font-weight:700;color:#d4a017;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="shop-header">
+  <div class="logo">Barber<span>.</span>Pro</div>
+  <h1 id="shopTitle">Цаг захиалга</h1>
+</div>
+<div class="card">
+  <div id="loading" class="loading"><div class="spinner"></div>Ачаалж байна...</div>
+  <div id="steps" style="display:none">
+    <div class="progress">
+      <div class="progress-dot active" id="dot1"></div>
+      <div class="progress-dot" id="dot2"></div>
+      <div class="progress-dot" id="dot3"></div>
+    </div>
+
+    <div class="step active" id="step-barber">
+      <div class="step-label">Барбераа сонго</div>
+      <div class="barber-grid" id="barberList"></div>
+    </div>
+
+    <div class="step" id="step-service">
+      <div class="back-row"><button class="back-btn" onclick="goStep('barber')">← Буцах</button></div>
+      <div class="step-label">Үйлчилгээ сонго</div>
+      <div class="svc-list" id="svcList"></div>
+    </div>
+
+    <div class="step" id="step-date">
+      <div class="back-row"><button class="back-btn" onclick="goStep('service')">← Буцах</button></div>
+      <div class="step-label">Огноо, цаг сонго</div>
+      <div class="date-row"><input type="date" class="date-input" id="datePick"></div>
+      <div class="slot-grid" id="slotList"></div>
+    </div>
+
+    <div class="step" id="step-info">
+      <div class="back-row"><button class="back-btn" onclick="goStep('date')">← Буцах</button></div>
+      <div class="step-label">Таны мэдээлэл</div>
+      <div class="summary-bar"><span id="sumText"></span><span class="sum-price" id="sumPrice"></span></div>
+      <div class="input-row">
+        <input type="text" id="custName" placeholder="Нэр">
+        <input type="tel" id="custPhone" placeholder="Утасны дугаар (8 оронтой)">
+      </div>
+      <div class="btn-wrap"><button class="btn" id="bookBtn">Захиалах</button></div>
+    </div>
+
+    <div class="step" id="step-done">
+      <div class="confirm">
+        <div class="check-wrap"><div class="check">✅</div></div>
+        <h2>Захиалга баталгаажлаа</h2>
+        <p class="sub">Танд баталгаажуулах мэдээлэл илгээгдэх болно</p>
+        <div class="details" id="doneDetails"></div>
+        <button class="btn" onclick="resetAll()">Дахиж захиалах</button>
+      </div>
+    </div>
+
+    <div class="err" id="error"></div>
+  </div>
+</div>
+<script>
+var SLUG=location.pathname.split('/')[2];
+var API=location.origin;
+var barbers=[],services=[],selBarber=null,selSvc=null,selDate=null,selTime=null;
+
+function showErr(m){document.getElementById('error').textContent=m||''}
+function goStep(s){selTime=null;showStep(s)}
+
+function updateDots(s){
+  var steps={barber:0,service:1,date:2,info:2};
+  var i=steps[s]||0;
+  [1,2,3].forEach(function(n){
+    var d=document.getElementById('dot'+n);
+    d.classList.remove('done','active');
+    if(n-1<i)d.classList.add('done');
+    if(n-1===i)d.classList.add('active');
+  });
+}
+function showStep(s){
+  document.querySelectorAll('.step').forEach(function(x){x.classList.remove('active')});
+  document.getElementById('step-'+s).classList.add('active');
+  updateDots(s);
+  showErr('');
+  if(s==='date'){setToday();loadSlots()}
+  if(s==='info')updateSummary();
+}
+
+function setToday(){
+  var dp=document.getElementById('datePick');
+  var d=new Date().toLocaleDateString('en-CA');
+  dp.value=d;dp.min=d;selDate=d;
+}
+
+function updateSummary(){
+  var bn='',sp='';
+  barbers.forEach(function(b){if(b.id==selBarber)bn=b.name});
+  services.forEach(function(s){if(s.id==selSvc){sp=s.price.toLocaleString()+'₮';document.getElementById('sumText').textContent=s.name}});
+  document.getElementById('sumPrice').textContent=sp;
+}
+
+async function init(){
+  try{
+    var sr=await fetch(API+'/api/shop/'+SLUG);
+    if(!sr.ok){showErr('Дэлгүүр олдсонгүй');return}
+    var sd=await sr.json();
+    document.title=sd.name+' — Цаг захиалга';
+    document.getElementById('shopTitle').textContent=sd.name;
+
+    var br=await fetch(API+'/api/shop/'+SLUG+'/barbers');
+    barbers=await br.json();
+    if(!barbers.length){showErr('Барбер байхгүй');return}
+    var emojis=['💈','✂️','🧔','💇','🔹','⭐'];
+    var bh='';
+    barbers.forEach(function(b,i){
+      bh+='<div class="barber-card" data-id="'+b.id+'"><div class="av">'+emojis[i%6]+'</div><div class="info"><div class="nm">'+b.name+'</div><div class="tl">'+(b.title||'')+'</div></div><div class="arr">→</div></div>';
+    });
+    document.getElementById('barberList').innerHTML=bh;
+    document.querySelectorAll('.barber-card').forEach(function(c){
+      c.onclick=function(){
+        document.querySelectorAll('.barber-card').forEach(function(x){x.classList.remove('sel')});
+        this.classList.add('sel');
+        selBarber=this.dataset.id;
+        showStep('service');
+      };
+    });
+
+    var svr=await fetch(API+'/api/shop/'+SLUG+'/services');
+    services=await svr.json();
+    var sh='';
+    services.forEach(function(s){
+      sh+='<div class="svc-item" data-id="'+s.id+'"><div class="svc-left"><div class="svc-icon">✂️</div><div><div class="svc-name">'+s.name+'</div><div class="svc-meta">'+s.duration+' мин</div></div></div><div class="svc-price">'+s.price.toLocaleString()+'₮</div></div>';
+    });
+    document.getElementById('svcList').innerHTML=sh||'<div style="color:rgba(255,255,255,.3);text-align:center;padding:20px">Үйлчилгээ байхгүй</div>';
+    document.querySelectorAll('.svc-item').forEach(function(c){
+      c.onclick=function(){
+        document.querySelectorAll('.svc-item').forEach(function(x){x.classList.remove('sel')});
+        this.classList.add('sel');
+        selSvc=this.dataset.id;
+        showStep('date');
+      };
+    });
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('steps').style.display='block';
+  }catch(e){showErr('Алдаа: '+e.message)}
+}
+
+document.getElementById('datePick').onchange=function(){
+  selDate=this.value;selTime=null;loadSlots();
+};
+
+async function loadSlots(){
+  if(!selBarber||!selDate)return;
+  try{
+    document.getElementById('slotList').innerHTML='<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,.15);padding:16px;font-size:.78rem">Ачаалж байна...</div>';
+    var r=await fetch(API+'/api/shop/'+SLUG+'/slots?date='+selDate+'&barber_id='+selBarber);
+    var d=await r.json();
+    var h='';
+    if(d.message){h='<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,.2);padding:16px;font-size:.78rem">'+d.message+'</div>'}
+    else if(d.slots&&d.slots.length){
+      d.slots.forEach(function(s){h+='<button class="slot-btn">'+s+'</button>'});
+    }else{h='<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,.2);padding:16px;font-size:.78rem">Цаг байхгүй</div>'}
+    document.getElementById('slotList').innerHTML=h;
+    document.querySelectorAll('.slot-btn').forEach(function(b){
+      b.onclick=function(){
+        document.querySelectorAll('.slot-btn').forEach(function(x){x.classList.remove('sel')});
+        this.classList.add('sel');
+        selTime=this.textContent;
+        showStep('info');
+      };
+    });
+  }catch(e){showErr('Цаг ачаалахад алдаа: '+e.message)}
+}
+
+document.getElementById('bookBtn').onclick=async function(){
+  var n=document.getElementById('custName').value.trim();
+  var p=document.getElementById('custPhone').value.trim();
+  if(!n){showErr('Нэрээ оруулна уу');return}
+  if(!p||p.replace(/[\s-]/g,'').length!==8){showErr('Утасны дугаараа зөв оруулна уу (8 оронтой)');return}
+  var btn=document.getElementById('bookBtn');
+  btn.disabled=true;btn.textContent='Захиалж байна...';
+  try{
+    var r=await fetch(API+'/api/shop/'+SLUG+'/book',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({barber_id:selBarber,service_id:selSvc,customer_name:n,customer_phone:p,booking_date:selDate,booking_time:selTime})
+    });
+    var d=await r.json();
+    if(!r.ok){showErr(d.error);btn.disabled=false;btn.textContent='Захиалах';return}
+    var barberName='';barbers.forEach(function(b){if(b.id==selBarber)barberName=b.name});
+    var svcName='';services.forEach(function(s){if(s.id==selSvc)svcName=s.name});
+    var price='';services.forEach(function(s){if(s.id==selSvc)price=s.price.toLocaleString()+'₮'});
+    document.getElementById('doneDetails').innerHTML=
+      '<div class="row"><span class="lbl">Барбер</span><span class="val">'+barberName+'</span></div>'+
+      '<div class="row"><span class="lbl">Үйлчилгээ</span><span class="val">'+svcName+'</span></div>'+
+      '<div class="row"><span class="lbl">Өдөр</span><span class="val">'+selDate+'</span></div>'+
+      '<div class="row"><span class="lbl">Цаг</span><span class="val">'+selTime+'</span></div>'+
+      '<div class="row"><span class="lbl">Үнэ</span><span class="val" style="color:#d4a017">'+price+'</span></div>'+
+      '<div class="row"><span class="lbl">ID</span><span class="val">#'+d.booking_id+'</span></div>';
+    showStep('done');
+  }catch(e){showErr('Алдаа: '+e.message);btn.disabled=false;btn.textContent='Захиалах'}
+};
+
+function resetAll(){
+  selBarber=null;selSvc=null;selDate=null;selTime=null;
+  document.querySelectorAll('.barber-card,.svc-item,.slot-btn').forEach(function(x){x.classList.remove('sel')});
+  document.getElementById('custName').value='';
+  document.getElementById('custPhone').value='';
+  document.getElementById('bookBtn').disabled=false;
+  document.getElementById('bookBtn').textContent='Захиалах';
+  showStep('barber');
+}
+
+init();
+</script>
+</body>
+</html>

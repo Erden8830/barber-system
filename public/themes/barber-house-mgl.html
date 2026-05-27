@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber House MGL — Цаг захиалга</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f0e8;--surface:#fff;--accent:#8b6914;--text:#2c1810;--dim:#8a7a6a;--border:#e0d5c5;--shadow:0 8px 24px rgba(44,24,16,.06);--font-serif:'Playfair Display',Georgia,serif;--font-sans:'Inter',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;background:rgba(245,240,232,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:.5px}
+.nav-logo span{color:var(--accent)}
+.nav-cta{background:var(--accent);color:white;padding:10px 24px;font-weight:600;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
+.hero{min-height:100vh;display:flex;align-items:center;padding:80px 24px 0;background:linear-gradient(180deg,var(--bg) 0%,#ede6d8 100%)}
+.hero-g{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;width:100%}
+@media(max-width:800px){.hero-g{grid-template-columns:1fr;gap:30px;text-align:center}.hero{min-height:auto;padding:100px 24px 50px}}
+.hero-t{font-size:.6rem;font-weight:600;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.08;margin-bottom:12px}
+.hero h1 span{color:var(--accent);font-style:italic}
+.hero p{color:var(--dim);font-size:.88rem;line-height:1.7;margin-bottom:28px;max-width:420px}
+@media(max-width:800px){.hero p{margin:0 auto 28px}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;font-weight:600;font-size:.82rem;text-decoration:none;cursor:pointer;font-family:inherit;border:none;transition:all .3s}
+.btn-solid{background:var(--accent);color:white}
+.btn-solid:hover{opacity:.9}
+.hero-card{background:var(--surface);padding:28px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.hero-card .hl{font-family:var(--font-serif);font-weight:600;font-size:.85rem;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.hero-card .il{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.hero-card .il .n{width:24px;height:24px;border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-family:var(--font-serif);flex-shrink:0}
+.hero-card .il .t{font-size:.78rem}
+.hero-card .il .t .s{font-size:.68rem;color:var(--dim)}
+.sec{padding:60px 0}
+.sl{font-size:.6rem;font-weight:600;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec h2{font-family:var(--font-serif);font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:700;margin-bottom:20px}
+.booking-card{background:var(--surface);border:1px solid var(--border);padding:36px;box-shadow:var(--shadow);max-width:640px;margin:0 auto}
+@media(max-width:600px){.booking-card{padding:20px}}
+.booking-card .st{font-size:.6rem;font-weight:600;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;margin-top:16px}
+.booking-card select,.booking-card input{width:100%;padding:10px 14px;border:1px solid var(--border);font-size:.85rem;font-family:inherit;background:var(--bg);color:var(--text);margin-bottom:6px}
+.booking-card select:focus,.booking-card input:focus{outline:none;border-color:var(--accent)}
+.booking-card .r{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:500px){.booking-card .r{grid-template-columns:1fr}}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}@media(max-width:500px){.slots{grid-template-columns:repeat(4,1fr)}}
+.slots button{padding:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:.78rem;cursor:pointer;font-family:inherit}
+.slots button:hover{border-color:var(--accent)}
+.slots .sel{background:var(--accent);color:white;border-color:var(--accent)}
+.slots .na{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.price-sum{text-align:center;padding:14px;background:var(--bg);margin:16px 0}
+.price-sum strong{font-family:var(--font-serif);font-size:1.2rem;color:var(--accent)}
+.booking-card .btn{width:100%;justify-content:center;font-size:.85rem;padding:14px}
+.conf{display:none;text-align:center;padding:40px 24px}
+.conf .check{font-size:2.5rem;margin-bottom:12px}
+.conf h2{font-family:var(--font-serif);font-size:1.3rem;margin-bottom:6px}
+.conf .det{background:var(--surface);border:1px solid var(--border);padding:20px;max-width:360px;margin:20px auto;text-align:left}
+.conf .det .rw{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem}
+.conf .det .rw:last-child{border:none}
+.conf .det .l{color:var(--dim)}
+.notif{display:none;position:fixed;top:72px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;padding:10px 20px;z-index:200;font-size:.82rem}.notif.show{display:block}
+footer{padding:30px 24px;text-align:center;border-top:1px solid var(--border);color:var(--dim);font-size:.72rem}
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+<nav><a href="#" class="nav-logo">Barber<span> House</span></a><a href="#book" class="nav-cta">Цаг захиалах</a></nav>
+
+<section class="hero"><div class="hero-g">
+  <div>
+    <div class="hero-t">Улаанбаатар</div>
+    <h1>Barber<br><span>House</span></h1>
+    <p>Уламжлалт барбершопын уур амьсгал, орчин үеийн хэв маяг. Barber House MGL-д таны хэв маягийг хүндэтгэнэ.</p>
+    <a href="#book" class="btn btn-solid">Цаг захиалах →</a>
+  </div>
+  <div class="hero-card">
+    <div class="hl">Хэрхэн захиалах вэ</div>
+    <div class="il"><div class="n">1</div><div class="t">Барбер сонгох<div class="s">Манай барберуудтай танилцана уу</div></div></div>
+    <div class="il"><div class="n">2</div><div class="t">Цаг сонгох<div class="s">Өөрт тохирсон цагийг сонгоно уу</div></div></div>
+    <div class="il"><div class="n">3</div><div class="t">Баталгаажуулах<div class="s">Утасны дугаараа үлдээнэ үү</div></div></div>
+  </div>
+</div></section>
+
+<section class="sec" id="book"><div class="container">
+  <div class="sl" style="text-align:center">Цаг захиалах</div>
+  <h2 style="text-align:center">Өөрийн цагаа сонго</h2>
+  <div class="booking-card" id="form">
+    <div class="st">Барбер сонго</div>
+    <select id="barber"><option>Барбер сонгох...</option></select>
+    <div class="st">Үйлчилгээ сонго</div>
+    <select id="service"><option>Үйлчилгээ сонгох...</option></select>
+    <div class="st">Цаг сонго</div>
+    <div class="r">
+      <div><label style="font-size:.75rem;font-weight:600">Өдөр</label><select id="date"></select></div>
+      <div><label style="font-size:.75rem;font-weight:600">Цаг</label><div class="slots" id="slots"><p style="font-size:.78rem;color:var(--dim);grid-column:1/-1;text-align:center">Эхлээд өдөр сонго</p></div></div>
+    </div>
+    <div class="st">Холбогдох мэдээлэл</div>
+    <div class="r"><div><input type="text" id="name" placeholder="Таны нэр"></div><div><input type="tel" id="phone" placeholder="Утасны дугаар"></div></div>
+    <div class="price-sum">Нийт: <strong id="total">0₮</strong></div>
+    <button class="btn btn-solid" onclick="book()">📅 Захиалгыг баталгаажуулах</button>
+  </div>
+  <div class="conf" id="conf">
+    <div class="check">✅</div>
+    <h2>Захиалга амжилттай!</h2>
+    <p style="color:var(--dim);margin-bottom:16px">Танд баталгаажуулах SMS илгээгдэх болно</p>
+    <div class="det" id="conf-det"></div>
+    <button class="btn btn-solid" onclick="resetForm()">Дахиж захиалах</button>
+  </div>
+</div></section>
+<footer>© 2026 Barber House MGL. Powered by <strong>Bolor Digital</strong></footer>
+<script>
+const api=window.location.origin,slug='barber-pro';
+async function init(){
+  try{
+    const[barbers,services]=await Promise.all([
+      fetch(api+'/api/shop/'+slug+'/barbers').then(r=>r.json()),
+      fetch(api+'/api/shop/'+slug+'/services').then(r=>r.json())
+    ]);
+    barbers.forEach(b=>{document.getElementById('barber').innerHTML+='<option value="'+b.id+'">'+b.name+'</option>'});
+    const s=document.getElementById('service');
+    services.forEach(sv=>{s.innerHTML+='<option value="'+sv.id+'" data-price="'+sv.price+'">'+sv.name+' — '+sv.price.toLocaleString()+'₮ ('+sv.duration+'мин)</option>'});
+    s.onchange=function(){const o=s.options[s.selectedIndex];document.getElementById('total').textContent=o.dataset.price?parseInt(o.dataset.price).toLocaleString()+'₮':'0₮';};
+    const d=document.getElementById('date');
+    for(let i=0;i<=7;i++){const dt=new Date();dt.setDate(dt.getDate()+i);const days=['Ням','Дав','Мяг','Лха','Пүр','Баа','Бям'];d.innerHTML+='<option value="'+dt.toLocaleDateString('en-CA')+'"'+(i===0?' selected':'')+'>'+days[dt.getDay()]+', '+(dt.getMonth()+1)+'/'+dt.getDate()+'</option>';}
+    d.onchange=loadSlots;document.getElementById('barber').onchange=loadSlots;
+  }catch(e){showNotif('Ачаалахад алдаа',true);}
+}
+async function loadSlots(){
+  const date=document.getElementById('date').value,barber=document.getElementById('barber').value,s=document.getElementById('slots');
+  if(!date||!barber){s.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--dim)">Эхлээд барбер, өдөр сонгоно уу</p>';return;}
+  try{
+    const res=await fetch(api+'/api/shop/'+slug+'/slots?date='+date+'&barber_id='+barber);
+    const slots=await res.json();
+    s.innerHTML='';
+    slots.forEach(sl=>{const b=document.createElement('button');b.textContent=sl.time;b.className=sl.available?'':'na';if(!sl.available)b.disabled=true;b.onclick=()=>{s.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));if(sl.available)b.classList.add('sel');};s.appendChild(b);});
+  }catch(e){}
+}
+function showNotif(msg,err){const n=document.getElementById('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),3000);}
+async function book(){
+  const barber=document.getElementById('barber').value,sv=document.getElementById('service').value,date=document.getElementById('date').value,name=document.getElementById('name').value.trim(),phone=document.getElementById('phone').value.trim(),slot=document.querySelector('#slots .sel');
+  if(!barber||!sv||!date||!slot||!name||!phone||phone.replace(/[\s-]/g,'').length!==8)return showNotif('Бүх талбарыг бөглөнө үү',true);
+  const r=await fetch(api+'/api/shop/'+slug+'/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({barber_id:barber,service_id:sv,customer_name:name,customer_phone:phone,booking_date:date,booking_time:slot.textContent})});
+  const d=await r.json();
+  if(!d.success)return showNotif(d.error||'Алдаа',true);
+  document.getElementById('form').style.display='none';document.getElementById('conf').style.display='block';
+  document.getElementById('conf-det').innerHTML='<div class="rw"><span class="l">Барбер</span><span>'+document.querySelector('#barber option:checked').text+'</span></div><div class="rw"><span class="l">Үйлчилгээ</span><span>'+document.querySelector('#service option:checked').text+'</span></div><div class="rw"><span class="l">Өдөр</span><span>'+date+'</span></div><div class="rw"><span class="l">Цаг</span><span>'+slot.textContent+'</span></div><div class="rw"><span class="l">Захиалга ID</span><span>#'+d.booking_id+'</span></div>';
+}
+function resetForm(){document.getElementById('form').style.display='block';document.getElementById('conf').style.display='none';}
+init();
+</script>
+</body>
+</html>

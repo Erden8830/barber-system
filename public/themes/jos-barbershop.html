@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Jos Barbershop — Улаанбаатар</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Roboto',sans-serif;background:#000;color:#fff;-webkit-font-smoothing:antialiased;line-height:1.5}
+a{text-decoration:none;color:inherit}
+
+/* Header */
+.header{position:sticky;top:0;z-index:100;background:#111;border-bottom:1px solid rgba(255,255,255,.06)}
+.header-inner{max-width:1248px;margin:0 auto;padding:0 32px;height:90px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-img{width:74px;height:auto;border-radius:50%}
+.nav{display:flex;align-items:center;gap:32px}
+.nav a{font-size:14px;color:rgba(255,255,255,.7);transition:color .2s}
+.nav a:hover{color:#fff}
+.btn{padding:16px;font-size:16px;font-weight:700;font-family:inherit;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.btn-white{background:#fff;color:#242424}
+.btn-white:hover{opacity:.9}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.7);padding:16px 0}
+.btn-ghost:hover{color:#fff}
+
+/* Hero */
+.hero-section{padding:0}
+.hero-container{max-width:1248px;margin:0 auto;padding:0 32px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;min-height:80vh}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:40px;min-height:auto;text-align:center}}
+.hero-content h1{font-family:'DM Serif Display',serif;font-size:52px;font-weight:400;line-height:50px;letter-spacing:-.64px;margin-bottom:20px;color:#fff}
+@media(max-width:900px){.hero-content h1{font-size:36px;line-height:38px}}
+.hero-content .hero-text{font-size:16px;color:rgba(255,255,255,.7);font-weight:300;margin-bottom:32px;max-width:420px;line-height:1.6}
+@media(max-width:900px){.hero-content .hero-text{margin:0 auto 32px}}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.hero-actions{justify-content:center}}
+.hero-image{width:100%;overflow:hidden}
+.hero-image img{width:100%;height:auto;display:block}
+
+/* Sections */
+.section{padding:80px 0}
+.section-inner{max-width:1248px;margin:0 auto;padding:0 32px}
+.tag{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);text-align:center;margin-bottom:12px}
+.section h2{font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;text-align:center;margin-bottom:6px;color:#fff;letter-spacing:-.5px}
+.section .sub{text-align:center;color:rgba(255,255,255,.5);font-size:16px;font-weight:300;margin-bottom:40px}
+
+/* Barbers */
+.barber-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:600px){.barber-grid{grid-template-columns:1fr}}
+.barber-card{background:#111;border:1px solid rgba(255,255,255,.06);overflow:hidden}
+.barber-photo{width:100%;aspect-ratio:1;overflow:hidden}
+.barber-photo img{width:100%;height:100%;object-fit:cover}
+.barber-info{padding:20px}
+.barber-info h4{font-size:14px;font-weight:500;color:#fff;margin-bottom:4px}
+.barber-info p{font-size:13px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.5}
+
+/* Reviews */
+.reviews-scroll{display:flex;gap:16px;overflow-x:auto;padding:8px 0 16px;scroll-snap-type:x mandatory}
+.reviews-scroll::-webkit-scrollbar{height:4px}
+.reviews-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.review-card{min-width:300px;max-width:340px;padding:24px;background:#111;border:1px solid rgba(255,255,255,.06);scroll-snap-align:start;flex-shrink:0}
+.review-card .stars{color:#e7711b;font-size:18px;letter-spacing:3px;margin-bottom:8px}
+.review-card .name{font-weight:500;font-size:14px;color:#fff;margin-bottom:2px}
+.review-card .date{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px}
+.review-card .text{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5;font-weight:300}
+
+/* Location */
+.location-wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:800px;margin:0 auto;align-items:start}
+@media(max-width:700px){.location-wrap{grid-template-columns:1fr}}
+.location-info{background:#111;padding:24px;border:1px solid rgba(255,255,255,.06)}
+.location-info h4{font-size:14px;font-weight:500;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.location-info p{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:2px;line-height:1.5;font-weight:300}
+.location-info .hours{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06)}
+.location-info .hours .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0}
+.location-info .hours .row .day{color:rgba(255,255,255,.5);font-weight:300}
+.location-info .hours .row .time{color:#fff;font-weight:500}
+.location-map{width:100%;aspect-ratio:4/3;background:#111;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:13px}
+
+/* Booking */
+.book-wrap{max-width:540px;margin:0 auto}
+.book-card{background:#111;padding:36px;border:1px solid rgba(255,255,255,.06)}
+.book-card label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px;display:block;margin-top:16px}
+.book-card label:first-of-type{margin-top:0}
+.book-card select,.book-card input{width:100%;padding:12px 14px;border:1px solid rgba(255,255,255,.1);font-size:14px;font-family:'Roboto',sans-serif;background:#1a1a1a;color:#fff;margin-bottom:6px;-webkit-appearance:none;border-radius:0;outline:none}
+.book-card select:focus,.book-card input:focus{border-color:rgba(255,255,255,.3)}
+.book-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.book-row{grid-template-columns:1fr}}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}
+@media(max-width:500px){.slots{grid-template-columns:repeat(4,1fr)}}
+.slots button{padding:10px;border:1px solid rgba(255,255,255,.1);background:transparent;font-size:13px;cursor:pointer;font-family:'Roboto',sans-serif;color:#fff}
+.slots button:hover{border-color:rgba(255,255,255,.3)}
+.slots .sel{background:#fff;color:#000;border-color:#fff}
+.slots .na{opacity:.2;cursor:not-allowed;text-decoration:line-through}
+.total{text-align:center;padding:16px;background:#0a0a0a;margin:16px 0 0;font-size:14px;color:rgba(255,255,255,.7)}
+.total strong{font-family:'DM Serif Display',serif;font-size:20px;color:#fff}
+.book-card .btn-white{width:100%;justify-content:center;padding:16px;font-size:16px;margin-top:8px}
+.conf{display:none;text-align:center;padding:36px}
+.conf .check{font-size:40px;margin-bottom:8px}
+.conf h2{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:6px;color:#fff}
+.conf-details{background:#111;border:1px solid rgba(255,255,255,.06);padding:24px;max-width:340px;margin:20px auto;text-align:left}
+.conf-details .rw{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.conf-details .rw:last-child{border:none}
+.conf-details .l{color:rgba(255,255,255,.5)}
+footer{padding:48px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-size:12px}
+.social{display:flex;gap:16px;justify-content:center;margin-top:16px}
+.social a{color:rgba(255,255,255,.6);font-size:13px;display:flex;align-items:center;gap:4px}
+.social a:hover{color:#fff}
+.notif{position:fixed;top:90px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:14px 28px;z-index:200;font-size:14px;font-weight:500;display:none;border-radius:8px}
+.notif.show{display:block}
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <img class="logo-img" src="https://cdn.nearcut.com/XC2H1P/logo_logocirc.png" alt="Jos Barbershop">
+    </div>
+    <nav class="nav">
+      <a href="#">Нүүр</a>
+      <a href="#barbers">Үйлчилгээ</a>
+      <a href="#barbers">Бидний тухай</a>
+      <a href="#book">Book</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="#" class="btn btn-ghost">Нэвтрэх</a>
+      <a href="#book" class="btn btn-white">Цаг захиалах</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-container">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Тавтай морил<br>Jos Barbershop</h1>
+        <p class="hero-text">Цагаа хэдхэн секундэд захиалаарай. Улаанбаатарын шилдэг барбершоп.</p>
+        <div class="hero-actions">
+          <a href="#book" class="btn btn-white">Цаг захиалах →</a>
+          <a href="#barbers" class="btn btn-ghost">Services</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=930&h=620&fit=crop" alt="Barbershop interior" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services removed -->
+
+<section class="section" id="barbers">
+  <div class="section-inner">
+    <div class="tag">Манай баг</div>
+    <h2>Барберуудтай танилцах</h2>
+    <p class="sub">Таны хэв маягт зориулсан мэргэжлийн барберууд</p>
+    <div class="barber-grid" id="barberGrid"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="tag">Reviews</div>
+    <h2>Үйлчлүүлэгчдийн сэтгэгдэл</h2>
+    <p class="sub">Эрхэм үйлчлүүлэгчдийн сэтгэгдэл</p>
+    <div class="reviews-scroll" id="reviewScroll">
+      <div class="review-card"><div class="stars">★★★★★</div><div class="name">Temuujin B.</div><div class="date">2 weeks ago</div><div class="text">Best barber in UB. Always consistent and professional. Been coming here for 6 months.</div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><div class="name">Ankhbayar S.</div><div class="date">1 month ago</div><div class="text">Great service, friendly staff. My go-to place for haircuts.</div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><div class="name">Odgerel B.</div><div class="date">3 weeks ago</div><div class="text">Finally found a barber that listens. Amazing fades every time.</div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><div class="name">Bolor E.</div><div class="date">2 months ago</div><div class="text">Premium service at a fair price. Attention to detail is unmatched.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="book" style="padding-top:0">
+  <div class="section-inner">
+    <div class="tag">Booking</div>
+    <h2>Book your appointment</h2>
+    <p class="sub">Takes just 2 minutes</p>
+    <div class="book-wrap">
+      <div class="book-card" id="form">
+        <label>Барбер</label>
+        <select id="barber"><option>Барбер сонгох...</option></select>
+        <label>Service</label>
+        <select id="service"><option>Үйлчилгээ сонгох...</option></select>
+        <label>Date & time</label>
+        <div class="book-row">
+          <div><select id="date"></select></div>
+          <div><div class="slots" id="slots"><p style="font-size:13px;color:rgba(255,255,255,.4);grid-column:1/-1;text-align:center">Эхлээд өдөр сонго</p></div></div>
+        </div>
+        <label>Холбогдох мэдээлэл</label>
+        <div class="book-row"><div><input type="text" id="name" placeholder="Таны нэр"></div><div><input type="tel" id="phone" placeholder="Утасны дугаар"></div></div>
+        <div class="total">Total: <strong id="total">0₮</strong></div>
+        <button class="btn btn-white" onclick="book()">📅 Захиалгыг баталгаажуулах</button>
+      </div>
+      <div class="conf" id="conf">
+        <div class="check">✅</div>
+        <h2>Захиалга баталгаажлаа!</h2>
+        <p style="color:rgba(255,255,255,.5);margin-bottom:16px;font-size:14px">Танд SMS баталгаажуулалт ирэх болно</p>
+        <div class="conf-details" id="confDet"></div>
+        <button class="btn btn-white" onclick="resetForm()">Дахиж захиалах</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="tag">Location</div>
+    <h2>Бидний хаяг</h2>
+    <p class="sub">Хотын төвд бидэнтэй уулзана уу</p>
+    <div class="location-wrap">
+      <div class="location-info">
+        <h4>📍 Jos Barbershop</h4>
+        <p>Sukhbaatar District</p>
+        <p>Улаанбаатар, Монгол улс</p>
+        <div class="hours">
+          <div class="row"><span class="day">Даваа — Баасан</span><span class="time">10:00 – 20:00</span></div>
+          <div class="row"><span class="day">Бямба</span><span class="time">10:00 – 18:00</span></div>
+          <div class="row"><span class="day">Ням</span><span class="time" style="color:rgba(255,255,255,.4)">Амарна</span></div>
+        </div>
+        <div class="social"><a href="#">📷 Instagram</a></div>
+      </div>
+      <div class="location-map">Газрын зураг — Сүхбаатар дүүрэг, УБ</div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Jos Barbershop. Бүх эрх хуулиар хамгаалагдсан.</footer>
+
+<script>
+const A=window.location.origin,S='barber-pro';
+async function init(){
+  try{
+    const[b,sv]=await Promise.all([fetch(A+'/api/shop/'+S+'/barbers').then(r=>r.json()),fetch(A+'/api/shop/'+S+'/services').then(r=>r.json())]);
+    const sel=document.getElementById('barber'),grid=document.getElementById('barberGrid');
+    const pix=['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop','https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop'];
+    b.forEach((x,i)=>{
+      sel.innerHTML+='<option value="'+x.id+'">'+x.name+'</option>';
+      grid.innerHTML+='<div class="barber-card"><div class="barber-photo"><img src="'+pix[i%pix.length]+'" alt="'+x.name+'" loading="lazy"></div><div class="barber-info"><h4>'+x.name+'</h4><p>'+(x.title||'Barber')+'</p></div></div>';
+    });
+    const s=document.getElementById('service');
+    sv.forEach(x=>{s.innerHTML+='<option value="'+x.id+'" data-price="'+x.price+'">'+x.name+' — '+x.price.toLocaleString()+'₮</option>'});
+    s.onchange=function(){const o=s.options[s.selectedIndex];document.getElementById('total').textContent=o.dataset.price?parseInt(o.dataset.price).toLocaleString()+'₮':'0₮';};
+    const d=document.getElementById('date');
+    for(let i=0;i<=7;i++){const dt=new Date();dt.setDate(dt.getDate()+i);const days=['Ням','Дав','Мяг','Лха','Пүр','Баа','Бям'];d.innerHTML+='<option value="'+dt.toLocaleDateString('en-CA')+'"'+(i===0?' selected':'')+'>'+days[dt.getDay()]+', '+(dt.getMonth()+1)+'/'+dt.getDate()+'</option>';}
+    d.onchange=loadSlots;document.getElementById('barber').onchange=loadSlots;
+  }catch(e){n('Error loading',1);}
+}
+async function loadSlots(){
+  const d=document.getElementById('date').value,b=document.getElementById('barber').value,sl=document.getElementById('slots');
+  if(!d||!b){sl.innerHTML='<p style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,.4)">Эхлээд барбер, өдөр сонго</p>';return;}
+  try{
+    const r=await fetch(A+'/api/shop/'+S+'/slots?date='+d+'&barber_id='+b);const data=await r.json();const slots=data.slots||[];sl.innerHTML='';
+slots.forEach(s=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>{sl.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};sl.appendChild(b);});
+  }catch(e){}
+}
+function n(m,e){const x=document.getElementById('notif');x.textContent=m;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),3000);}
+async function book(){
+  const b=document.getElementById('barber').value,sv=document.getElementById('service').value,d=document.getElementById('date').value,nm=document.getElementById('name').value.trim(),p=document.getElementById('phone').value.trim(),sl=document.querySelector('#slots .sel');
+  if(!b||!sv||!d||!sl||!nm||p.replace(/[\s-]/g,'').length!==8)return n('Бүх талбарыг бөглөнө үү',1);
+  const r=await fetch(A+'/api/shop/'+S+'/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({barber_id:b,service_id:sv,customer_name:nm,customer_phone:p,booking_date:d,booking_time:sl.textContent})});
+  const dt=await r.json();
+  if(!dt.success)return n(dt.error||'Error',1);
+  document.getElementById('form').style.display='none';document.getElementById('conf').style.display='block';
+  document.getElementById('confDet').innerHTML='<div class="rw"><span class="l">Barber</span><span>'+document.querySelector('#barber option:checked').text+'</span></div><div class="rw"><span class="l">Service</span><span>'+document.querySelector('#service option:checked').text+'</span></div><div class="rw"><span class="l">Date</span><span>'+d+'</span></div><div class="rw"><span class="l">Time</span><span>'+sl.textContent+'</span></div><div class="rw"><span class="l">ID</span><span>#'+dt.booking_id+'</span></div>';
+}
+function resetForm(){document.getElementById('form').style.display='block';document.getElementById('conf').style.display='none';}
+init();
+</script>
+</body>
+</html>

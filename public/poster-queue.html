@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:12px}
+.card{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:320px;text-align:center}
+.phone-wrap{width:170px;height:350px;background:#1a1a1c;border-radius:32px;padding:8px;box-shadow:0 0 0 2px #2a2a2c,0 10px 30px rgba(0,0,0,.5)}
+.phone-screen{width:100%;height:100%;background:#0a0a0a;border-radius:26px;overflow:hidden;position:relative}
+.notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:50px;height:16px;background:#0a0a0a;border-radius:10px;z-index:3}
+.screen{padding:26px 10px 8px;height:100%;display:flex;flex-direction:column}
+.sc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sc-title{font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.sc-badge{font-size:8px;background:rgba(212,160,23,.12);color:#d4a017;padding:2px 6px;border-radius:6px;font-weight:600}
+.sc-now{background:rgba(212,160,23,.04);border:1px solid rgba(212,160,23,.1);border-radius:6px;padding:6px;text-align:center;margin-bottom:5px}
+.sc-now .lbl{font-size:7px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.5px}
+.sc-now .name{font-size:11px;font-weight:700;color:#d4a017}
+.sc-btn{width:100%;padding:9px;background:linear-gradient(135deg,#d4a017,#b8922e);border:none;border-radius:8px;color:#0a0a0a;font-size:11px;font-weight:700;text-align:center;margin-bottom:5px;position:relative}
+.sc-item{padding:3px 6px;font-size:9px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:5px}
+.sc-item .pos{font-weight:700;color:rgba(255,255,255,.35)}
+.sc-item .info{flex:1}
+.sc-item .tag{font-size:7px;background:rgba(212,160,23,.12);color:#d4a017;padding:1px 4px;border-radius:3px}
+.logo{font-size:14px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,.25)}
+.logo span{color:#d4a017}
+h1{font-size:28px;font-weight:800;color:#d4a017;margin-bottom:4px}
+p{font-size:13px;color:rgba(255,255,255,.45);line-height:1.5}
+.url{font-size:11px;color:rgba(255,255,255,.15);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="phone-wrap"><div class="phone-screen">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="sc-row"><span class="sc-title">🚶 Barber Pro</span><span class="sc-badge">3 хүлээж байна</span></div>
+      <div class="sc-now"><div class="lbl">Үйлчилгээнд</div><div class="name">Батболд</div></div>
+      <div class="sc-btn">⚡ Дараагийнх</div>
+      <div class="sc-item"><span class="pos">#2</span><span class="info">Тэмүүлэн</span><span class="tag">📅 14:00</span></div>
+      <div class="sc-item"><span class="pos">#3</span><span class="info">99118833</span></div>
+      <div class="sc-item"><span class="pos">#4</span><span class="info">Саруул</span></div>
+    </div>
+  </div></div>
+  <div class="logo">BARBER<span>.</span>PRO</div>
+  <h1>Дараалал</h1>
+  <p>QR уншуул. Оочироо ав, ээлжээ дөхөх үед үйлчлүүл. Барбер нэг товч дарж дуудна.</p>
+  <div class="url">barberpro.mn · 7 хоног үнэгүй</div>
+</div>
+</body>
+</html>

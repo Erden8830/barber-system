@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Queue Status — Barber Pro</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;min-height:100vh;padding:16px}
+h1{font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:2px}
+.sub{font-size:.78rem;color:rgba(255,255,255,.45);margin-bottom:16px}
+.barbers{display:flex;flex-direction:column;gap:10px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+.card.green{border-left:3px solid #2ecc71}
+.card.yellow{border-left:3px solid #f1c40f}
+.card.red{border-left:3px solid #e74c3c}
+.card.grey{border-left:3px solid rgba(255,255,255,.12)}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.card-head .name{font-size:.92rem;font-weight:600;color:#fff}
+.card-head .title{font-size:.72rem;color:rgba(255,255,255,.35);margin-left:6px}
+.card-head .count{font-size:.85rem;font-weight:700;padding:2px 8px;border-radius:6px}
+.count.green{background:rgba(46,204,113,.15);color:#2ecc71}
+.count.yellow{background:rgba(241,196,15,.15);color:#f1c40f}
+.count.red{background:rgba(231,76,60,.15);color:#e74c3c}
+.count.grey{background:rgba(255,255,255,.06);color:rgba(255,255,255,.3)}
+.card-body{font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.5}
+.card-body .serving{color:#d4a017;font-weight:500}
+.card-body .est{color:rgba(255,255,255,.4)}
+.total-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:12px}
+.total-bar .big{font-size:1.4rem;font-weight:700;color:#d4a017}
+.total-bar .label{font-size:.72rem;color:rgba(255,255,255,.4)}
+.updated-at{text-align:center;font-size:.7rem;color:rgba(255,255,255,.25);margin-top:20px;padding:10px}
+.join-link{display:block;text-align:center;margin-top:16px;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#d4a017;font-size:.82rem;text-decoration:none;font-weight:500}.join-link:hover{background:rgba(212,160,23,.08);border-color:#d4a017}
+.shop-name{color:#d4a017;font-weight:500}
+.spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,.06);border-top-color:#d4a017;border-radius:50%;animation:spin .6s linear infinite;margin:40px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app"><div class="spinner"></div></div>
+<script>
+const SLUG=window.location.pathname.split('/')[2],API=location.origin;
+function sc(w,s){if(s&&w===0)return'green';if(w===0&&!s)return'grey';if(w<=2)return'yellow';return'red'}
+function render(d){const a=document.getElementById('app');if(!d||!d.shop_name){a.innerHTML='<div style="text-align:center;padding:40px;color:#e74c3c">Дэлгүүр олдсонгүй</div>';return}const bs=d.barbers||[];let h='<h1>🚶 <span class="shop-name">'+d.shop_name+'</span></h1><p class="sub">Дарааллын төлөв · хүлээх хугацааны тооцоо</p><div class="total-bar"><div><div class="big">'+d.total_waiting+'</div><div class="label">хүлээж байна</div></div><div><div class="big" style="color:rgba(255,255,255,.5);font-size:1rem">'+d.total_serving+'</div><div class="label">үйлчилгээнд</div></div></div><div class="barbers">';bs.forEach(b=>{const c=sc(b.waiting,b.serving),wl=b.waiting>0?b.waiting+' хүн':'хоосон',sl=b.serving?'<div>✂️ Үйлчилгээнд: <span class="serving">'+b.serving+'</span></div>':'',el=b.waiting>0?'<div class="est">~'+b.estimated_min+' мин хүлээх</div>':(b.serving?'<div class="est">✂️ ажиллаж байна</div>':'<div class="est">🟢 сул</div>');h+='<div class="card '+c+'"><div class="card-head"><div><span class="name">'+b.name+'</span>'+(b.title?'<span class="title">— '+b.title+'</span>':'')+'</div><span class="count '+c+'">'+b.waiting+'</span></div><div class="card-body">'+sl+el+'</div></div>'});h+='</div><a href="/shop/'+SLUG+'" class="join-link">📅 Цагаа захиалах →</a><div class="updated-at">Шинэчлэгдсэн: '+(d.updated_at||'')+'</div>';a.innerHTML=h}
+async function load(){try{const r=await fetch(API+'/api/shop/'+SLUG+'/queue-overview');if(!r.ok){document.getElementById('app').innerHTML='<div style="text-align:center;padding:40px;color:#e74c3c">Дэлгүүр олдсонгүй</div>';return}render(await r.json())}catch(e){document.getElementById('app').innerHTML='<div style="text-align:center;padding:40px;color:#e74c3c">Холболтын алдаа</div>'}}
+load();setInterval(load,10000);
+</script>
+</body>
+</html>

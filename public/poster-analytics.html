@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:12px}
+.card{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:320px;text-align:center}
+.phone-wrap{width:170px;height:350px;background:#1a1a1c;border-radius:32px;padding:8px;box-shadow:0 0 0 2px #2a2a2c,0 10px 30px rgba(0,0,0,.5)}
+.phone-screen{width:100%;height:100%;background:#0a0a0a;border-radius:26px;overflow:hidden;position:relative}
+.notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:50px;height:16px;background:#0a0a0a;border-radius:10px;z-index:3}
+.screen{padding:26px 8px 8px;display:flex;flex-direction:column}
+.sc-title{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);text-align:center;margin-bottom:4px}
+.sc-title span{color:#d4a017}
+.sc-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:4px}
+.sc-stat{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);border-radius:4px;padding:4px;text-align:center}
+.sc-stat .n{font-size:10px;font-weight:700;color:#d4a017}
+.sc-stat .l{font-size:6px;color:rgba(255,255,255,.22)}
+.sc-chl{font-size:7px;color:rgba(255,255,255,.18);margin-bottom:2px}
+.sc-bars{display:flex;align-items:flex-end;gap:2px;height:35px;margin-bottom:1px}
+.sc-bar{flex:1;background:linear-gradient(180deg,#d4a017,rgba(212,160,23,.25));border-radius:2px 2px 0 0}
+.sc-days{display:flex;justify-content:space-between;font-size:6px;color:rgba(255,255,255,.12);margin-bottom:4px}
+.sc-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);border-radius:4px;padding:4px 5px;margin-bottom:2px}
+.sc-card .row{display:flex;justify-content:space-between;font-size:7px;margin-bottom:1px}
+.sc-card .lab{color:rgba(255,255,255,.28)}
+.sc-card .val{color:rgba(255,255,255,.4)}
+.logo{font-size:14px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,.25)}
+.logo span{color:#d4a017}
+h1{font-size:28px;font-weight:800;color:#d4a017;margin-bottom:4px}
+p{font-size:13px;color:rgba(255,255,255,.45);line-height:1.5}
+.url{font-size:11px;color:rgba(255,255,255,.15);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="phone-wrap"><div class="phone-screen">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="sc-title">Barber<span>.</span>Pro · <span>Тоон мэдээ</span></div>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="n">₮135K</div><div class="l">Өнөөдрийн орлого</div></div>
+        <div class="sc-stat"><div class="n">4</div><div class="l">Захиалга</div></div>
+        <div class="sc-stat"><div class="n">₮33.8K</div><div class="l">Дундаж чек</div></div>
+        <div class="sc-stat"><div class="n">2</div><div class="l">Дараалалаар</div></div>
+      </div>
+      <div class="sc-chl">7 хоногийн орлого</div>
+      <div class="sc-bars">
+        <div class="sc-bar" style="height:25%"></div><div class="sc-bar" style="height:45%"></div><div class="sc-bar" style="height:80%"></div>
+        <div class="sc-bar" style="height:35%"></div><div class="sc-bar" style="height:55%"></div><div class="sc-bar" style="height:100%"></div><div class="sc-bar" style="height:90%"></div>
+      </div>
+      <div class="sc-days"><span>Да</span><span>Мя</span><span>Лх</span><span>Пү</span><span>Ба</span><span>Бя</span><span>Ня</span></div>
+      <div class="sc-card"><div class="row"><span class="lab">🔥 Шилдэг үйлчилгээ</span></div>
+        <div class="row"><span>💈 Үс засах</span><span class="val">3x · ₮75K</span></div>
+        <div class="row"><span>🔥 Үс + Сахал</span><span class="val">1x · ₮35K</span></div>
+      </div>
+      <div class="sc-card"><div class="row"><span class="lab">✂️ Барбер гүйцэтгэл</span></div>
+        <div class="row"><span>Бат-Эрдэнэ</span><span class="val" style="color:#d4a017">3x · +₮37.5K</span></div>
+        <div class="row"><span>Тэмүүлэн</span><span class="val">1x · +₮17.5K</span></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="logo">BARBER<span>.</span>PRO</div>
+  <h1>Тоон Мэдээ</h1>
+  <p>Өдрийн орлого, завгүй цаг, шилдэг барбер — бүгд графиктай.</p>
+  <div class="url">barberpro.mn · 7 хоног үнэгүй</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Цаг захиалга — Barber Pro</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:28px 20px;width:100%;max-width:420px}
+h1{font-size:1.1rem;text-align:center;margin-bottom:20px}h1 span{color:#d4a017}
+.step{display:none}.step.active{display:block}
+.barbers{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.barber{border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;text-align:center;cursor:pointer;transition:all .15s;font-family:inherit;background:transparent;color:rgba(255,255,255,.6);font-size:.8rem;min-width:80px}
+.barber:hover{border-color:#d4a017}.barber.sel{background:rgba(212,160,23,.1);border-color:#d4a017;color:#d4a017;font-weight:600}
+select,input{width:100%;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.85rem;outline:none;margin-bottom:10px;font-family:inherit;text-align:center}
+select:focus,input:focus{border-color:#d4a017}
+.btn{width:100%;padding:14px;background:#d4a017;color:#0a0a0a;border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit}.btn:hover{opacity:.9}.btn:disabled{opacity:.5}
+.btn-cancel{width:100%;padding:12px;background:transparent;border:1px solid #e74c3c;color:#e74c3c;border-radius:8px;font-size:.8rem;cursor:pointer;margin-top:8px;display:none;font-family:inherit}
+.err{color:#e74c3c;font-size:.72rem;text-align:center;margin-top:8px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.slot{padding:8px;border:1px solid rgba(255,255,255,.08);border-radius:6px;text-align:center;font-size:.8rem;cursor:pointer;color:rgba(255,255,255,.5);font-family:inherit;background:transparent}.slot:hover{border-color:#d4a017;color:#d4a017}.slot.sel{background:rgba(212,160,23,.15);border-color:#d4a017;color:#d4a017;font-weight:600}
+.success{text-align:center;display:none}.success .icon{font-size:3rem;margin-bottom:12px}.success h2{font-size:1rem;margin-bottom:8px}.success p{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1 id="shopTitle">Barber<span>.</span>Pro</h1>
+  <div class="step active" id="step-barber"><div class="barbers" id="barberList"></div></div>
+  <div class="step" id="step-service"><select id="svcPick"><option value="">Үйлчилгээ сонгох</option></select></div>
+  <div class="step" id="step-date"><input type="date" id="datePick"><div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:10px">Боломжтой цагууд</div><div class="slots" id="slotList"></div></div>
+  <div class="step" id="step-info"><input type="text" id="custName" placeholder="Таны нэр"><input type="tel" id="custPhone" placeholder="Утасны дугаар"><button class="btn" onclick="confirmBook()">Захиалах</button></div>
+  <div class="success" id="step-done"><div class="icon">✅</div><h2>Захиалга баталгаажлаа</h2><p id="doneMsg"></p><button class="btn-cancel" id="cancelBtn" onclick="cancelBook()">Цуцлах</button></div>
+  <div class="err" id="error"></div>
+</div>
+<script>
+const SLUG=window.location.pathname.split('/')[2],API=location.origin;
+let barbers=[],selBarber=null,selSvc=null,selDate=null,selTime=null,bookingId=null;
+async function init(){try{const s=await fetch(API+'/api/shop/'+SLUG);const sd=await s.json();document.getElementById('shopTitle').innerHTML='<span style="color:#d4a017">'+sd.name+'</span> · Цаг захиалга';const b=await fetch(API+'/api/shop/'+SLUG+'/barbers');barbers=await b.json();let h='';barbers.forEach(b=>{h+='<button class="barber" onclick="pickBarber(''+b.id+'',this)">✂️ '+b.name+'<br><span style="font-size:.6rem;color:rgba(255,255,255,.3)">'+b.title+'</span></button>'});document.getElementById('barberList').innerHTML=h;const sv=await fetch(API+'/api/shop/'+SLUG+'/services');const svd=await sv.json();document.getElementById('svcPick').innerHTML='<option value="">Үйлчилгээ сонгох</option>'+svd.map(s=>'<option value="'+s.id+'">'+s.name+' · '+s.price.toLocaleString()+'₮ · '+s.duration+' мин</option>').join('');const td=new Date().toLocaleDateString('en-CA');document.getElementById('datePick').value=td;document.getElementById('datePick').min=td}catch(e){}}
+function pickBarber(id,el){document.querySelectorAll('.barber').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');selBarber=id;showStep('service')}
+function showStep(s){document.querySelectorAll('.step').forEach(x=>x.classList.remove('active'));document.getElementById('step-'+s).classList.add('active');document.getElementById('error').textContent='';if(s==='date')loadSlots()}
+document.getElementById('svcPick').onchange=function(){if(this.value){selSvc=this.value;showStep('date')}};
+document.getElementById('datePick').onchange=function(){selDate=this.value;loadSlots()};
+async function loadSlots(){if(!selBarber||!selDate)return;try{const r=await fetch(API+'/api/shop/'+SLUG+'/slots?date='+selDate+'&barber_id='+selBarber);const d=await r.json();if(d.message){document.getElementById('slotList').innerHTML='<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">'+d.message+'</div>';return}let h='';d.slots.forEach(s=>{h+='<button class="slot" onclick="pickSlot(''+s+'',this)">'+s+'</button>'});document.getElementById('slotList').innerHTML=h}catch(e){}}
+function pickSlot(t,el){document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');selTime=t;showStep('info')}
+async function confirmBook(){const n=document.getElementById('custName').value.trim(),p=document.getElementById('custPhone').value.trim();if(!n||!p)return document.getElementById('error').textContent='Нэр болон утасны дугаараа оруулна уу';try{const r=await fetch(API+'/api/shop/'+SLUG+'/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({barber_id:selBarber,service_id:selSvc,customer_name:n,customer_phone:p,booking_date:selDate,booking_time:selTime})});const d=await r.json();if(!r.ok){document.getElementById('error').textContent=d.error;return}bookingId=d.booking_id;document.getElementById('doneMsg').textContent=selDate+' · '+selTime+' цагт';showStep('done');document.getElementById('cancelBtn').style.display='block'}catch(e){}}
+async function cancelBook(){if(!bookingId)return;const p=document.getElementById('custPhone').value.trim();try{await fetch(API+'/api/shop/'+SLUG+'/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({booking_id:bookingId,phone:p})});document.getElementById('cancelBtn').style.display='none';document.getElementById('doneMsg').textContent='Цуцлагдлаа';(function(){let t=3;const i=setInterval(()=>{if(t<=0){clearInterval(i);location.reload()}else{document.getElementById('doneMsg').textContent='Цуцлагдлаа · '+t+' секундын дараа шинэчилнэ';t--}},1000)})()}catch(e){}}
+init();
+</script>
+</body>
+</html>

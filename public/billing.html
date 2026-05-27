@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing — Barber Pro</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;padding:20px;max-width:1000px;margin:0 auto}
+h1{font-size:1.2rem;color:#fff;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:.65rem;text-transform:uppercase;letter-spacing:.5px}
+td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600}
+.status.trial{background:rgba(212,160,23,.15);color:#d4a017}
+.status.active{background:rgba(46,204,113,.15);color:#2ecc71}
+.status.expired{background:rgba(231,76,60,.15);color:#e74c3c}
+.btn-sm{padding:5px 8px;border:1px solid rgba(255,255,255,.1);border-radius:5px;background:transparent;color:#fff;font-size:.65rem;cursor:pointer;font-family:inherit;margin:1px}
+.btn-sm:hover{background:rgba(255,255,255,.06)}
+.btn-sm.green{border-color:rgba(46,204,113,.3);color:#2ecc71}
+.btn-sm.red{border-color:rgba(231,76,60,.3);color:#e74c3c}
+.btn-sm.gold{background:#d4a017;color:#0a0a0a;border:none;font-weight:600}
+.edit-inp{background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#fff;padding:3px 6px;font-size:.7rem;font-family:inherit;width:90px}
+.edit-inp:focus{border-color:#d4a017;outline:none}
+input.key{width:100%;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:.82rem;background:#111;color:#fff;outline:none;margin-bottom:16px;font-family:inherit}input.key:focus{border-color:#d4a017}
+.hidden{display:none}.loading{text-align:center;color:rgba(255,255,255,.3);padding:40px}
+</style>
+</head>
+<body>
+<div id="login"><h1>💰 Billing Admin</h1><input class="key" type="password" id="masterKey" placeholder="Master key"><button class="btn-sm gold" onclick="login()" style="padding:10px 20px;font-size:.82rem">Нэвтрэх</button></div>
+<div id="app" class="hidden"><h1>💰 Billing — <span style="color:#d4a017">Barber Pro</span></h1>
+  <table><thead><tr><th>Дэлгүүр</th><th>Эзэмшигч</th><th>Утас</th><th>Төлөв</th><th>Дуусах</th><th>Зах.</th><th>Хар.</th><th>Үйлдэл</th></tr></thead><tbody id="shopList"><tr><td colspan="8" class="loading">Ачааллаж байна...</td></tr></tbody></table></div>
+<script>
+const API=location.origin;let masterKey='';
+function login(){masterKey=document.getElementById('masterKey').value;if(!masterKey)return;loadShops()}
+async function loadShops(){try{const r=await fetch(API+'/api/billing/shops',{headers:{'x-master-key':masterKey}});if(!r.ok){alert('Буруу түлхүүр');return}document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');const shops=await r.json();const sl={trial:'Туршилт',active:'Идэвхтэй',expired:'Дууссан'},sc={trial:'trial',active:'active',expired:'expired'};let h='';shops.forEach(s=>{const ea=s.sub_status==='trial'?s.trial_ends_at:s.sub_ends_at;h+='<tr><td><a href="/shop/'+s.slug+'" style="color:#d4a017;text-decoration:none">'+s.name+'</a><br><span style="color:rgba(255,255,255,.3);font-size:.62rem">'+s.slug+'</span></td><td><input class="edit-inp" value="'+(s.owner_name||'').replace(/"/g,'&quot;')+'" onchange="saveInfo(''+s.id+'','owner_name',this.value)" placeholder="Нэр"></td><td><input class="edit-inp" value="'+(s.phone||'')+'" onchange="saveInfo(''+s.id+'','phone',this.value)" placeholder="Утас" style="width:80px"></td><td><span class="status '+sc[s.sub_status]+'">'+sl[s.sub_status]+'</span></td><td style="font-size:.7rem">'+(ea||'—')+'</td><td>'+(s.total_bookings||0)+'</td><td>'+(s.total_customers||0)+'</td><td><button class="btn-sm green" onclick="activateShop(''+s.id+'',1)">+1с</button> <button class="btn-sm green" onclick="activateShop(''+s.id+'',3)">+3с</button> '+(s.sub_status!=='expired'?'<button class="btn-sm red" onclick="deactivateShop(''+s.id+'')">✕</button> ':'')+'<button class="btn-sm" style="border-color:rgba(212,160,23,.3);color:#d4a017" onclick="resetPassword(''+s.id+'',''+s.name.replace(/'/g,"\'")+'')">🔑</button> <button class="btn-sm" style="border-color:rgba(231,76,60,.5);color:#e74c3c" onclick="deleteShop(''+s.id+'',''+s.name.replace(/'/g,"\'")+'')">🗑</button></td></tr>'});document.getElementById('shopList').innerHTML=h||'<tr><td colspan="8" style="text-align:center;padding:20px;color:rgba(255,255,255,.3)">Дэлгүүр байхгүй</td></tr>'}catch(e){document.getElementById('shopList').innerHTML='<tr><td colspan="8" style="color:#e74c3c">Алдаа гарлаа</td></tr>'}}
+async function saveInfo(id,f,v){try{const b={shop_id:id};b[f]=v;await fetch(API+'/api/billing/update-shop',{method:'POST',headers:{'Content-Type':'application/json','x-master-key':masterKey},body:JSON.stringify(b)})}catch(e){}}
+async function activateShop(id,m){try{const r=await fetch(API+'/api/billing/activate',{method:'POST',headers:{'Content-Type':'application/json','x-master-key':masterKey},body:JSON.stringify({shop_id:id,months:m})});const d=await r.json();if(d.success)loadShops()}catch(e){}}
+async function deactivateShop(id){if(!confirm('Энэ дэлгүүрийг блоклох уу?'))return;try{const r=await fetch(API+'/api/billing/deactivate',{method:'POST',headers:{'Content-Type':'application/json','x-master-key':masterKey},body:JSON.stringify({shop_id:id})});const d=await r.json();if(d.success)loadShops()}catch(e){}}
+async function deleteShop(id,name){if(!confirm('⚠️ "'+name+'" дэлгүүрийг УСТГАХ уу?'))return;if(!confirm('Энэ үйлдлийг БУЦААХ БОЛОМЖГҮЙ. Үргэлжлүүлэх үү?'))return;try{const r=await fetch(API+'/api/billing/delete-shop',{method:'POST',headers:{'Content-Type':'application/json','x-master-key':masterKey},body:JSON.stringify({shop_id:id})});const d=await r.json();if(d.success)loadShops()}catch(e){}}
+async function resetPassword(id,name){const pw=prompt('"'+name+'" дэлгүүрийн ШИНЭ нууц үг (дор хаяж 4 тэмдэгт):');if(!pw||pw.length<4)return alert('Дор хаяж 4 тэмдэгт оруулна уу');try{const r=await fetch(API+'/api/billing/reset-password',{method:'POST',headers:{'Content-Type':'application/json','x-master-key':masterKey},body:JSON.stringify({shop_id:id,new_password:pw})});const d=await r.json();if(d.success)alert('Нууц үг солигдлоо: '+pw)}catch(e){}}
+</script>
+</body>
+</html>

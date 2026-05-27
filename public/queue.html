@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Дараалал — Barber Pro</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:32px;width:100%;max-width:380px;text-align:center}
+h1{font-size:1.2rem;font-weight:600;margin-bottom:4px}
+.sub{color:rgba(255,255,255,.5);font-size:.82rem;margin-bottom:16px}
+.barbers{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.barber-btn{padding:8px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:rgba(255,255,255,.6);font-size:.78rem;cursor:pointer;font-family:inherit;transition:all .15s}
+.barber-btn:hover{border-color:#d4a017}
+.barber-btn.active{background:rgba(212,160,23,.15);border-color:#d4a017;color:#d4a017;font-weight:600}
+input,select{width:100%;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:.88rem;background:#1a1a1a;color:#fff;outline:none;text-align:center;font-family:inherit;margin-bottom:8px}
+input:focus,select:focus{border-color:#d4a017}
+input::placeholder{color:rgba(255,255,255,.3)}
+.btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;background:#d4a017;color:#0a0a0a;margin-top:8px;font-family:inherit}.btn:hover{opacity:.9}.btn:disabled{opacity:.5}
+.error{color:#e74c3c;font-size:.78rem;margin-top:8px;display:none}
+.position{display:none;padding:10px 0}.position .num{font-size:3rem;font-weight:700;color:#d4a017}.position .lbl{font-size:.85rem;color:rgba(255,255,255,.5)}.position .barber-name{font-size:.78rem;color:#d4a017;margin-top:4px}.position .status{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:6px}.position .ahead{font-size:.82rem;color:rgba(255,255,255,.6);margin-top:8px}.position .wait{font-size:.92rem;color:#d4a017;font-weight:600;margin-top:4px}.position .svc-name{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:2px}
+.spinner{display:none;width:24px;height:24px;border:2px solid rgba(255,255,255,.1);border-top-color:#d4a017;border-radius:50%;animation:spin .6s linear infinite;margin:12px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div style="font-size:2rem;margin-bottom:8px">🚶</div>
+  <h1>Дараалалд зогсох</h1>
+  <p class="sub">Барбер, үйлчилгээ сонгоод бүртгүүлнэ үү</p>
+  <div id="join">
+    <div class="barbers" id="barberList"></div>
+    <select id="svcPick"><option value="">Үйлчилгээ сонгох</option></select>
+    <input type="text" id="name" placeholder="Таны нэр">
+    <input type="tel" id="phone" placeholder="Утасны дугаар" inputmode="numeric" autocomplete="tel">
+    <div id="error" class="error"></div>
+    <button class="btn" id="joinBtn" type="button" onclick="joinQueue()">🚶 Дараалалд зогсох</button>
+  </div>
+  <div class="spinner" id="spinner"></div>
+  <div class="position" id="position">
+    <div class="num" id="posNum">#0</div><div class="lbl">Таны ээлж</div><div class="barber-name" id="posBarber"></div><div class="svc-name" id="posSvc"></div><div class="status" id="posStatus"></div><div class="wait" id="posWait"></div><div class="ahead" id="posAhead"></div><button class="btn" onclick="checkStatus()" style="font-size:.82rem">🔄 Шинэчлэх</button>
+  </div>
+</div>
+<script>
+const SLUG=window.location.pathname.split('/')[2],API=location.origin;
+let selectedBarber=null,barbers=[],pt=null;
+(function ws(){const p=location.protocol==='https:'?'wss:':'ws:';try{const s=new WebSocket(p+'//'+location.host+'/ws?shop='+SLUG);s.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type!=='connected')checkStatus()}catch(e){}};s.onclose=()=>setTimeout(ws,5000)}catch(e){setTimeout(ws,5000)}})();
+async function loadBarbers(){try{const b=await fetch(API+'/api/shop/'+SLUG+'/barbers');barbers=await b.json();let h='<div class="barber-btn" data-id="" onclick="selectBarber(this,\'\')">✂️ Аль ч</div>';barbers.forEach(b=>{h+='<div class="barber-btn" data-id="'+b.id+'" onclick="selectBarber(this,\''+b.id+'\')">✂️ '+b.name+'</div>'});document.getElementById('barberList').innerHTML=h;const f=document.querySelector('.barber-btn');if(f)selectBarber(f,'');loadServices()}catch(e){console.error(e)}}
+function selectBarber(el,id){document.querySelectorAll('.barber-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');selectedBarber=id}
+async function joinQueue(){const p=document.getElementById('phone').value.replace(/[\s-]/g,''),n=document.getElementById('name').value.trim(),er=document.getElementById('error');if(!p||p.length<6){er.textContent='Утасны дугаараа зөв оруулна уу';er.style.display='block';return}er.style.display='none';document.getElementById('join').style.display='none';document.getElementById('spinner').style.display='block';try{const b={phone:p};if(n)b.customer_name=n;if(selectedBarber)b.barber_id=selectedBarber;const s=document.getElementById('svcPick').value;if(s)b.service_id=s;const r=await fetch(API+'/api/shop/'+SLUG+'/queue/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const d=await r.json();document.getElementById('spinner').style.display='none';if(d.success){const bb=barbers.find(x=>x.id===selectedBarber);showPosition(d.position,'waiting',null,null,bb?.name,null,null);startPolling()}else{document.getElementById('join').style.display='block';er.textContent=d.error;er.style.display='block'}}catch(ex){console.error(ex);document.getElementById('spinner').style.display='none';document.getElementById('join').style.display='block';er.textContent='Алдаа гарлаа';er.style.display='block'}}
+function showPosition(pos,st,ahead,total,bn,sn,em){document.getElementById('position').style.display='block';document.getElementById('posNum').textContent='#'+pos;document.getElementById('posBarber').textContent=bn?'✂️ '+bn:'';document.getElementById('posSvc').textContent=sn||'';if(st==='serving')document.getElementById('posStatus').textContent='🔴 Таны ээлж ирлээ!';else if(st==='called')document.getElementById('posStatus').textContent='📞 Тань дуудаж байна';else document.getElementById('posStatus').textContent='⏳ Хүлээж байна';if(em>0)document.getElementById('posWait').textContent='~'+em+' мин хүлээх';else document.getElementById('posWait').textContent='';if(ahead!=null&&total!=null)document.getElementById('posAhead').textContent='Тань өмнө '+ahead+' хүн. Нийт: '+total;else document.getElementById('posAhead').textContent=''}
+function startPolling(){pt=setInterval(checkStatus,5000);checkStatus()}
+async function loadServices(){try{const r=await fetch(API+'/api/shop/'+SLUG+'/services');const d=await r.json();const s=document.getElementById('svcPick');if(s)s.innerHTML='<option value="">Үйлчилгээ сонгох</option>'+d.map(s=>'<option value="'+s.id+'">'+s.name+' · '+s.price.toLocaleString()+'₮ · '+s.duration+' мин</option>').join('')}catch(e){console.error(e)}}
+async function checkStatus(){const p=document.getElementById('phone').value.replace(/[\s-]/g,'');if(!p)return;const btn=document.querySelector('#position .btn');if(btn){btn.disabled=true;btn.textContent='⏳'}try{const r=await fetch(API+'/api/shop/'+SLUG+'/queue/status?phone='+p);const d=await r.json();if(d.inQueue){showPosition(d.position,d.status,d.ahead,d.total,d.barber_name,d.service,d.estimated_min);if(d.status==='serving'||d.status==='called'){document.getElementById('posStatus').textContent='🔴 Таны ээлж ирлээ!';if(pt)clearInterval(pt)}}}catch(e){console.error(e)}if(btn){btn.disabled=false;btn.textContent='🔄 Шинэчлэх'}}
+loadBarbers();
+</script>
+</body>
+</html>

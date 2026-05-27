@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barber Pro — Демо</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;padding:20px;max-width:800px;margin:0 auto}
+h1{font-size:1.2rem;margin-bottom:24px}h1 span{color:#d4a017}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{display:block;padding:20px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;text-decoration:none;color:#fff;transition:all .2s}
+.card:hover{border-color:#d4a017;background:rgba(212,160,23,.04)}
+.card h3{font-size:.9rem;margin-bottom:6px}
+.card p{font-size:.7rem;color:rgba(255,255,255,.4)}
+.card .arrow{color:#d4a017;float:right;font-size:1.1rem}
+</style>
+</head>
+<body>
+<h1>Barber<span>.</span>Pro — <span>Демо</span></h1>
+<div class="grid">
+  <a href="/shop/barber-pro" class="card"><h3>📅 Цаг захиалга<span class="arrow">→</span></h3><p>Үйлчлүүлэгчийн харах хуудас</p></a>
+  <a href="/shop/barber-pro/queue" class="card"><h3>🚶 Дараалалд зогсох<span class="arrow">→</span></h3><p>QR уншуулсан хүний хуудас</p></a>
+  <a href="/shop/barber-pro/queue-status" class="card"><h3>📊 Дарааллын төлөв<span class="arrow">→</span></h3><p>Хэдэн хүн хүлээж байгааг харах</p></a>
+  <a href="/shop/barber-pro/barber?token=demo-permanent&barber_id=b1&barber_name=%D0%91%D0%B0%D1%82-%D0%AD%D1%80%D0%B4%D1%8D%D0%BD%D1%8D" class="card"><h3>✂️ Барбер хуудас<span class="arrow">→</span></h3><p>Нэг товч дуудах — шууд орно</p></a>
+  <a href="/admin?token=demo-permanent&shop=barber-pro" class="card"><h3>🔑 Админ самбар<span class="arrow">→</span></h3><p>Бүх тохиргоо — шууд орно</p></a>
+  <a href="/signup" class="card"><h3>🚀 Бүртгүүлэх<span class="arrow">→</span></h3><p>7 хоног үнэгүй</p></a>
+</div>
+<p style="text-align:center;margin-top:32px;font-size:.7rem;color:rgba(255,255,255,.3)">Демо барбершоп: barber-pro / admin123</p>
+</body>
+</html>

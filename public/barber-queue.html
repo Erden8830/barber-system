@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+<title>Дараалал — Barber</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;min-height:100dvh;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.container{display:flex;flex-direction:column;height:100vh;height:100dvh;padding:16px;padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.header h1{font-size:1rem;font-weight:600;color:rgba(255,255,255,.8)}
+.header .count{background:rgba(212,160,23,.15);color:#d4a017;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600}
+.barber-switch{font-size:.6rem;color:rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:3px 10px;transition:all .15s;margin-left:6px;vertical-align:middle}
+.barber-switch:active{background:rgba(212,160,23,.1);border-color:rgba(212,160,23,.3);color:#d4a017}
+.next-btn{flex:0 0 auto;height:80px;display:flex;align-items:center;justify-content:center;border:none;border-radius:16px;font-size:1.4rem;font-weight:700;cursor:pointer;transition:transform .1s;font-family:inherit;position:relative;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent;margin-bottom:4px}
+.next-btn:active{transform:scale(.97)}
+.next-btn.ready{background:linear-gradient(135deg,#d4a017,#b8922e);color:#0a0a0a;box-shadow:0 8px 32px rgba(212,160,23,.3)}
+.next-btn.ready::after{content:'⚡';font-size:3rem;position:absolute;right:30px;opacity:.3}
+.next-btn.empty{background:#1a1a1a;color:rgba(255,255,255,.3)}
+.next-btn.serving{background:#111;border:2px solid rgba(212,160,23,.3);color:#d4a017;font-size:1.2rem}
+.current{text-align:center;padding:10px;margin-bottom:8px;background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.15);border-radius:12px;display:none}
+.current .label{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:2px}
+.current .name{font-size:1.1rem;font-weight:700;color:#d4a017}
+.current .since{font-size:.65rem;color:rgba(255,255,255,.3);margin-top:2px}
+.queue-list{flex:0 0 auto;max-height:30vh;overflow-y:auto;margin-top:8px}
+.queue-list::-webkit-scrollbar{width:2px}
+.queue-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:10px}
+.queue-item{display:flex;align-items:center;padding:6px 10px;gap:8px;font-size:.8rem}
+.queue-item .pos{font-weight:700;color:rgba(255,255,255,.4);min-width:24px}
+.queue-item .phone{color:rgba(255,255,255,.6)}
+.queue-item .tag{font-size:.6rem;padding:1px 6px;border-radius:4px;background:rgba(212,160,23,.15);color:#d4a017}
+.picker{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100dvh;padding:20px;text-align:center}
+.picker h2{font-size:1.1rem;margin-bottom:4px}
+.picker p{font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:24px}
+.picker-list{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
+.picker-btn{padding:16px 20px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#111;color:#fff;font-size:1.05rem;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.picker-btn:hover{background:#1a1a1a;border-color:#d4a017}
+</style>
+</head>
+<body>
+<div class="picker" id="picker">
+  <div style="font-size:2.5rem;margin-bottom:8px">✂️</div>
+  <h2>Та аль барбер вэ?</h2>
+  <p>Өөрийн нэрээ сонгоод дараалалд холбогдоно уу</p>
+  <div class="picker-list" id="barberList"></div>
+</div>
+<div class="container" id="app" style="display:none">
+  <div class="header"><h1><span id="shopName">🚶</span> · <span id="barberName" style="color:#d4a017"></span> <span class="barber-switch" onclick="switchBarber()">↻ Солих</span></h1><div class="count" id="queueCount">0</div></div>
+  <div class="current" id="currentBox"><div class="label" id="currentLabel">Үйлчилгээнд</div><div class="name" id="currentName">—</div><div class="since" id="currentSince"></div></div>
+  <button class="next-btn" id="nextBtn"><span id="btnText">⚡ Дараагийнх</span></button>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:8px;background:#1a1a1a;border:1px solid rgba(255,255,255,.08);border-radius:10px">
+    <button onclick="adjTime(-5)" style="width:36px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:transparent;color:#fff;font-size:1rem;cursor:pointer;font-family:inherit">−</button>
+    <span style="font-size:.82rem;color:#d4a017;font-weight:600;min-width:70px" id="timeDisplay">⏱ 30 мин</span>
+    <button onclick="adjTime(5)" style="width:36px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:transparent;color:#fff;font-size:1rem;cursor:pointer;font-family:inherit">+</button>
+  </div>
+  <div class="queue-list" id="queueList"></div>
+  <div id="todayBookings" style="margin-top:4px;padding:8px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);display:none">
+    <div style="font-size:.6rem;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📅 Өнөөдрийн захиалгууд</div>
+    <div id="todayBookingsList" style="font-size:.65rem;color:rgba(255,255,255,.4)"></div>
+  </div>
+  <div class="help" id="lastPoll" style="position:static;transform:none;left:auto;bottom:auto;margin-top:auto;text-align:center;font-size:.6rem;color:rgba(255,255,255,.15);padding:8px">⚡ Таны дараалал</div>
+</div>
+<script>
+const SLUG=window.location.pathname.split('/')[2],API=location.origin;
+let token=null,barberId=null,barberName='',avgTime=30,saveTimer=null;
+function safeStore(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+const saved=safeGet('barber_id_'+SLUG);
+const urlParams=new URLSearchParams(window.location.search);
+const urlBid=urlParams.get('barber_id'),urlBname=urlParams.get('barber_name');
+if(urlBid){barberId=urlBid;barberName=urlBname||'';safeStore('barber_id_'+SLUG,urlBid);safeStore('barber_name_'+SLUG,urlBname||'');startApp()}
+else if(saved){barberId=saved;barberName=safeGet('barber_name_'+SLUG)||'';startApp()}
+else loadBarbers();
+
+async function loadBarbers(){try{const r=await fetch(API+'/api/shop/'+SLUG+'/barbers');const d=await r.json();let h='';d.forEach(b=>{h+='<button class="picker-btn" onclick="pickBarber(\''+b.id+'\',\''+b.name+'\')">✂️ '+b.name+'</button>'});document.getElementById('barberList').innerHTML=h}catch(e){}}
+function pickBarber(id,name){barberId=id;barberName=name;safeStore('barber_id_'+SLUG,id);safeStore('barber_name_'+SLUG,name);startApp()}
+function switchBarber(){safeStore('barber_id_'+SLUG,'');safeStore('barber_name_'+SLUG,'');document.getElementById('app').style.display='none';document.getElementById('picker').style.display='flex';loadBarbers()}
+async function startApp(){document.getElementById('picker').style.display='none';document.getElementById('app').style.display='flex';document.getElementById('barberName').textContent=barberName;let t=safeGet('barber_token');if(!t){const ut=urlParams.get('token');if(ut){token=ut;safeStore('barber_token',ut);safeStore('barber_shop',SLUG);t=ut}}if(t){const ss=safeGet('barber_shop');if(ss&&ss!==SLUG){safeStore('barber_token','');safeStore('barber_shop','');window.location.href='/admin-login?slug='+SLUG+'&redirect='+encodeURIComponent('/shop/'+SLUG+'/barber');return}token=t;onLoggedIn()}else{window.location.href='/admin-login?slug='+SLUG+'&redirect='+encodeURIComponent('/shop/'+SLUG+'/barber')}}
+async function onLoggedIn(){try{const r=await fetch(API+'/api/admin/queue?_='+Date.now(),{headers:{'Authorization':'Bearer '+token}});if(!r.ok){safeStore('barber_token','');window.location.href='/admin-login?slug='+SLUG+'&redirect='+encodeURIComponent('/shop/'+SLUG+'/barber');return}document.getElementById('shopName').textContent=safeGet('barber_shop_name')||'Barber Pro';load();loadBarberTime();connectWS(safeGet('barber_shop')||SLUG)}catch(e){}}
+function connectWS(slug){const p=location.protocol==='https:'?'wss:':'ws:';try{const ws=new WebSocket(p+'//'+location.host+'/ws?shop='+slug);ws.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(d.type==='queue:join')playBeep();if(d.type!=='connected')load()}catch(e){}};ws.onclose=()=>{setTimeout(()=>connectWS(slug),5000)}}catch(e){}}
+let lp=0;(function sp(){if(Date.now()-lp>2000&&token){load();lp=Date.now()}requestAnimationFrame(sp)})();
+async function load(){if(!token||!barberId)return;try{const r=await fetch(API+'/api/admin/queue?_='+Date.now(),{headers:{'Authorization':'Bearer '+token}});const d=await r.json();const mQ=d.queue.filter(q=>q.barber_id===barberId||!q.barber_id);const mS=d.serving.filter(s=>s.barber_id===barberId||!s.barber_id);document.getElementById('queueCount').textContent=mQ.length+' хүлээж байна';const box=document.getElementById('currentBox'),btn=document.getElementById('nextBtn'),bt=document.getElementById('btnText');if(mS.length>0){box.style.display='block';document.getElementById('currentLabel').textContent='Үйлчилгээнд';const s=mS[0];document.getElementById('currentName').textContent=s.customer_name||s.phone;const si=s.booked_service?'📅 '+s.booked_service+' · '+s.booking_time+' | ':'';document.getElementById('currentSince').textContent=si+'Дуудагдсан: '+(s.called_at||'').slice(11,16);if(mQ.length>0){btn.className='next-btn ready';bt.textContent='⚡ Дараагийнх'}else{btn.className='next-btn empty';bt.textContent='✅ Хоосон'}}else if(mQ.length>0){box.style.display='block';document.getElementById('currentLabel').textContent='Дараагийн';const n=mQ[0];document.getElementById('currentName').textContent=n.customer_name||n.phone;const si=n.booked_service?'📅 '+n.booked_service+' · '+n.booking_time+' | ':'';document.getElementById('currentSince').textContent=si+'#'+n.position+' · '+(n.booking_time||'Алхалсан');btn.className='next-btn ready';bt.textContent='⚡ Дуудах'}else{box.style.display='none';btn.className='next-btn empty';bt.textContent='✅ Хоосон'}let h='';mQ.slice(0,10).forEach(q=>{const b=q.priority>0&&q.booking_time;h+='<div class="queue-item" style="'+(b?'border-left:2px solid #d4a017;padding-left:8px;':'')+'"><span class="pos" style="'+(b?'color:#d4a017':'')+'">#'+q.position+'</span><span class="phone">'+(q.customer_name||q.phone)+'</span>'+(b?'<span class="tag">📅 '+q.booking_time+'</span>':'')+'</div>'});document.getElementById('queueList').innerHTML=h;try{const td=new Date().toLocaleDateString('en-CA');const br=await fetch(API+'/api/admin/bookings?date='+td,{headers:{'Authorization':'Bearer '+token}});const bd=await br.json();const mB=(bd||[]).filter(b=>b.barber_id===barberId&&b.status==='confirmed');if(mB.length>0){const box=document.getElementById('todayBookings');box.style.display='block';let bk='';mB.sort((a,b)=>a.booking_time.localeCompare(b.booking_time)).forEach(b=>{bk+='<div style=\"display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)\"><span><span style=\"color:#d4a017\">'+b.booking_time+'</span> '+b.customer_name+'</span><span>'+b.service_name+'</span></div>'});document.getElementById('todayBookingsList').innerHTML=bk}}catch(e){}const el=document.getElementById('lastPoll');if(el)el.textContent='🔄 '+new Date().toLocaleTimeString('mn-MN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}catch(e){}}
+async function nextCustomer(){if(!token||!barberId)return;const btn=document.getElementById('nextBtn'),bt=document.getElementById('btnText');if(btn.className.includes('empty'))return;btn.className='next-btn serving';bt.textContent='⏳ Дуудаж байна...';try{const body={barber_id:barberId};const r=await fetch(API+'/api/admin/queue/next',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(d.success&&navigator.vibrate)navigator.vibrate(200);load()}catch(e){load()}}
+function adjTime(d){avgTime=Math.max(10,Math.min(120,avgTime+d));document.getElementById('timeDisplay').textContent='⏱ '+avgTime+' мин';clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await fetch(API+'/api/admin/barbers/update',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({id:barberId,avg_service_time:avgTime})})}catch(e){}},600)}
+async function loadBarberTime(){try{const r=await fetch(API+'/api/admin/barbers',{headers:{'Authorization':'Bearer '+token}});const d=await r.json();const me=d.find(b=>b.id===barberId);if(me&&me.avg_service_time){avgTime=me.avg_service_time;document.getElementById('timeDisplay').textContent='⏱ '+avgTime+' мин'}}catch(e){}}
+function playBeep(){try{const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.01,c.currentTime+.4);o.start(c.currentTime);o.stop(c.currentTime+.4)}catch(e){}try{if(Notification.permission==='granted')new Notification('🚶 Шинэ хүн дараалалд орлоо',{body:'Дараагийн хүнийг дуудахад бэлэн'})}catch(e){}}
+try{if(Notification.permission==='default')Notification.requestPermission()}catch(e){}
+document.getElementById('nextBtn').addEventListener('click',nextCustomer);
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Бүртгүүлэх</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input{color:inherit;font-family:inherit}
+body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:40px 32px;width:100%;max-width:400px;text-align:center}
+.logo{font-size:1.1rem;font-weight:900;letter-spacing:3px;margin-bottom:32px}.logo span{color:#d4a017}
+h1{font-size:1rem;font-weight:600;margin-bottom:4px}
+.sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:24px}
+input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.88rem;outline:none;font-family:inherit;margin-bottom:10px}input:focus{border-color:#d4a017}input::placeholder{color:rgba(255,255,255,.2)}
+.btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#d4a017,#b8922e);color:#0a0a0a;margin-top:8px;font-family:inherit}.btn:hover{opacity:.9}
+.err{color:#e74c3c;font-size:.72rem;margin-top:8px}
+.ok{color:#2ecc71;font-size:.82rem;margin-top:12px;display:none}
+.back{display:inline-block;margin-top:16px;color:rgba(255,255,255,.3);font-size:.7rem;text-decoration:none}.back:hover{color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Barber<span>.</span>Pro</div>
+  <h1>Шинэ бүртгэл</h1>
+  <p class="sub">7 хоног үнэгүй. Сард 99,000₮.</p>
+  <div id="form">
+    <input type="text" id="name" placeholder="Дэлгүүрийн нэр">
+    <input type="text" id="slug" placeholder="Таны URL хаяг (жишээ: my-shop)" autocapitalize="off">
+    <input type="tel" id="phone" placeholder="Утасны дугаар">
+    <input type="password" id="password" placeholder="Нууц үг">
+    <div class="err" id="error"></div>
+    <button class="btn" onclick="signup()">🚀 Бүртгүүлэх</button>
+  </div>
+  <div class="ok" id="ok"></div>
+  <a href="/" class="back">← Буцах</a>
+</div>
+<script>
+async function signup(){const n=document.getElementById('name').value.trim(),s=document.getElementById('slug').value.trim().toLowerCase(),pw=document.getElementById('password').value,p=document.getElementById('phone').value.trim(),e=document.getElementById('error');if(!n||!s||!pw){e.textContent='Бүх талбарыг бөглөнө үү';return}if(s.length<3){e.textContent='Хаяг дор хаяж 3 тэмдэгт';return}e.textContent='';try{const r=await fetch('/api/shop/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,slug:s,password:pw,phone:p})});const d=await r.json();if(!r.ok){e.textContent=d.error;return}document.getElementById('form').style.display='none';const ok=document.getElementById('ok');ok.style.display='block';ok.innerHTML='✅ Бүртгэл амжилттай!<br><br><a href="/admin-login?slug='+s+'" style="color:#d4a017;font-weight:700">Админ самбарт нэвтрэх →</a><br><br><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Таны хуудас: /shop/'+s+'</span>'}catch(e){e.textContent='Серверт холбогдоход алдаа гарлаа'}}
+</script>
+</body>
+</html>

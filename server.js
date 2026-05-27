@@ -467,6 +467,14 @@ app.get('/api/shop/:shop', requireShop, requireActiveSub, (req, res) => {
   res.json(safe);
 });
 
+// Public live stats for landing page
+app.get('/api/stats/live', (req, res) => {
+  const shops = db.prepare('SELECT COUNT(*) as c FROM shops WHERE active = 1').get().c;
+  const inQueue = db.prepare("SELECT COUNT(*) as c FROM queue_entries WHERE status IN ('waiting','called','serving')").get().c;
+  const todayBookings = db.prepare("SELECT COUNT(*) as c FROM bookings WHERE booking_date = date('now','localtime') AND status = 'confirmed'").get().c;
+  res.json({ shops, inQueue, todayBookings });
+});
+
 // Get barbers for a shop
 app.get('/api/shop/:shop/barbers', requireShop, requireActiveSub, (req, res) => {
   const barbers = db.prepare('SELECT id,name,title,specialty,experience,rating,description FROM barbers WHERE shop_id = ? AND active = 1').all(req.shop.id);

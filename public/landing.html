@@ -24,6 +24,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .hero h1 .hl{color:var(--gold)}
 .hero p{color:var(--dim);font-size:clamp(.9rem,1.5vw,1.05rem);max-width:580px;margin:0 auto 36px;line-height:1.7;font-weight:400}
 .hero-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.live-num{font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1}.live-lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;font-weight:700;font-size:.85rem;text-decoration:none;border-radius:100px;border:none;cursor:pointer;transition:all .2s;font-family:inherit}
 .btn-gold{background:var(--gold);color:#0a0a0a;box-shadow:0 4px 20px rgba(212,160,23,.2)}.btn-gold:hover{opacity:.9;transform:translateY(-1px)}
 .btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.15)}.btn-outline:hover{background:rgba(255,255,255,.04)}
@@ -93,6 +94,11 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
   <div class="hero-badge">🚶 Монголын барбершопуудад</div>
   <h1>Үйлчлүүлэгчээ<br><span class="hl">битгий хүлээлгэ</span>.</h1>
   <p>Үйлчлүүлэгч хаалгаар орж ирээд 6 хүний оочир харвал буцдаг. QR уншуул, оочироо ав, бусад ажилаа амжуул. Барбер нэг товч дарж дараагийн үйлчлүүлэгчээ дуудна. Дараалал, захиалга, тоон мэдээ — нэг системд.</p>
+  <div class="live-stats" id="liveStats" style="display:flex;justify-content:center;gap:32px;margin-bottom:28px;flex-wrap:wrap">
+    <div class="live-stat"><div class="live-num" id="ls-shops">—</div><div class="live-lbl">Идэвхтэй салон</div></div>
+    <div class="live-stat"><div class="live-num" id="ls-queue">—</div><div class="live-lbl">Дараалалд байгаа</div></div>
+    <div class="live-stat"><div class="live-num" id="ls-bookings">—</div><div class="live-lbl">Өнөөдрийн захиалга</div></div>
+  </div>
   <div class="hero-actions">
     <a href="/demo" class="btn btn-gold">🚶 Демо үзэх</a>
     <a href="/signup" class="btn btn-outline">7 хоног үнэгүй турших →</a>
@@ -179,6 +185,7 @@ const observer=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
 },{threshold:0.12});
 document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+(async function liveStats(){try{const r=await fetch('/api/stats/live');const d=await r.json();document.getElementById('ls-shops').textContent=d.shops;document.getElementById('ls-queue').textContent=d.inQueue;document.getElementById('ls-bookings').textContent=d.todayBookings}catch(e){}setTimeout(liveStats,30000)})();
 </script>
 </body>
 </html>

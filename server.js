@@ -1119,6 +1119,13 @@ app.get('/billing', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'billing.html'));
 });
 
+app.post('/api/billing/set-plan', requireMaster, (req, res) => {
+  const { shop_id, plan } = req.body;
+  if (!shop_id || !plan) return res.status(400).json({ error: 'shop_id and plan required' });
+  db.prepare('UPDATE shops SET plan = ? WHERE id = ?').run(plan, shop_id);
+  res.json({ success: true, plan });
+});
+
 app.get('/api/billing/shops', requireMaster, (req, res) => {
   const shops = db.prepare(`
     SELECT s.id, s.name, s.slug, s.phone, s.owner_name, s.sub_status, s.plan, s.trial_ends_at, s.sub_ends_at, s.created_at,

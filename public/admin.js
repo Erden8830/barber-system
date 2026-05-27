@@ -10,7 +10,7 @@ if(!T){location='/admin-login'+(urlShop?'?slug='+urlShop:'')}
 if(urlShop)try{localStorage.setItem('barber_shop',urlShop)}catch(e){}
 // Check subscription — redirect to expired if blocked, hide tabs for basic
 let PLAN='pro';
-(async function(){try{const r=await fetch(A+'/api/admin/shop/info',{headers:{'Authorization':'Bearer '+T}});const d=await r.json();if(d.sub_status==='expired'){location='/expired?shop='+(urlShop||(function(){try{return localStorage.getItem('barber_shop')}catch(e){}})())}PLAN=d.plan||'pro';if(PLAN==='basic'){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab=\"'+t+'\"]');if(el)el.style.display='none'})}}catch(e){}})();
+(async function(){try{const r=await fetch(A+'/api/admin/shop/info',{headers:{'Authorization':'Bearer '+T}});const d=await r.json();if(d.sub_status==='expired'){location='/expired?shop='+(urlShop||(function(){try{return localStorage.getItem('barber_shop')}catch(e){}})())}PLAN=d.plan||'pro';if(PLAN==='basic'){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab="'+t+'"]');if(el)el.style.display='none'});var tb=document.getElementById('today-bookings');if(tb)tb.style.display='none'}}catch(e){}})();
 const H={'Authorization':'Bearer '+T,'Content-Type':'application/json'};
 
 // Tab switching
@@ -283,7 +283,7 @@ async function loadSettings(){
     const ig=document.getElementById('set-iglink');if(ig)ig.value=location.origin+'/shop/'+d.slug;
     const banner=document.getElementById('sub-banner');
     if(d.sub_status==='expired'){banner.style.display='block';banner.style.background='rgba(231,76,60,.1)';banner.style.color='var(--red)';banner.textContent='⚠️ Таны бүртгэл хаагдсан. 85279299 утас руу холбогдоно уу.'}
-    else if(d.sub_status==='trial'&&d.trial_ends_at){const dl=Math.max(0,Math.ceil((new Date(d.trial_ends_at+'T00:00:00')-new Date())/86400000));banner.style.display='block';banner.style.background=dl<=3?'rgba(212,160,23,.1)':'rgba(46,204,113,.06)';banner.style.color=dl<=3?'var(--accent)':'var(--green)';banner.textContent=dl<=3?'⏳ Туршилт дуусахад '+dl+' хоног үлдлээ. 85279299.':'🟢 Туршилтын хугацаа: '+dl+' хоног. Сарын 99,000₮.'}
+    else if(d.sub_status==='trial'&&d.trial_ends_at){const dl=Math.max(0,Math.ceil((new Date(d.trial_ends_at+'T00:00:00')-new Date())/86400000));banner.style.display='block';banner.style.background=dl<=3?'rgba(212,160,23,.1)':'rgba(46,204,113,.06)';banner.style.color=dl<=3?'var(--accent)':'var(--green)';banner.textContent=dl<=3?'⏳ Туршилт дуусахад '+dl+' хоног үлдлээ. 85279299.':'🟢 Туршилтын хугацаа: '+dl+' хоног. Сард '+(PLAN==='basic'?'49,000':'99,000')+'₮.'}
   }catch(e){}
 }
 async function saveSettings(){try{const b={};['name','tag','phone','addr','ig'].forEach(id=>{const v=document.getElementById('s-'+id).value.trim();if(v)b[id==='tag'?'tagline':id==='addr'?'address':id==='ig'?'instagram':id]=v});b.primary_color=document.getElementById('s-pc').value;b.accent_color=document.getElementById('s-ac').value;const r=await fetch(A+'/api/admin/shop/update',{method:'POST',headers:H,body:JSON.stringify(b)});const d=await r.json();document.getElementById('set-msg').textContent=d.success?'✅ Хадгалагдлаа':'❌ Алдаа';setTimeout(()=>document.getElementById('set-msg').textContent='',2000)}catch(e){}}

@@ -207,7 +207,7 @@ function todayLocal() {
 function requireShop(req, res, next) {
   const slug = req.params.shop || req.query.shop;
   if (!slug) return res.status(400).json({ error: 'shop slug required' });
-  const shop = db.prepare('SELECT * FROM shops WHERE slug = ? AND active = 1').get(slug);
+  const shop = db.prepare("SELECT * FROM shops WHERE slug = ? AND (active = 1 OR sub_status = 'expired')").get(slug);
   if (!shop) return res.status(404).json({ error: 'Shop not found' });
   req.shop = shop;
   next();
@@ -254,7 +254,7 @@ function requireAuth(req, res, next) {
 
 // ===== SHOP SIGNUP (self-service) =====
 app.post('/api/shop/signup', async (req, res) => {
-  const { name, slug, password, phone } = req.body;
+  const { name, slug, password, phone, plan } = req.body;
   if (!name || !slug || !password) return res.status(400).json({ error: 'Нэр, хаяг, нууц үг шаардлагатай' });
   if (!/^[a-z0-9-]+$/.test(slug)) return res.status(400).json({ error: 'Хаяг зөвхөн англи үсэг, тоо, зураас агуулна' });
   if (slug.length < 3) return res.status(400).json({ error: 'Хаяг хамгийн багадаа 3 тэмдэгт байх ёстой' });
@@ -268,7 +268,7 @@ app.post('/api/shop/signup', async (req, res) => {
   trialEnds.setDate(trialEnds.getDate() + 7);
   const trialDate = trialEnds.toLocaleDateString('en-CA');
 
-  db.prepare('INSERT INTO shops (id,name,slug,password_hash,phone,theme,sub_status,trial_ends_at) VALUES (?,?,?,?,?,?,?,?)').run(id, name, slug, hash, phone || '', 'dark', 'trial', trialDate);
+  db.prepare('INSERT INTO shops (id,name,slug,password_hash,phone,theme,sub_status,trial_ends_at,plan) VALUES (?,?,?,?,?,?,?,?,?)').run(id, name, slug, hash, phone || '', 'dark', 'trial', trialDate, plan || 'pro');
 
   // Default barbers
   const insB = db.prepare('INSERT INTO barbers (id,shop_id,name,title,specialty,experience,rating,commission) VALUES (?,?,?,?,?,?,?,?)');
@@ -608,7 +608,7 @@ app.post('/api/shop/:shop/cancel', requireShop, requireActiveSub, (req, res) => 
 // Login
 app.post('/api/auth/login', (req, res) => {
   const { slug, password } = req.body;
-  const shop = db.prepare('SELECT * FROM shops WHERE slug = ? AND active = 1').get(slug);
+  const shop = db.prepare('SELECT * FROM shops WHERE slug = ?').get(slug);
   if (!shop) return res.status(401).json({ error: 'Буруу холбоос эсвэл нууц үг' });
 
   const hash = crypto.createHash('sha256').update(password).digest('hex');
@@ -616,7 +616,7 @@ app.post('/api/auth/login', (req, res) => {
 
   const token = crypto.randomBytes(24).toString('hex');
   db.prepare('INSERT INTO sessions (token, shop_id) VALUES (?,?)').run(token, shop.id);
-  res.json({ token, shop_id: shop.id, shop_name: shop.name, slug: shop.slug });
+  res.json({ token, shop_id: shop.id, shop_name: shop.name, slug: shop.slug, sub_status: shop.sub_status, plan: shop.plan || 'pro' });
 });
 
 // ===== ADMIN API (authenticated) =====
@@ -908,7 +908,7 @@ app.post('/api/admin/shop/create', requireAuth, (req, res) => {
 
 // Get shop info for editing
 app.get('/api/admin/shop/info', requireAuth, (req, res) => {
-  const shop = db.prepare('SELECT name, slug, tagline, phone, address, instagram, facebook, email, primary_color, accent_color, theme, sub_status, trial_ends_at, sub_ends_at FROM shops WHERE id = ?').get(req.shop_id);
+  const shop = db.prepare('SELECT name, slug, tagline, phone, address, instagram, facebook, email, primary_color, accent_color, theme, sub_status, plan, trial_ends_at, sub_ends_at FROM shops WHERE id = ?').get(req.shop_id);
   res.json(shop);
 });
 
@@ -1098,6 +1098,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+app.get('/expired', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'expired.html'));
+});
+
 app.get('/admin-login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -1117,10 +1121,10 @@ app.get('/billing', (req, res) => {
 
 app.get('/api/billing/shops', requireMaster, (req, res) => {
   const shops = db.prepare(`
-    SELECT s.id, s.name, s.slug, s.phone, s.owner_name, s.sub_status, s.trial_ends_at, s.sub_ends_at, s.created_at,
+    SELECT s.id, s.name, s.slug, s.phone, s.owner_name, s.sub_status, s.plan, s.trial_ends_at, s.sub_ends_at, s.created_at,
       (SELECT COUNT(*) FROM bookings WHERE shop_id = s.id AND status = 'confirmed') as total_bookings,
       (SELECT COUNT(*) FROM customers WHERE shop_id = s.id) as total_customers
-    FROM shops s WHERE s.active = 1 ORDER BY s.created_at DESC
+    FROM shops s WHERE s.active = 1 OR s.sub_status = 'expired' ORDER BY s.created_at DESC
   `).all();
   res.json(shops);
 });
@@ -1134,14 +1138,14 @@ app.post('/api/billing/activate', requireMaster, (req, res) => {
   endDate.setMonth(endDate.getMonth() + m);
   const endStr = endDate.toLocaleDateString('en-CA');
   
-  db.prepare("UPDATE shops SET sub_status = 'active', sub_ends_at = ? WHERE id = ?").run(endStr, shop_id);
+  db.prepare("UPDATE shops SET sub_status = 'active', sub_ends_at = ?, active = 1 WHERE id = ?").run(endStr, shop_id);
   res.json({ success: true, sub_ends_at: endStr, months: m });
 });
 
 app.post('/api/billing/deactivate', requireMaster, (req, res) => {
   const { shop_id } = req.body;
   if (!shop_id) return res.status(400).json({ error: 'shop_id required' });
-  db.prepare("UPDATE shops SET sub_status = 'expired' WHERE id = ?").run(shop_id);
+  db.prepare("UPDATE shops SET sub_status = 'expired', active = 0 WHERE id = ?").run(shop_id);
   res.json({ success: true });
 });
 
@@ -1156,7 +1160,7 @@ app.post('/api/billing/update-shop', requireMaster, (req, res) => {
 app.post('/api/billing/delete-shop', requireMaster, (req, res) => {
   const { shop_id } = req.body;
   if (!shop_id) return res.status(400).json({ error: 'shop_id required' });
-  db.prepare('UPDATE shops SET active = 0 WHERE id = ?').run(shop_id);
+  db.prepare("UPDATE shops SET active = 0, sub_status = 'deleted' WHERE id = ?").run(shop_id);
   res.json({ success: true });
 });
 

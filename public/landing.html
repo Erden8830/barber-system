@@ -57,9 +57,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .step-num{width:40px;height:40px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(212,160,23,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--gold);font-weight:800;font-size:1rem}
 .step h3{font-size:.82rem;font-weight:700;margin-bottom:6px}
 .step p{font-size:.72rem;color:var(--dim);line-height:1.6}
-.pricing-grid{display:grid;grid-template-columns:1fr;max-width:400px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;margin:0 auto}@media(max-width:600px){.pricing-grid{grid-template-columns:1fr;max-width:400px}}
 .price-card{padding:32px 24px;background:var(--card);border:1px solid rgba(212,160,23,.3);border-radius:14px;text-align:center;position:relative;background:linear-gradient(180deg,rgba(212,160,23,.04),transparent)}
 .price-card .plan-name{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:8px}
+.price-card.basic{border-color:rgba(255,255,255,.1);background:var(--card)}.price-card.basic .plan-price{color:#fff}
 .price-card .plan-price{font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:4px}
 .price-card .plan-sub{font-size:.7rem;color:var(--dim);margin-bottom:16px}
 .price-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.62rem;border-radius:100px;white-space:nowrap}
@@ -96,7 +97,6 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
   <p>Үйлчлүүлэгч хаалгаар орж ирээд 6 хүний оочир харвал буцдаг. QR уншуул, оочироо ав, бусад ажилаа амжуул. Барбер нэг товч дарж дараагийн үйлчлүүлэгчээ дуудна. Дараалал, захиалга, тоон мэдээ — нэг системд.</p>
   <div class="live-stats" id="liveStats" style="display:flex;justify-content:center;gap:32px;margin-bottom:28px;flex-wrap:wrap">
     <div class="live-stat"><div class="live-num" id="ls-shops">—</div><div class="live-lbl">Идэвхтэй салон</div></div>
-    <div class="live-stat"><div class="live-num" id="ls-queue">—</div><div class="live-lbl">Дараалалд байгаа</div></div>
     <div class="live-stat"><div class="live-num" id="ls-bookings">—</div><div class="live-lbl">Өнөөдрийн захиалга</div></div>
   </div>
   <div class="hero-actions">
@@ -147,21 +147,34 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
 </section>
 
 <section id="pricing" class="section">
-  <div class="section-header fade-in"><h2><span class="hl">Үнэ</span></h2><p>7 хоног үнэгүй туршина. Дараа нь сард ₮99,000.</p></div>
+  <div class="section-header fade-in"><h2><span class="hl">Үнэ</span></h2><p>7 хоног үнэгүй туршина. Дараа нь өөрт тохирох төлөвлөгөөгөө сонго.</p></div>
   <div class="pricing-grid">
-    <div class="price-card fade-in">
+    <div class="price-card basic fade-in">
       <div class="price-badge">7 ХОНОГ ҮНЭГҮЙ</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">₮49,000</div>
+      <div class="plan-sub">сард</div>
+      <ul class="plan-list">
+        <li>QR дараалал систем</li>
+        <li>Олон барбер</li>
+        <li>Админ самбар</li>
+        <li>Үндсэн тоон мэдээ</li>
+      </ul>
+      <a href="/signup" class="btn btn-outline" style="width:100%;justify-content:center">7 хоног үнэгүй эхлэх</a>
+    </div>
+    <div class="price-card fade-in">
+      <div class="price-badge">САЙН СОНГОЛТ</div>
       <div class="plan-name">Pro</div>
       <div class="plan-price">₮99,000</div>
       <div class="plan-sub">сард</div>
       <ul class="plan-list">
-        <li>QR дараалал систем</li>
+        <li>Basic бүх боломжууд</li>
         <li>Онлайн цаг захиалга</li>
         <li>Өөрийн захиалгын вэбсайт</li>
-        <li>Админ самбар</li>
         <li>Тоон мэдээ, график</li>
         <li>Комисс тооцоолол</li>
         <li>Харилцагчийн бүртгэл</li>
+        <li>SMS автоматжуулалт</li>
       </ul>
       <a href="/signup" class="btn btn-gold" style="width:100%;justify-content:center">7 хоног үнэгүй эхлэх</a>
     </div>
@@ -185,7 +198,8 @@ const observer=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
 },{threshold:0.12});
 document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
-(async function liveStats(){try{const r=await fetch('/api/stats/live');const d=await r.json();document.getElementById('ls-shops').textContent=d.shops;document.getElementById('ls-queue').textContent=d.inQueue;document.getElementById('ls-bookings').textContent=d.todayBookings}catch(e){}setTimeout(liveStats,30000)})();
+(async function liveStats(){try{const r=await fetch('/api/stats/live');const d=await r.json();const e=document.getElementById('ls-shops');if(e)e.textContent=d.shops;const b=document.getElementById('ls-bookings');if(b)b.textContent=d.todayBookings}catch(e){}setTimeout(liveStats,30000)})();
+(function(){try{const t=localStorage.getItem('barber_token'),s=localStorage.getItem('barber_shop');if(t&&s)location.href='/admin?token='+t+'&shop='+s}catch(e){}})();
 </script>
 </body>
 </html>

@@ -8,6 +8,9 @@ const urlTok=urlP.get('token'),urlShop=urlP.get('shop');
 if(!T&&urlTok){T=urlTok;try{localStorage.setItem('barber_token',urlTok)}catch(e){}}
 if(!T){location='/admin-login'+(urlShop?'?slug='+urlShop:'')}
 if(urlShop)try{localStorage.setItem('barber_shop',urlShop)}catch(e){}
+// Check subscription — redirect to expired if blocked, hide tabs for basic
+let PLAN='pro';
+(async function(){try{const r=await fetch(A+'/api/admin/shop/info',{headers:{'Authorization':'Bearer '+T}});const d=await r.json();if(d.sub_status==='expired'){location='/expired?shop='+(urlShop||(function(){try{return localStorage.getItem('barber_shop')}catch(e){}})())}PLAN=d.plan||'pro';if(PLAN==='basic'){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab=\"'+t+'\"]');if(el)el.style.display='none'})}}catch(e){}})();
 const H={'Authorization':'Bearer '+T,'Content-Type':'application/json'};
 
 // Tab switching

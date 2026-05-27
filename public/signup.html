@@ -13,7 +13,15 @@ body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;di
 .logo{font-size:1.1rem;font-weight:900;letter-spacing:3px;margin-bottom:32px}.logo span{color:#d4a017}
 h1{font-size:1rem;font-weight:600;margin-bottom:4px}
 .sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:24px}
-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.88rem;outline:none;font-family:inherit;margin-bottom:10px}input:focus{border-color:#d4a017}input::placeholder{color:rgba(255,255,255,.2)}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.plan-card{padding:14px 10px;border:2px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;text-align:center;transition:all .15s;position:relative}
+.plan-card:hover{border-color:rgba(212,160,23,.3)}
+.plan-card.sel{border-color:#d4a017;background:rgba(212,160,23,.06)}
+.plan-card .pname{font-weight:700;font-size:.82rem}
+.plan-card .pprice{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:2px}
+.plan-card .pcheck{display:none;position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;background:#d4a017;color:#0a0a0a;font-size:.6rem;line-height:20px;font-weight:700}
+.plan-card.sel .pcheck{display:block}
+input,select{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#1a1a1a;color:#fff;font-size:.88rem;outline:none;font-family:inherit;margin-bottom:10px}input:focus,select:focus{border-color:#d4a017}input::placeholder{color:rgba(255,255,255,.2)}
 .btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#d4a017,#b8922e);color:#0a0a0a;margin-top:8px;font-family:inherit}.btn:hover{opacity:.9}
 .err{color:#e74c3c;font-size:.72rem;margin-top:8px}
 .ok{color:#2ecc71;font-size:.82rem;margin-top:12px;display:none}
@@ -24,8 +32,20 @@ input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-
 <div class="card">
   <div class="logo">Barber<span>.</span>Pro</div>
   <h1>Шинэ бүртгэл</h1>
-  <p class="sub">7 хоног үнэгүй. Сард 99,000₮.</p>
+  <p class="sub">7 хоног үнэгүй туршаад, өөрт тохирох төлөвлөгөөгөө сонго</p>
   <div id="form">
+    <div class="plans">
+      <div class="plan-card" id="plan-basic" onclick="selectPlan('basic')">
+        <div class="pcheck">✓</div>
+        <div class="pname">Basic</div>
+        <div class="pprice">₮49,000/сар</div>
+      </div>
+      <div class="plan-card sel" id="plan-pro" onclick="selectPlan('pro')">
+        <div class="pcheck">✓</div>
+        <div class="pname">Pro</div>
+        <div class="pprice">₮99,000/сар</div>
+      </div>
+    </div>
     <input type="text" id="name" placeholder="Дэлгүүрийн нэр">
     <input type="text" id="slug" placeholder="Таны URL хаяг (жишээ: my-shop)" autocapitalize="off">
     <input type="tel" id="phone" placeholder="Утасны дугаар">
@@ -37,7 +57,9 @@ input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-
   <a href="/" class="back">← Буцах</a>
 </div>
 <script>
-async function signup(){const n=document.getElementById('name').value.trim(),s=document.getElementById('slug').value.trim().toLowerCase(),pw=document.getElementById('password').value,p=document.getElementById('phone').value.trim(),e=document.getElementById('error');if(!n||!s||!pw){e.textContent='Бүх талбарыг бөглөнө үү';return}if(s.length<3){e.textContent='Хаяг дор хаяж 3 тэмдэгт';return}e.textContent='';try{const r=await fetch('/api/shop/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,slug:s,password:pw,phone:p})});const d=await r.json();if(!r.ok){e.textContent=d.error;return}document.getElementById('form').style.display='none';const ok=document.getElementById('ok');ok.style.display='block';ok.innerHTML='✅ Бүртгэл амжилттай!<br><br><a href="/admin-login?slug='+s+'" style="color:#d4a017;font-weight:700">Админ самбарт нэвтрэх →</a><br><br><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Таны хуудас: /shop/'+s+'</span>'}catch(e){e.textContent='Серверт холбогдоход алдаа гарлаа'}}
+var selectedPlan='pro';
+function selectPlan(p){selectedPlan=p;document.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('sel')});document.getElementById('plan-'+p).classList.add('sel')}
+async function signup(){var n=document.getElementById('name').value.trim(),s=document.getElementById('slug').value.trim().toLowerCase(),pw=document.getElementById('password').value,p=document.getElementById('phone').value.trim(),e=document.getElementById('error');if(!n||!s||!pw){e.textContent='Бүх талбарыг бөглөнө үү';return}if(s.length<3){e.textContent='Хаяг дор хаяж 3 тэмдэгт';return}e.textContent='';try{var r=await fetch('/api/shop/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,slug:s,password:pw,phone:p,plan:selectedPlan})});var d=await r.json();if(!r.ok){e.textContent=d.error;return}document.getElementById('form').style.display='none';var ok=document.getElementById('ok');ok.style.display='block';ok.innerHTML='✅ Бүртгэл амжилттай!<br><br><a href="/admin-login?slug='+s+'" style="color:#d4a017;font-weight:700">Админ самбарт нэвтрэх →</a><br><br><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Таны хуудас: /shop/'+s+'</span>'}catch(ex){e.textContent='Серверт холбогдоход алдаа гарлаа'}}
 </script>
 </body>
 </html>

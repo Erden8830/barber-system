@@ -925,17 +925,36 @@ app.get('/api/admin/schedule/today', requireAuth, (req, res) => {
 
 // ===== ADMIN — MANAGE BARBERS =====
 app.post('/api/admin/barbers/add', requireAuth, (req, res) => {
-  const { name, title, specialty, experience, description, commission } = req.body;
+  const { name, title, specialty, experience, description, commission, schedule } = req.body;
   if (!name) return res.status(400).json({ error: 'Name required' });
   const id = uuidv4().slice(0, 8);
-  db.prepare('INSERT INTO barbers (id,shop_id,name,title,specialty,experience,description,rating,commission) VALUES (?,?,?,?,?,?,?,?,?)').run(id, req.shop_id, name, title||'', specialty||'', experience||'', description||'', 5, commission||50);
+  db.prepare('INSERT INTO barbers (id,shop_id,name,title,specialty,experience,description,rating,commission,schedule) VALUES (?,?,?,?,?,?,?,?,?,?)').run(id, req.shop_id, name, title||'', specialty||'', experience||'', description||'', 5, commission||50, schedule||'{}');
   res.json({ success: true, id, name });
 });
 
+// Barber schedule
+app.get('/api/admin/barber/:id/schedule', requireAuth, (req, res) => {
+  const sched = db.prepare('SELECT day_of_week, start_time, end_time, active FROM barber_schedules WHERE barber_id = ? ORDER BY day_of_week').all(req.params.id);
+  res.json(sched);
+});
+
+app.post('/api/admin/barber/:id/schedule', requireAuth, (req, res) => {
+  const { schedule } = req.body; // [{day_of_week, start_time, end_time, active}]
+  if (!schedule || !Array.isArray(schedule)) return res.status(400).json({ error: 'schedule array required' });
+  const del = db.prepare('DELETE FROM barber_schedules WHERE barber_id = ?');
+  const ins = db.prepare('INSERT OR REPLACE INTO barber_schedules (barber_id, day_of_week, start_time, end_time, active) VALUES (?,?,?,?,?)');
+  const txn = db.transaction(() => {
+    del.run(req.params.id);
+    schedule.forEach(s => { ins.run(req.params.id, s.day_of_week, s.start_time, s.end_time, s.active ? 1 : 0); });
+  });
+  txn();
+  res.json({ success: true });
+});
+
 app.post('/api/admin/barbers/update', requireAuth, (req, res) => {
-  const { id, name, title, specialty, experience, description, commission, avg_service_time } = req.body;
+  const { id, name, title, specialty, experience, description, commission, avg_service_time, schedule } = req.body;
   if (!id) return res.status(400).json({ error: 'ID required' });
-  db.prepare('UPDATE barbers SET name=COALESCE(?,name), title=COALESCE(?,title), specialty=COALESCE(?,specialty), experience=COALESCE(?,experience), description=COALESCE(?,description), commission=COALESCE(?,commission), avg_service_time=COALESCE(?,avg_service_time) WHERE id=? AND shop_id=?').run(name||null, title||null, specialty||null, experience||null, description||null, commission||null, avg_service_time||null, id, req.shop_id);
+  db.prepare('UPDATE barbers SET name=COALESCE(?,name), title=COALESCE(?,title), specialty=COALESCE(?,specialty), experience=COALESCE(?,experience), description=COALESCE(?,description), commission=COALESCE(?,commission), avg_service_time=COALESCE(?,avg_service_time), schedule=COALESCE(?,schedule) WHERE id=? AND shop_id=?').run(name||null, title||null, specialty||null, experience||null, description||null, commission||null, avg_service_time||null, schedule||null, id, req.shop_id);
   wsBroadcast(req.shop_id, { type: 'queue:change' });
   res.json({ success: true });
 });

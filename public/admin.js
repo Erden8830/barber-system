@@ -5,12 +5,14 @@ const A=location.origin;
 let T=(()=>{try{return localStorage.getItem('barber_token')}catch(e){return null}})();
 const urlP=new URLSearchParams(location.search);
 const urlTok=urlP.get('token'),urlShop=urlP.get('shop');
-if(!T&&urlTok){T=urlTok;try{localStorage.setItem('barber_token',urlTok)}catch(e){}}
+if(urlTok){T=urlTok;try{localStorage.setItem('barber_token',urlTok)}catch(e){}}
 if(!T){location='/admin-login'+(urlShop?'?slug='+urlShop:'')}
 if(urlShop)try{localStorage.setItem('barber_shop',urlShop)}catch(e){}
 // Check subscription — redirect to expired if blocked, hide tabs for basic
-let PLAN='pro';
-(async function(){try{const r=await fetch(A+'/api/admin/shop/info',{headers:{'Authorization':'Bearer '+T}});const d=await r.json();if(d.sub_status==='expired'){location='/expired?shop='+(urlShop||(function(){try{return localStorage.getItem('barber_shop')}catch(e){}})())}PLAN=d.plan||'pro';if(PLAN==='basic'){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab="'+t+'"]');if(el)el.style.display='none'});var tb=document.getElementById('today-bookings');if(tb)tb.style.display='none'}}catch(e){}})();
+let PLAN=(function(){try{return localStorage.getItem('barber_plan')||'pro'}catch(e){return 'pro'}})();
+// Also check sub_status via API for expired redirect
+(async function(){try{const r=await fetch(A+'/api/admin/shop/info',{headers:{'Authorization':'Bearer '+T}});const d=await r.json();if(d.sub_status==='expired'){location='/expired?shop='+(urlShop||(function(){try{return localStorage.getItem('barber_shop')}catch(e){}})())};localStorage.setItem('barber_plan',d.plan||'pro');if(d.plan==='basic'){setTimeout(function(){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab="'+t+'"]');if(el)el.setAttribute('hidden','');el.style.display='none'});var tb=document.getElementById('today-bookings');if(tb)tb.style.display='none'},0)}}catch(e){}})();
+if(PLAN==='basic'){setTimeout(function(){['today','bookings','customers','sms','analytics','commission'].forEach(function(t){var el=document.querySelector('#tabs a[data-tab="'+t+'"]');if(el)el.setAttribute('hidden','');el.style.display='none'});var tb=document.getElementById('today-bookings');if(tb)tb.style.display='none'},0)}
 const H={'Authorization':'Bearer '+T,'Content-Type':'application/json'};
 
 // Tab switching

@@ -475,9 +475,21 @@ app.get('/api/stats/live', (req, res) => {
   res.json({ shops, inQueue, todayBookings });
 });
 
-// Get barbers for a shop
+// Get barbers for a shop — optional ?date=YYYY-MM-DD filters by schedule
 app.get('/api/shop/:shop/barbers', requireShop, requireActiveSub, (req, res) => {
-  const barbers = db.prepare('SELECT id,name,title,specialty,experience,rating,description FROM barbers WHERE shop_id = ? AND active = 1').all(req.shop.id);
+  const { date } = req.query;
+  let barbers;
+  if (date) {
+    const dayOfWeek = new Date(date + 'T00:00:00').getDay();
+    barbers = db.prepare(`
+      SELECT DISTINCT b.id, b.name, b.title, b.specialty, b.experience, b.rating, b.description
+      FROM barbers b
+      JOIN barber_schedules s ON s.barber_id = b.id
+      WHERE b.shop_id = ? AND b.active = 1 AND s.day_of_week = ? AND s.active = 1
+    `).all(req.shop.id, dayOfWeek);
+  } else {
+    barbers = db.prepare('SELECT id,name,title,specialty,experience,rating,description FROM barbers WHERE shop_id = ? AND active = 1').all(req.shop.id);
+  }
   res.json(barbers);
 });
 

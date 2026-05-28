@@ -245,8 +245,37 @@ async function init(){
   }catch(e){showErr('Алдаа: '+e.message)}
 }
 
-document.getElementById('datePick').onchange=function(){
-  selDate=this.value;selTime=null;loadSlots();
+function renderBarbers(){
+  var emojis=['💈','✂️','🧔','💇','🔹','⭐'];
+  var bh='';
+  barbers.forEach(function(b,i){
+    bh+='<div class="barber-card" data-id="'+b.id+'"><div class="av">'+emojis[i%6]+'</div><div class="info"><div class="nm">'+b.name+'</div><div class="tl">'+(b.title||'')+'</div></div><div class="arr">→</div></div>';
+  });
+  document.getElementById('barberList').innerHTML=bh;
+  document.querySelectorAll('.barber-card').forEach(function(c){
+    c.onclick=function(){
+      document.querySelectorAll('.barber-card').forEach(function(x){x.classList.remove('sel')});
+      this.classList.add('sel');
+      selBarber=this.dataset.id;
+      showStep('service');
+    };
+  });
+}
+
+document.getElementById('datePick').onchange=async function(){
+  selDate=this.value;selTime=null;
+  // Re-fetch barbers filtered by schedule for this date
+  var br=await fetch(API+'/api/shop/'+SLUG+'/barbers?date='+selDate);
+  var filtered=await br.json();
+  // If current barber is off this day, reset to step 1
+  var curAvail=filtered.find(function(b){return b.id==selBarber});
+  if(!curAvail){
+    selBarber=null;selSvc=null;showStep('barber');
+    if(filtered.length){barbers=filtered;renderBarbers()}
+    showErr('Сонгосон барбер энэ өдөр ажиллахгүй');
+    return;
+  }
+  loadSlots();
 };
 
 async function loadSlots(){

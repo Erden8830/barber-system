@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barber Pro — Танилцуулга</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#0a0a0a;color:#f0f0f0;-webkit-font-smoothing:antialiased}
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:48px 24px;max-width:420px;margin:0 auto;text-align:center}
+.slide-cover{background:linear-gradient(180deg,#0a0a0a 0%,#1a1200 100%)}
+
+.cover-logo{font-size:2rem;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+.cover-logo span{color:#d4a017}
+.cover-tagline{font-size:.9rem;color:#777;margin-bottom:40px}
+.cover-big{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:800;line-height:1.3;margin-bottom:12px}
+.cover-big .hl{color:#d4a017}
+.cover-sub{font-size:.82rem;color:#888;line-height:1.7;margin-bottom:32px}
+.cover-price{display:inline-block;padding:12px 28px;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:100px;font-size:.75rem;color:#d4a017;font-weight:600}
+.swipe{font-size:.65rem;color:#444;margin-top:48px}
+
+.h2{font-size:1.4rem;font-weight:800;margin-bottom:8px;line-height:1.3}
+.h2 .hl{color:#d4a017}
+.sub{font-size:.8rem;color:#888;margin-bottom:36px;line-height:1.6}
+
+.pain-block{display:flex;flex-direction:column;gap:14px;width:100%}
+.pain-item{display:flex;align-items:flex-start;gap:12px;padding:18px;background:#111;border:1px solid rgba(255,255,255,.05);border-radius:12px;text-align:left}
+.pain-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px}
+.pain-title{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.pain-desc{font-size:.72rem;color:#888;line-height:1.5}
+.pain-cost{font-size:.68rem;color:#e74c3c;font-weight:600;margin-top:4px}
+
+.stat{font-size:2.5rem;font-weight:900;color:#d4a017;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:.75rem;color:#888;margin-bottom:24px}
+
+.ft-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ft-item{padding:18px 14px;background:#111;border:1px solid rgba(255,255,255,.05);border-radius:12px}
+.ft-item .emoji{font-size:1.3rem;margin-bottom:6px}
+.ft-item .ft-title{font-size:.76rem;font-weight:700;margin-bottom:4px}
+.ft-item .ft-desc{font-size:.65rem;color:#888;line-height:1.4}
+
+.roi-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+.roi-card{background:#111;border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:20px 16px;min-width:140px;text-align:center}
+.roi-card .n{font-size:1.6rem;font-weight:900;color:#d4a017;margin-bottom:4px}
+.roi-card .l{font-size:.68rem;color:#888;line-height:1.4}
+.roi-math{font-size:.78rem;color:#ccc;line-height:1.8;text-align:left;max-width:320px;margin:0 auto}
+.roi-math .plus{color:#2ecc71}
+.roi-math .eq{color:#d4a017;font-weight:700;font-size:.85rem}
+
+.price-cards{display:flex;flex-direction:column;gap:12px;width:100%}
+.price-card{padding:22px 20px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:14px;text-align:left}
+.price-card.recommended{border-color:#d4a017;background:rgba(212,160,23,.04);position:relative}
+.price-card.recommended::before{content:'Хамгийн түгээмэл';position:absolute;top:-10px;right:16px;background:#d4a017;color:#0a0a0a;font-size:.62rem;font-weight:700;padding:4px 10px;border-radius:100px}
+.price-name{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.price-amt{font-size:1.5rem;font-weight:900;color:#d4a017;margin-bottom:10px}
+.price-amt small{font-size:.65rem;color:#888;font-weight:400}
+.price-feats{list-style:none;font-size:.7rem;color:#aaa;line-height:2}
+.price-feats li::before{content:'✓ ';color:#2ecc71;font-weight:700}
+
+.cta-btn{display:inline-block;padding:16px 40px;background:#d4a017;color:#0a0a0a;font-weight:700;font-size:.9rem;border-radius:100px;text-decoration:none;margin-bottom:8px}
+.cta-sub{font-size:.7rem;color:#888}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;width:100%}
+.cta-item{font-size:.72rem;color:#aaa;line-height:1.5}
+.cta-item strong{color:#f0f0f0}
+
+.divider{width:60px;height:2px;background:#d4a017;margin:24px auto;opacity:.3}
+
+.psych-box{padding:18px;background:rgba(212,160,23,.05);border:1px solid rgba(212,160,23,.15);border-radius:12px;text-align:left;margin-bottom:28px}
+.psych-box .psych-q{font-size:.72rem;color:#d4a017;font-weight:700;margin-bottom:6px}
+.psych-box .psych-a{font-size:.72rem;color:#ccc;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-cover">
+  <div class="cover-logo">Barber<span>Pro</span></div>
+  <div class="cover-tagline">Барбершопын ухаалаг систем</div>
+  <div class="cover-big">Дараалал + Захиалга<br><span class="hl">Нэг товчоор</span></div>
+  <div class="cover-sub">Үйлчлүүлэгч QR уншуулна. Барбер нэг товч дарна. Та алдсан орлогоо буцааж авна.</div>
+  <div class="cover-price">49,000 — 99,000₮ / сар · 7 хоног үнэгүй</div>
+  <div class="swipe">↓↓ доош гүйлгэ →→</div>
+</div>
+
+<!-- SLIDE 2: THE REAL PROBLEM -->
+<div class="slide">
+  <div class="h2">Өдөрт хэдэн үйлчлүүлэгч та <span class="hl">алддаг</span> вэ?</div>
+  <div style="font-size:2.8rem;font-weight:900;color:#e74c3c;margin:16px 0 28px 0;letter-spacing:-1px">ЯАГААД?</div>
+  <div class="pain-block">
+    <div class="pain-item">
+      <div class="pain-icon">🤷</div>
+      <div>
+        <div class="pain-title">Хэр удаан хүлээхээ мэдэхгүй</div>
+        <div class="pain-desc">5 хүн сууж байхад 20 минут уу, 1 цаг уу? Тааварлах аргагүй. Жижиг, тав тухгүй орчинд удаан хүлээмээргүй байдаг учираас гарч явдаг байна.</div>
+        <div class="pain-cost">Мэдэхгүй байх нь хүлээхээс илүү аймшигтай</div>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-icon">🌙</div>
+      <div>
+        <div class="pain-title">Хаагдсаны дараа захиалга алддаг</div>
+        <div class="pain-desc">Шөнийн 11 цагт хүн маргааш үсээ засуулъя гэж шийднэ. Гэхдээ таны дэлгүүр хаалттай. Захиалгын хуудас байхгүй. Тэр хүн маргааш өрсөлдөгч рүү чинь орно. Үүнийг онлайн захиалгын систем шийдвэрлэж өгнө.</div>
+        <div class="pain-cost">Захиалгын тал орчим нь ажлын цагаас гадуур ирдэг</div>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-icon">👻</div>
+      <div>
+        <div class="pain-title">Алдсан үйлчлүүлэгчдээ мэдэхгүй</div>
+        <div class="pain-desc">Сүүлийн 30 хоногт ирээгүй 50 хүн байна. Тэдний нэр, утас хаана байгаа вэ? Хаана ч байхгүй. Тэд дахиж ирэхгүй. Та шинэ хүн хайсаар л байна.</div>
+        <div class="pain-cost">Хуучин үйлчлүүлэгчээ эргүүлж татах нь шинэ хүн олохоос 5 дахин хямд</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: HOW DIGITAL QUEUE ACTUALLY WORKS -->
+<div class="slide">
+  <div class="h2">Дугаар л <span class="hl">хангалттай</span></div>
+  <div class="sub">Хүмүүс удаан хүлээхээс биш, хэр удахаа мэдэхгүй байгаагаас л болж гарч явдаг</div>
+
+  <div class="psych-box">
+    <div class="psych-q">Яагаад?</div>
+    <div class="psych-a">Та 5 хүний дараа суулаа гэж бод. 20 минут уу? 1 цаг уу? Хариулт байхгүй. Тархи хамгийн мууг бодно. "Энд суухаар өөр дэлгүүр оръё" гээд гарна.</div>
+  </div>
+
+  <div class="psych-box">
+    <div class="psych-q">QR дараалал юу өөрчилдөг вэ?</div>
+    <div class="psych-a">Дэлгэцэн дээр "Та 4-р байранд, ойролцоогоор 25 минут" гэж гарна. Одоо тэр хүн мэдэж байна. 25 минут тэвчиж болно. Хажуугийн дэлгүүрт ороод юм аваад ирж болно. Машинаа ч тавьж болно. <strong style="color:#d4a017">Хүлээх хугацаа өөрчлөгдөөгүй — түүний талаарх ойлголт л өөрчлөгдсөн.</strong> Тэгээд л тэр хүн үлддэг.</div>
+  </div>
+
+  <div style="font-size:.68rem;color:#555;margin-top:12px">Энэ бол сэтгэл зүй, технологи биш. Гэхдээ технологи л үүнийг боломжтой болгодог.</div>
+</div>
+
+<!-- SLIDE 4: WHAT YOU GET -->
+<div class="slide">
+  <div class="h2">Бидний <span class="hl">шийдэл</span></div>
+  <div class="sub">Гурван систем, нэг дор</div>
+
+  <div class="ft-grid">
+    <div class="ft-item">
+      <div class="emoji">📱</div>
+      <div class="ft-title">QR Дараалал</div>
+      <div class="ft-desc">Үйлчлүүлэгч QR уншуулж дугаар аваад, хэдэн хүний дараа, хэр удаан хүлээхээ харна. Гарч явахгүй. Барберууд нэг товч дарж дуудна.</div>
+    </div>
+    <div class="ft-item">
+      <div class="emoji">📅</div>
+      <div class="ft-title">24/7 Захиалга</div>
+      <div class="ft-desc">Хаалга хаагдсан ч захиалгын хуудас нээлттэй. Үйлчлүүлэгч шөнийн 2 цагт ч захиалгаа өгнө. Та өглөө босоод харна.</div>
+    </div>
+    <div class="ft-item">
+      <div class="emoji">📊</div>
+      <div class="ft-title">Админ самбар</div>
+      <div class="ft-desc">Өдөрт хэдэн хүн, хэн хэдэн төгрөг хийсэн, ямар үйлчилгээ эрэлттэй — бүгд нэг дэлгэцэн дээр.</div>
+    </div>
+    <div class="ft-item">
+      <div class="emoji">🔄</div>
+      <div class="ft-title">CRM — Үйлчлүүлэгчийн түүх</div>
+      <div class="ft-desc">Хэн 30 хоног ирээгүй, хэн тогтмол ирдэг — бүртгэлтэй. Хуучин үйлчлүүлэгчээ эргүүлэн татах боломж.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: THE STACK -->
+<div class="slide">
+  <div class="h2">Гурван үе шат</div>
+  <div class="sub">Бүгд хоорондоо холбоотой</div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;width:100%">
+    <div class="pain-item" style="border-color:rgba(212,160,23,.2);background:rgba(212,160,23,.03)">
+      <div class="pain-icon" style="font-size:2rem">1.</div>
+      <div>
+        <div class="pain-title" style="color:#d4a017">QR дараалал — оруулж ирнэ</div>
+        <div class="pain-desc">Хүн уншуулж дугаар авна. Хэзээ орохоо мэднэ. Гарч явахгүй. Нэр, утас бүртгэгдэнэ.</div>
+      </div>
+    </div>
+    <div class="pain-item" style="border-color:rgba(212,160,23,.15);background:rgba(212,160,23,.02)">
+      <div class="pain-icon" style="font-size:2rem">2.</div>
+      <div>
+        <div class="pain-title" style="color:#d4a017">Онлайн захиалга — хаагдсан ч барьж авна</div>
+        <div class="pain-desc">Шөнийн 2 цагт хүн захиалга өгнө. Та өглөө босоод л харна. Утасны дуудлага 80% багасна.</div>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-icon" style="font-size:2rem">3.</div>
+      <div>
+        <div class="pain-title">CRM — эргүүлж авчирна</div>
+        <div class="pain-desc">Дээрх 2 системээс цугларсан нэр, утасны дугаарууд. Сүүлийн 30 хоногт ирээгүй хүмүүсийн жагсаалт. Та тэдэнд хандаж болно. Хуучин үйлчлүүлэгчээ эргүүлж татах нь шинэ хүн олохоос 5 дахин хямд.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;font-size:.7rem;color:#d4a017;font-weight:600">QR оруулна → Захиалга барьж авна → CRM эргүүлнэ</div>
+</div>
+
+<!-- SLIDE 6: REAL MATH -->
+<div class="slide">
+  <div class="h2">Таны <span class="hl">тоо</span></div>
+  <div class="sub">Гадны статистик биш. Та өөрөө тоолж болох зүйлс.</div>
+
+  <div class="roi-math" style="margin-bottom:24px">
+    <div>Та өдөрт хэдэн хүн алддаг вэ?</div>
+    <div style="margin-top:8px"><span class="plus">Өдөрт 2 явган хүн</span> × 35,000₮ × 30 хоног = <span class="plus">2,100,000₮/сар</span> алдагдал</div>
+    <div><span class="plus">Өдөрт 1 захиалгын ноу-шоу</span> × 35,000₮ × 30 хоног = <span class="plus">1,050,000₮/сар</span></div>
+    <div><span class="plus">Шөнийн 5 захиалга</span> × 35,000₮ = <span class="plus">175,000₮/сар</span> (одоо 0)</div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><span class="eq">Нийт алдагдал: ~3,300,000₮/сар</span></div>
+  </div>
+
+  <div style="padding:18px;background:rgba(212,160,23,.05);border:1px solid rgba(212,160,23,.15);border-radius:12px">
+    <div style="font-size:.75rem;color:#d4a017;font-weight:700;margin-bottom:6px">Системийн үнэ: 99,000₮/сар</div>
+    <div style="font-size:.82rem;color:#f0f0f0;line-height:1.6">Энэ дүнгийн <strong>3%</strong>. Өдөрт 1 хүн авч үлдэхэд л систем өөрөө өөрийгөө <strong>3 хоногт</strong> төлнө.</div>
+  </div>
+</div>
+
+<!-- SLIDE 7: PRICING -->
+<div class="slide">
+  <div class="h2"><span class="hl">Үнэ</span></div>
+  <div class="sub">Бүх төлөвлөгөө 7 хоног үнэгүй. Карт шаардлагагүй.</div>
+
+  <div class="price-cards">
+    <div class="price-card">
+      <div class="price-name">🚶 Basic — Дараалал</div>
+      <div class="price-amt">49,000₮ <small>/ сар</small></div>
+      <ul class="price-feats">
+        <li>QR дараалал (дугаар + хүлээх хугацаа)</li>
+        <li>Олон барбер дэмжинэ</li>
+        <li>Үндсэн админ самбар</li>
+      </ul>
+    </div>
+
+    <div class="price-card recommended">
+      <div class="price-name">⭐ Pro — Бүрэн</div>
+      <div class="price-amt">99,000₮ <small>/ сар</small></div>
+      <ul class="price-feats">
+        <li>Basic бүх боломж +</li>
+        <li>24/7 Онлайн захиалга</li>
+        <li>Аналитик + Барберын комисс</li>
+        <li>Үйлчлүүлэгчийн түүх (CRM)</li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:.68rem;color:#555">Гэрээ байхгүй. Хүссэн үедээ цуцалж болно.</div>
+</div>
+
+<!-- SLIDE 8: VS COMPETITORS -->
+<div class="slide">
+  <div class="h2">Бид <span class="hl">яагаад</span> ялгаатай вэ?</div>
+
+  <div style="display:flex;flex-direction:column;gap:12px;width:100%;margin-bottom:24px">
+    <div style="padding:14px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem">
+      <span>📋 <strong>barber.mn</strong></span>
+      <span style="color:#888">Жагсаалт төдий. Дараалал ✗ Захиалга ✗ CRM ✗</span>
+    </div>
+    <div style="padding:14px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem">
+      <span>💳 <strong>Fresha</strong></span>
+      <span style="color:#888">Захиалгатай. Дараалал ✗ CRM ✗ Комисс % ✗</span>
+    </div>
+    <div style="padding:14px;background:rgba(212,160,23,.04);border:1px solid rgba(212,160,23,.2);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem">
+      <span>🥇 <strong>Barber Pro</strong></span>
+      <span style="color:#d4a017;font-weight:600">Дараалал ✓ Захиалга ✓ CRM ✓ 99K тогтмол ✓</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="font-size:.8rem;color:#ccc;line-height:1.8">
+    <strong style="color:#d4a017">Монголд өрсөлдөгчгүй QR дараалал</strong><br>
+    <strong style="color:#d4a017">Тогтмол үнэ</strong> — Fresha шиг % авахгүй<br>
+    <strong style="color:#d4a017">Гурван систем нэг дор</strong> — дараалал оруулна, захиалга барьж авна, CRM эргүүлнэ
+  </div>
+</div>
+
+<!-- SLIDE 9: CTA -->
+<div class="slide slide-cover">
+  <div class="h2" style="color:#f0f0f0">Эхний <span class="hl">7 хоног</span> үнэгүй</div>
+  <div class="sub">Карт оруулахгүй. 2 минутад бэлэн. Бүх боломж нээлттэй.</div>
+
+  <a href="https://barberpro-mn.duckdns.org/signup" class="cta-btn">🚀 Үнэгүй эхлүүлэх</a>
+  <div class="cta-sub">barberpro-mn.duckdns.org/signup</div>
+
+  <div class="divider"></div>
+
+  <div class="cta-grid">
+    <div class="cta-item"><strong>📱 Холбогдох:</strong><br>Утас: 85279299<br>Instagram: @barberpro_mn</div>
+    <div class="cta-item"><strong>⚡ Асуулт байвал:</strong><br>Дуудаарай. Бичээрэй. Бид ирж танилцуулъя. Эхний сарын тохиргоог бид хийнэ — та зүгээр л ашигла.</div>
+  </div>
+</div>
+
+</body>
+</html>

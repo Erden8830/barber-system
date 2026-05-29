@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barber Pro — Демо скрипт</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#0a0a0a;color:#f0f0f0;-webkit-font-smoothing:antialiased;padding:16px;max-width:440px;margin:0 auto}
+h1{font-size:1.2rem;font-weight:800;margin-bottom:4px}h1 span{color:#d4a017}
+.subtitle{font-size:.7rem;color:#666;margin-bottom:24px}
+.beat{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.05)}
+.beat-num{display:inline-block;width:24px;height:24px;border-radius:50%;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);color:#d4a017;font-size:.7rem;font-weight:800;text-align:center;line-height:24px;margin-bottom:8px}
+.beat-time{font-size:.62rem;color:#555;margin-bottom:6px}
+.beat-title{font-size:.82rem;font-weight:700;margin-bottom:6px;color:#d4a017}
+.beat-say{background:#111;border-left:3px solid #d4a017;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:8px;font-size:.75rem;line-height:1.6;color:#ccc;font-style:italic}
+.beat-do{font-size:.7rem;color:#888;line-height:1.6}
+.beat-do strong{color:#f0f0f0}
+.beat-insight{font-size:.65rem;color:#d4a017;margin-top:6px;line-height:1.5;padding:8px 10px;background:rgba(212,160,23,.05);border-radius:6px}
+a{color:#d4a017}
+
+.obj-section{margin-top:36px;padding-top:20px;border-top:2px solid rgba(212,160,23,.2)}
+.obj-section h2{font-size:.9rem;font-weight:800;color:#d4a017;margin-bottom:16px}
+.obj-item{margin-bottom:14px;padding:14px;background:#111;border:1px solid rgba(255,255,255,.05);border-radius:10px}
+.obj-q{font-size:.78rem;font-weight:700;color:#e74c3c;margin-bottom:4px}
+.obj-a{font-size:.72rem;color:#ccc;line-height:1.6}
+
+.tip{font-size:.65rem;color:#555;margin-top:4px;font-style:italic}
+
+hr{border:none;border-top:1px solid rgba(255,255,255,.05);margin:24px 0}
+</style>
+</head>
+<body>
+
+<h1>Barber<span>Pro</span> Демо</h1>
+<div class="subtitle">5 минутын борлуулалтын скрипт · Талбайд ашиглахад зориулав</div>
+
+<!-- BEAT 1 -->
+<div class="beat">
+  <div class="beat-num">1</div>
+  <div class="beat-time">⏱ 0:00 — 0:40</div>
+  <div class="beat-title">Оршил — Тэд өөрсдөө асуудлаа хэлэх ёстой</div>
+  <div class="beat-say">"Танай дэлгүүр өдөрт хэдэн хүн үйлчилдэг вэ? Хамгийн завгүй цагт хэдэн хүн хүлээдэг вэ? Хүлээгээд гарч явдаг хүмүүс байдаг уу? Та тэднийг тоолж үзсэн үү?"</div>
+  <div class="beat-do"><strong>Зорилго:</strong> Тэднийг яриул. Хүмүүс яагаад гарч явдгийг өөрсдөөр нь хэлүүл. Хариулт нь үргэлж л "хэр удаан хүлээхээ мэдэхгүй" гэсэн хувилбар байдаг. Энэ бол чиний дараагийн алхам.</div>
+  <div class="tip">⚠️ "Манайд тийм асуудал байхгүй" гэвэл: "Тэгвэл өдөрт хэдэн хүн алдаж байгаагаа мэдэхгүй л байна. Систем танд яг тоог нь харуулна."</div>
+</div>
+
+<!-- BEAT 2 -->
+<div class="beat">
+  <div class="beat-num">2</div>
+  <div class="beat-time">⏱ 0:40 — 2:00</div>
+  <div class="beat-title">QR дараалал — Дугаар л хангалттай</div>
+  <div class="beat-say">"Хүмүүс удаан хүлээхээс биш, хэр удаан хүлээхээ мэдэхгүй байхдаа л гарч явдаг. QR дараалал тэдэнд дугаар, хүлээх хугацаа харуулна. Ингээд л тэд үлддэг. Үзүүлье."</div>
+  <div class="beat-do">
+    <strong>Утсаа гарга:</strong><br>
+    1. <a href="https://barberpro-mn.duckdns.org/shop/barber-pro/queue" target="_blank">barberpro-mn.duckdns.org/shop/barber-pro/queue</a> нээ<br>
+    2. "Бат-Эрдэнэ" гэж нэр оруул<br>
+    3. "Дараалалд зогсох" товч дар<br>
+    4. <strong>→ Дэлгэцэн дээр гарч ирнэ — хэдүгээрт, хэр удаан хүлээх нь харагдана</strong><br>
+    5. "Харж байна уу? Одоо энэ хүн хүлээх хугацаагаа мэдэж байна. Тэр гарч явахгүй."
+  </div>
+  <div class="beat-insight">💡 Гол санаа: Хүлээх хугацаа өөрчлөгдөөгүй — түүний талаарх ойлголт л өөрчлөгдсөн. Энэ бол сэтгэл зүй.</div>
+</div>
+
+<!-- BEAT 3 -->
+<div class="beat">
+  <div class="beat-num">3</div>
+  <div class="beat-time">⏱ 2:00 — 3:00</div>
+  <div class="beat-title">Барбер хуудас — Нэг товч</div>
+  <div class="beat-say">"Одоо барбер юу хардгийг харуулъя. Тэд нэг л товч дарна. Өөр юу ч байхгүй."</div>
+  <div class="beat-do">
+    <strong>Барберын дэлгэц нээ:</strong><br>
+    1. <a href="https://barberpro-mn.duckdns.org/shop/barber-pro/barber?token=demo-permanent&barber_id=b1&barber_name=Бат-Эрдэнэ" target="_blank">Барбер хуудас</a> нээ<br>
+    2. "Дараагийнх" товчийг тодруулж харуул<br>
+    3. "Энэ л товч. Сургалт 0."<br>
+    4. Товч дар — "Бат-Эрдэнэ, таны ээлж!" гарна<br>
+    <strong>Чухал:</strong> "Танай барберууд утасныхаа дэлгэцэн дээр энэ товчийг л дарах болно. Нэвтрэхгүй, кодгүй, юу ч сурахгүй."
+  </div>
+</div>
+
+<!-- BEAT 5 -->
+<div class="beat">
+  <div class="beat-num">5</div>
+  <div class="beat-time">⏱ 3:45 — 4:30</div>
+  <div class="beat-title">Захиалгын хуудас — 3 алхам, 24/7 нээлттэй</div>
+  <div class="beat-say">"Гурав дахь систем. Хүн шөнийн 11 цагт маргааш үсээ засуулъя гэж шийднэ. Таны дэлгүүр хаалттай. Гэхдээ энэ хуудас нээлттэй."</div>
+  <div class="beat-do">
+    <strong>Захиалгын хуудас нээ:</strong><br>
+    1. <a href="https://barberpro-mn.duckdns.org/shop/barber-pro" target="_blank">Захиалгын хуудас</a> нээ<br>
+    2. Алхам 1: Барбер сонгох — карт товшиход шууд дараагийн алхам<br>
+    3. Алхам 2: Үйлчилгээ → Огноо → Цаг сонгох<br>
+    4. Алхам 3: Нэр, утас оруулаад "Захиалах" товч<br>
+    5. "Гурван алхам. 30 секунд. Энэ холбоосыг Instagram био дээрээ тавина."
+  </div>
+  <div class="beat-insight">💡 Захиалгын тал орчим хувь нь ажлын цагаас гадуур ирдэг. Хуудасгүй бол тэр захиалгууд өрсөлдөгчид чинь очдог.</div>
+</div>
+
+<!-- BEAT 5 -->
+<div class="beat">
+  <div class="beat-num">5</div>
+  <div class="beat-time">⏱ 3:45 — 4:30</div>
+  <div class="beat-title">Админ + CRM — Таны хяналтын самбар</div>
+  <div class="beat-say">"Гурав дахь систем. QR дараалал, захиалгын хуудас — энэ хоёр бүх хүний нэр, утасны дугаарыг цуглуулж байгаа. Тэгээд юу болдог вэ?"</div>
+  <div class="beat-do">
+    <strong>Админ нээ:</strong><br>
+    1. <a href="https://barberpro-mn.duckdns.org/admin?token=demo-permanent&shop=barber-pro" target="_blank">Админ самбар</a> нээ<br>
+    2. 📊 Тоон мэдээ — орлого, захиалга, график<br>
+    3. 🚶 Дараалал — бодит цагийн хяналт<br>
+    4. 🔄 "Хамгийн чухал нь: систем сүүлийн 30 хоногт ирээгүй хүмүүсийг харуулна. Тэдэнд хандаарай. Хуучин хүн эргүүлж татах нь шинэ хүн олохоос 5 дахин хямд."
+  </div>
+  <div class="beat-insight">💡 QR + Захиалга = өгөгдөл. Өгөгдөл = буцаж ирээгүй хүмүүсийг олж харах чадвар. Энэ бол ихэнх дэлгүүрийн харж чаддаггүй зүйл.</div>
+</div>
+
+<!-- BEAT 6 -->
+<div class="beat">
+  <div class="beat-num">6</div>
+  <div class="beat-time">⏱ 4:30 — 5:00</div>
+  <div class="beat-title">Хаалт — Тэдний тоогоор хаа</div>
+  <div class="beat-say">"Та өдөрт хэдэн хүн алддаг талаар ярьсан. Өдөрт 2 хүн л гэхэд сард 2 сая төгрөг. Манай систем 99,000₮. Өдөрт 1 хүн авч үлдэхэд л 3 хоногт зараа нөхнө. Үлдсэн 27 хоног цэвэр ашиг. 7 хоног үнэгүй туршаад үз. Дургүй бол болиулчих."</div>
+  <div class="beat-do">
+    <strong>Дараагийн алхам:</strong><br>
+    • <a href="https://barberpro-mn.duckdns.org/signup">barberpro-mn.duckdns.org/signup</a> — шууд бүртгүүлэх<br>
+    • Утас: 85279299 — залгахад л болно<br>
+    • "Маргааш ирж QR наагаад өгье" — onboarding-ийг нь хий
+  </div>
+</div>
+
+<hr>
+
+<!-- OBJECTIONS -->
+<div class="obj-section">
+  <h2>🛡️ Эсэргүүцэл шийдвэрлэх</h2>
+
+  <div class="obj-item">
+    <div class="obj-q">"Үнэтэй байна"</div>
+    <div class="obj-a">"Та өдөрт хэдэн хүн алддаг вэ? Нэг л хүний үнэ. Систем тэр нэг хүнийг авч үлдэхэд л мөнгөө нөхнө. Үлдсэн бүх зүйл цэвэр ашиг."</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">"Манай барберууд ашиглаж чадахгүй"</div>
+    <div class="obj-a">"Тэд нэг л товч дарах ёстой. Нэр дуудахаас ялгаагүй. Би ирж заагаад өгье — 5 минут. Сургалт гэж байхгүй."</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">"Бид Instagram-аар захиалга авдаг"</div>
+    <div class="obj-a">"Instagram-аар хэн ирсэн, хэн ирээгүй, хэн 30 хоног ирээгүйг мэдэх үү? Манай систем харуулна. Хуучин үйлчлүүлэгчээ эргүүлж татах нь шинэ хүн олохоос 5 дахин хямд шүү дээ."</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">"barber.mn ашигладаг"</div>
+    <div class="obj-a">"barber.mn бол жагсаалт. Тэнд дараалал байхгүй, захиалга байхгүй, CRM байхгүй. Таны дэлгүүр өсөх тусам эдгээр хэрэгцээ гарна. Бид бүгдийг нэг дор өгнө."</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">"Эргэлзээд байна / дараа бодъё"</div>
+    <div class="obj-a">"Дараа гэхэд та хэдэн хүн алдах вэ? Өдөрт 2 хүн × 30 хоног × 35K = 2,100,000₮. 7 хоног үнэгүй — танд алдах юм байхгүй. Татахгүй бол болиулчих."</div>
+  </div>
+</div>
+
+<div style="height:40px"></div>
+
+</body>
+</html>

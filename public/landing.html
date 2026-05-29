@@ -16,7 +16,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .nav-logo{font-weight:900;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:2px}.nav-logo span{color:var(--gold)}
 .nav-links{display:flex;align-items:center;gap:20px}
 .nav-links a{color:var(--dim);text-decoration:none;font-size:.78rem;font-weight:500;transition:color .2s}.nav-links a:hover{color:var(--text)}
-.nav-cta{padding:8px 20px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.72rem;text-decoration:none;border-radius:100px;transition:opacity .2s}.nav-cta:hover{opacity:.9}
+.nav-cta{padding:8px 20px;background:var(--gold);color:#0a0a0a!important;font-weight:700;font-size:.72rem;text-decoration:none;border-radius:100px;transition:opacity .2s}.nav-cta:hover{opacity:.9}
 @media(max-width:640px){.nav-links{gap:12px}.nav-links a:not(.nav-cta):not(.nav-login){font-size:.68rem}}
 .hero{padding:160px 24px 80px;text-align:center;max-width:800px;margin:0 auto}
 .hero-badge{display:inline-block;padding:6px 16px;background:var(--gold-dim);border:1px solid rgba(212,160,23,.2);border-radius:100px;font-size:.7rem;font-weight:600;color:var(--gold);margin-bottom:28px}
@@ -46,6 +46,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .ft-card:hover{border-color:rgba(212,160,23,.2)}
 .ft-card h3{font-size:.9rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .ft-card p{font-size:.76rem;color:var(--dim);line-height:1.7}
+
+/* Product proof blocks */
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+@media(max-width:800px){.proof-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+.proof-card{text-align:center}
+.phone-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.phone-frame{width:240px;border-radius:24px;border:3px solid #333;overflow:hidden;background:var(--card);box-shadow:0 8px 40px rgba(0,0,0,.4)}
+@media(max-width:800px){.phone-frame{width:220px}}
+
+/* Barber screen */
+.barber-screen{text-align:left;font-size:.65rem}
+.barber-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem;letter-spacing:-.2px}
+.barber-sc-body{padding:10px 12px 14px}
+.barber-sc-queue{padding:8px 10px;border:1px solid rgba(255,255,255,.04);border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.02)}
+.barber-sc-name{font-weight:700;font-size:.75rem;color:var(--text);margin-bottom:2px}
+.barber-sc-pos{font-size:.6rem;color:var(--dim)}
+.barber-sc-btn{display:block;width:100%;padding:12px;background:#d4a017;color:#0a0a0a;text-align:center;font-weight:800;font-size:.78rem;border-radius:10px;margin-top:8px}
+
+/* Queue status screen */
+.queue-screen{text-align:center;font-size:.65rem}
+.queue-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem}
+.queue-sc-body{padding:20px 14px}
+.queue-sc-num{font-size:1.8rem;font-weight:900;color:#d4a017;line-height:1}
+.queue-sc-sub{font-size:.65rem;color:var(--dim);margin-bottom:16px}
+.queue-sc-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin:0 8px 12px;overflow:hidden}
+.queue-sc-bar-fill{height:100%;border-radius:3px;background:#d4a017}
+.queue-sc-time{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.queue-sc-note{font-size:.6rem;color:var(--dim);line-height:1.4}
+
+/* Admin mini screen */
+.admin-screen{text-align:left;font-size:.65rem}
+.admin-sc-top{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;font-size:.68rem}
+.admin-sc-body{padding:14px}
+.admin-sc-row{display:flex;justify-content:space-between;margin-bottom:12px}
+.admin-sc-stat{text-align:center}
+.admin-sc-val{font-size:1.2rem;font-weight:900;color:#d4a017;line-height:1}
+.admin-sc-lbl{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.admin-sc-chart{display:flex;align-items:flex-end;gap:6px;height:40px;margin-bottom:6px}
+.admin-sc-bar-mini{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,.06)}
+.admin-sc-label{font-size:.55rem;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:.5px}
+
+.proof-caption{margin-top:8px}
+.proof-caption h3{font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.proof-caption p{font-size:.72rem;color:var(--dim);line-height:1.6;max-width:280px;margin:0 auto}
 .demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:720px){.demo-grid{grid-template-columns:1fr}}
 .demo-link{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);transition:all .2s}
@@ -113,14 +157,96 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
 </section>
 
 <section id="features" class="section" style="border-top:none">
-  <div class="section-header fade-in"><h2>Бүх зүйл <span class="hl">нэг</span> самбарт</h2><p>Утасны дуудлага, цаасан дэвтэр, Messenger чат — боли. Нэг дэлгэцнээс бүгдийг удирдана.</p></div>
-  <div class="ft-grid">
-    <div class="ft-card fade-in"><h3>🚶 QR Дараалал</h3><p>Үйлчлүүлэгч QR уншуулж, барбер сонгоод, үйлчилгээгээ сонгоод дугаараа оруулна. Барбер нэг товч дарж дуудна. Хүлээлгийн танхим хоосон — хүмүүс гадаа, машиндаа, кофе ууж хүлээнэ.</p></div>
-    <div class="ft-card fade-in"><h3>📅 Цаг Захиалга</h3><p>24/7 онлайн захиалга. Instagram био холбоосоор шууд захиалга авна. Барбер, үйлчилгээ, огноо сонгоод баталгаажуулна. Захиалгатай хүн дараалалд давуу эрхтэй орно.</p></div>
-    <div class="ft-card fade-in"><h3>💰 Комисс Тооцоо</h3><p>Барбер бүр хэдэн хүн үйлчилсэн, хэдэн төгрөгийн орлого оруулсан, комисс хэд вэ — өдөр, долоо хоног, сараар автоматаар бодно. Цалин тооцох цаасан дэвтэр хэрэггүй.</p></div>
-    <div class="ft-card fade-in"><h3>📊 Тоон Мэдээ</h3><p>Өдрийн орлого, шилдэг үйлчилгээ, завгүй цагууд, барбер бүрийн гүйцэтгэл — бүгд графиктай. Хэн ажилладаг, хэн залхуу вэ гэдэг нь харагдана.</p></div>
-    <div class="ft-card fade-in"><h3>🌐 Өөрийн Вэбсайт</h3><p>Барбершоп бүрт өөрийн захиалгын хуудас. Instagram био дээрээ тавиад шууд захиалга авна. Бүртгүүлэхэд л болно — код бичих шаардлагагүй.</p></div>
-    <div class="ft-card fade-in"><h3>👥 Харилцагчид</h3><p>Үйлчлүүлэгч бүрийн утас, айлчлалын түүх, тэмдэглэл хадгалагдана. Хэн хэзээ ирсэн, ямар үйлчилгээ авсан — бүгд системд.</p></div>
+  <div class="section-header fade-in"><h2>Системийн <span class="hl">харагдах байдал</span></h2><p>Доорх дэлгэцүүд — таны гар утсан дээр яг адилхан харагдана.</p></div>
+  <div class="proof-grid">
+    <!-- PROOF 1: Barber page -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="barber-screen">
+            <div class="barber-sc-header">✂️ Бат-Эрдэнэ</div>
+            <div class="barber-sc-body">
+              <div class="barber-sc-queue">
+                <div class="barber-sc-name">Ганболд</div>
+                <div class="barber-sc-pos">✂️ ҮСЧИЛГЭЭ: Үс засах · 25мин</div>
+              </div>
+              <div class="barber-sc-queue">
+                <div class="barber-sc-name">Болормаа</div>
+                <div class="barber-sc-pos">✂️ ҮСЧИЛГЭЭ: Үс засах · 35мин</div>
+              </div>
+              <div class="barber-sc-btn">Дараагийнх</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>Нэг товч дуудах</h3>
+        <p>Барбер утаснаасаа "Дараагийнх" товчийг л дарна. Дараалал автоматаар урагшилна. Сургалт 0 минут.</p>
+      </div>
+    </div>
+
+    <!-- PROOF 2: Queue status -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="queue-screen">
+            <div class="queue-sc-header">🚶 barber-pro</div>
+            <div class="queue-sc-body">
+              <div class="queue-sc-pos">
+                <div class="queue-sc-num">4-р</div>
+                <div class="queue-sc-sub">байранд</div>
+              </div>
+              <div class="queue-sc-bar">
+                <div class="queue-sc-bar-fill" style="width:40%"></div>
+              </div>
+              <div class="queue-sc-time">~25 минут хүлээнэ</div>
+              <div class="queue-sc-note">Та дараалалд байна. Ээлж ойртоход мэдэгдэх болно.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>24/7 Дарааллын төлөв</h3>
+        <p>Үйлчлүүлэгч QR уншуулаад дугаар авч, хүрээлэн буй орчиндоо тав тухтай хүлээнэ. Гарч явахгүй.</p>
+      </div>
+    </div>
+
+    <!-- PROOF 3: Admin stats -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="admin-screen">
+            <div class="admin-sc-top">🔑 Админ · barber-pro</div>
+            <div class="admin-sc-body">
+              <div class="admin-sc-row">
+                <div class="admin-sc-stat">
+                  <div class="admin-sc-val" id="pf-shops">0</div>
+                  <div class="admin-sc-lbl">Өнөөдөр</div>
+                </div>
+                <div class="admin-sc-stat">
+                  <div class="admin-sc-val">&nbsp;</div>
+                  <div class="admin-sc-lbl">&nbsp;</div>
+                </div>
+              </div>
+              <div class="admin-sc-chart">
+                <div class="admin-sc-bar-mini" style="height:20px"></div>
+                <div class="admin-sc-bar-mini" style="height:32px"></div>
+                <div class="admin-sc-bar-mini" style="height:18px;background:#d4a017"></div>
+                <div class="admin-sc-bar-mini" style="height:28px;background:#d4a017"></div>
+                <div class="admin-sc-bar-mini" style="height:14px"></div>
+                <div class="admin-sc-bar-mini" style="height:24px"></div>
+                <div class="admin-sc-bar-mini" style="height:30px;background:#d4a017"></div>
+              </div>
+              <div class="admin-sc-label">7 хоногийн график</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>Бодит тоон мэдээ</h3>
+        <p>Орлого, үйлчлүүлэгч, барберын гүйцэтгэл — бүгд автоматик. Цаасан дэвтэр, Excel-ээ сал.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -189,8 +315,8 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
 
 <footer>
   <p style="font-weight:700;margin-bottom:4px">Barber<span style="color:var(--gold)">.</span>Pro</p>
-  <p style="margin-bottom:8px">Монголын барбершопуудад · Bolor Digital</p>
-  <a href="/signup">Бүртгүүлэх</a> · <a href="/admin-login">Нэвтрэх</a> · <a href="/demo">Демо</a> · <a href="tel:85279299">📞 85279299</a>
+  <p style="margin-bottom:8px">Velo Grid Systems LLC</p>
+  <a href="/signup">Бүртгүүлэх</a> · <a href="/admin-login">Нэвтрэх</a> · <a href="/demo">Демо</a> · <a href="/privacy">Нууцлал</a> · <a href="/terms">Нөхцөл</a> · <a href="tel:85279299">📞 85279299</a>
 </footer>
 
 <script>

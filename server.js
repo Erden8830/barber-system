@@ -196,6 +196,7 @@ try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_short_url TEXT").run(); }
 try { db.prepare("ALTER TABLE bookings ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN bank_qr_image TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN deposit_method TEXT DEFAULT 'none'").run(); } catch(e) {}
 
 // Seed default schedules for barbers without any
 const unscheduledBarbers = db.prepare(`SELECT b.id FROM barbers b WHERE b.active = 1 AND NOT EXISTS (SELECT 1 FROM barber_schedules WHERE barber_id = b.id)`).all();
@@ -604,12 +605,10 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
   const service = db.prepare('SELECT * FROM services WHERE id = ? AND shop_id = ?').get(service_id, req.shop.id);
   if (!service) return res.status(400).json({ error: 'Үйлчилгээ олдсонгүй' });
 
-  const needsDeposit = req.shop.deposit_enabled && service.deposit_amount > 0;
-
-  // Determine deposit method: QPay API, bank QR, or test
-  const useQpay = needsDeposit && req.shop.qpay_invoice_code && req.shop.qpay_invoice_code !== 'TEST';
-  const useTest = needsDeposit && req.shop.qpay_invoice_code === 'TEST';
-  const useBankQR = needsDeposit && !req.shop.qpay_invoice_code && (req.shop.bank_qr_url || req.shop.bank_qr_image);
+  const needsDeposit = req.shop.deposit_enabled && service.deposit_amount > 0 && req.shop.deposit_method !== 'none';
+  const useQpay = needsDeposit && req.shop.deposit_method === 'qpay';
+  const useTest = needsDeposit && req.shop.deposit_method === 'test';
+  const useBankQR = needsDeposit && req.shop.deposit_method === 'bank_qr';
 
   const id = uuidv4().slice(0, 8);
   const bookingStatus = needsDeposit ? 'pending_deposit' : 'confirmed';
@@ -1234,19 +1233,20 @@ app.post('/api/admin/barbers/:id/schedule', requireAuth, (req, res) => {
 
 // ===== ADMIN — QPAY DEPOSIT SETTINGS =====
 app.get('/api/admin/qpay/status', requireAuth, (req, res) => {
-  const shop = db.prepare('SELECT deposit_enabled, qpay_invoice_code, qpay_username FROM shops WHERE id = ?').get(req.shop_id);
+  const shop = db.prepare('SELECT deposit_enabled, deposit_method, qpay_invoice_code, qpay_username FROM shops WHERE id = ?').get(req.shop_id);
   res.json({ 
     enabled: !!shop.deposit_enabled,
+    method: shop.deposit_method || 'none',
     configured: !!(shop.qpay_invoice_code && shop.qpay_username),
     invoice_code: shop.qpay_invoice_code ? shop.qpay_invoice_code.slice(0, 4) + '...' + shop.qpay_invoice_code.slice(-2) : null 
   });
 });
 
 app.post('/api/admin/qpay/save', requireAuth, (req, res) => {
-  const { username, password, invoice_code, deposit_enabled, bank_qr_url, bank_qr_image } = req.body;
-  if (invoice_code && (!username || !password)) return res.status(400).json({ error: 'QPay username болон password оруулна уу' });
-  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=?, bank_qr_url=?, bank_qr_image=? WHERE id=?').run(username||null, password||null, invoice_code||null, deposit_enabled ? 1 : 0, bank_qr_url||null, bank_qr_image||null, req.shop_id);
-  res.json({ success: true, message: 'QPay тохиргоо хадгалагдлаа' });
+  const { username, password, invoice_code, deposit_enabled, deposit_method, bank_qr_url, bank_qr_image } = req.body;
+  if (deposit_method === 'qpay' && (!username || !password || !invoice_code)) return res.status(400).json({ error: 'QPay тохиргоог бүрэн бөглөнө үү' });
+  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=?, deposit_method=?, bank_qr_url=?, bank_qr_image=? WHERE id=?').run(username||null, password||null, invoice_code||null, deposit_enabled ? 1 : 0, deposit_method||'none', bank_qr_url||null, bank_qr_image||null, req.shop_id);
+  res.json({ success: true, message: 'Тохиргоо хадгалагдлаа' });
 });
 
 app.post('/api/admin/qpay/toggle', requireAuth, (req, res) => {

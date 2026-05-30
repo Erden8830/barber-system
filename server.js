@@ -174,6 +174,7 @@ try { db.prepare("ALTER TABLE barbers ADD COLUMN avg_service_time INTEGER DEFAUL
 try { db.prepare("ALTER TABLE shops ADD COLUMN sub_status TEXT DEFAULT 'trial'").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN trial_ends_at TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN sub_ends_at TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN plan TEXT DEFAULT 'pro'").run(); } catch(e) {}
 // Migration: add owner_name to shops (may 2026)
 try { db.prepare("ALTER TABLE shops ADD COLUMN owner_name TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN sms_remind_today TEXT").run(); } catch(e) {/* already exists */}

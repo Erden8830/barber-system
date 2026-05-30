@@ -1388,7 +1388,7 @@ app.get('/shop/:shop/queue-status', requireShop, (req, res) => {
 });
 app.get('/shop/:shop/book', requireShop, (req, res) => {
   if (isShopExpired(req.shop)) return res.sendFile(path.join(__dirname, 'public', 'expired.html'));
-  res.sendFile(path.join(__dirname, 'public', 'booking3.html'));
+  res.sendFile(path.join(__dirname, 'public', 'booking4.html'));
 });
 app.get('/shop/:shop', requireShop, (req, res) => {
   if (isShopExpired(req.shop)) return res.sendFile(path.join(__dirname, 'public', 'expired.html'));
@@ -1396,7 +1396,7 @@ app.get('/shop/:shop', requireShop, (req, res) => {
   if (fs.existsSync(themeFile)) {
     res.sendFile(themeFile);
   } else {
-    res.sendFile(path.join(__dirname, 'public', 'booking3.html'));
+    res.sendFile(path.join(__dirname, 'public', 'booking4.html'));
   }
 });
 

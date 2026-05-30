@@ -334,8 +334,10 @@ document.getElementById('bookBtn').onclick=async function(){
     // Check if deposit required
     if(d.status==='pending_deposit'){
       var isTest=d.qpay_short_url==='test://simulated';
+      var isBank=d.bank_qr_url;
       document.getElementById('depAmt').textContent=(d.deposit_amount||0).toLocaleString()+'₮';
       if(isTest) document.getElementById('depMsg').textContent='🧪 ТУРШИЛТЫН ГОРИМ — 8 секундын дараа автоматаар баталгаажина';
+      else if(isBank) document.getElementById('depMsg').textContent='Доорх QR-г уншуулж төлбөрөө төлнө үү. Төлсний дараа захиалга баталгаажина.';
       document.getElementById('depDetails').innerHTML=
         '<div class="row"><span class="lbl">Барбер</span><span class="val">'+barberName+'</span></div>'+
         '<div class="row"><span class="lbl">Үйлчилгээ</span><span class="val">'+svcName+'</span></div>'+
@@ -344,6 +346,8 @@ document.getElementById('bookBtn').onclick=async function(){
         '<div class="row"><span class="lbl">ID</span><span class="val">#'+d.booking_id+'</span></div>';
       if(d.qr_image){
         document.getElementById('depQR').innerHTML='<img src="data:image/png;base64,'+d.qr_image+'" width="180" height="180" style="border-radius:12px;border:1px solid rgba(255,255,255,.06)">';
+      }else if(isBank){
+        document.getElementById('depQR').innerHTML='<img src="'+d.bank_qr_url+'" width="220" height="220" style="border-radius:12px;border:1px solid rgba(255,255,255,.06);max-width:100%">';
       }else{
         document.getElementById('depQR').innerHTML='<div style="width:180px;height:180px;margin:0 auto;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:rgba(255,255,255,.2)">QR</div>';
       }

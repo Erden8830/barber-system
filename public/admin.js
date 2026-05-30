@@ -299,9 +299,8 @@ async function loadQpaySettings(){try{const r=await fetch(A+'/api/admin/qpay/sta
 if(d.configured){st.style.background='rgba(46,204,113,.08)';st.style.color='var(--green)';st.textContent='✅ QPay холбогдсон — '+d.invoice_code}
 else{st.style.background='rgba(231,76,60,.08)';st.style.color='var(--red)';st.textContent='❌ QPay тохируулаагүй байна'}
 document.getElementById('qpay-enabled').checked=d.enabled}catch(e){}}
-async function saveQpay(){try{const u=document.getElementById('qpay-user').value.trim();const p=document.getElementById('qpay-pass').value.trim();const c=document.getElementById('qpay-code').value.trim();const en=document.getElementById('qpay-enabled').checked;
-if(!u||!p||!c){document.getElementById('qpay-msg').textContent='❌ Бүх талбарыг бөглөнө үү';return}
-const r=await fetch(A+'/api/admin/qpay/save',{method:'POST',headers:H,body:JSON.stringify({username:u,password:p,invoice_code:c,deposit_enabled:en})});const d=await r.json();document.getElementById('qpay-msg').textContent=d.success?'✅ Хадгалагдлаа':'❌ '+d.error;setTimeout(()=>document.getElementById('qpay-msg').textContent='',3000);loadQpaySettings()}catch(e){}}
+async function saveQpay(){try{const u=document.getElementById('qpay-user').value.trim();const p=document.getElementById('qpay-pass').value.trim();const c=document.getElementById('qpay-code').value.trim();const en=document.getElementById('qpay-enabled').checked;const bq=document.getElementById('bank-qr').value.trim();
+const r=await fetch(A+'/api/admin/qpay/save',{method:'POST',headers:H,body:JSON.stringify({username:u||null,password:p||null,invoice_code:c||null,deposit_enabled:en,bank_qr_url:bq||null})});const d=await r.json();document.getElementById('qpay-msg').textContent=d.success?'✅ Хадгалагдлаа':'❌ '+d.error;setTimeout(()=>document.getElementById('qpay-msg').textContent='',3000);loadQpaySettings()}catch(e){}}
 async function toggleQpay(){try{const en=document.getElementById('qpay-enabled').checked;await fetch(A+'/api/admin/qpay/toggle',{method:'POST',headers:H,body:JSON.stringify({enabled:!en})});loadQpaySettings()}catch(e){}}
 
 // SMS

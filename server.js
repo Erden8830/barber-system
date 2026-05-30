@@ -193,6 +193,8 @@ try { db.prepare("ALTER TABLE bookings ADD COLUMN deposit_paid INTEGER DEFAULT 0
 try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_invoice_id TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_qr_image TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_short_url TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
 
 // Seed default schedules for barbers without any
 const unscheduledBarbers = db.prepare(`SELECT b.id FROM barbers b WHERE b.active = 1 AND NOT EXISTS (SELECT 1 FROM barber_schedules WHERE barber_id = b.id)`).all();
@@ -603,37 +605,41 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
 
   const needsDeposit = req.shop.deposit_enabled && service.deposit_amount > 0;
 
+  // Determine deposit method: QPay API, bank QR, or test
+  const useQpay = needsDeposit && req.shop.qpay_invoice_code && req.shop.qpay_invoice_code !== 'TEST';
+  const useTest = needsDeposit && req.shop.qpay_invoice_code === 'TEST';
+  const useBankQR = needsDeposit && !req.shop.qpay_invoice_code && req.shop.bank_qr_url;
+
   const id = uuidv4().slice(0, 8);
   const bookingStatus = needsDeposit ? 'pending_deposit' : 'confirmed';
 
   if (needsDeposit) {
-    // Create booking with pending_deposit status + QPay invoice
-    let invoiceResult;
+    // Create booking with pending_deposit status
+    let invoiceResult = {};
+    let bankQrUrl = null;
 
-    // TEST MODE: if invoice_code is "TEST", simulate without real QPay
-    if (req.shop.qpay_invoice_code === 'TEST') {
-      invoiceResult = {
-        invoice_id: 'test-' + id,
-        qr_image: null,
-        short_url: 'test://simulated'
-      };
-    } else {
+    if (useQpay) {
+      // Real QPay invoice
       try {
         const callbackUrl = `${req.protocol}://${req.get('host')}/api/qpay/webhook`;
         invoiceResult = await qpayCreateInvoice(
-          req.shop,
-          service.deposit_amount,
+          req.shop, service.deposit_amount,
           `Барьерын цаг баталгаажуулах — ${service.name}`,
-          id,
-          callbackUrl
+          id, callbackUrl
         );
       } catch (e) {
         return res.status(500).json({ error: 'Төлбөрийн нэхэмжлэл үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.' });
       }
+    } else if (useTest) {
+      invoiceResult = { invoice_id: 'test-' + id, qr_image: null, short_url: 'test://simulated' };
+    } else if (useBankQR) {
+      // Bank QR — no API call, just use shop's static QR
+      invoiceResult = { invoice_id: 'bank-' + id, qr_image: null, short_url: null };
+      bankQrUrl = req.shop.bank_qr_url;
     }
 
-    db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status,deposit_amount,qpay_invoice_id,qpay_qr_image,qpay_short_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
-      .run(id, req.shop.id, barber_id, service_id, customer_name, customer_phone, booking_date, booking_time, bookingStatus, service.deposit_amount, invoiceResult.invoice_id, invoiceResult.qr_image, invoiceResult.short_url);
+    db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status,deposit_amount,qpay_invoice_id,qpay_qr_image,qpay_short_url,bank_qr_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+      .run(id, req.shop.id, barber_id, service_id, customer_name, customer_phone, booking_date, booking_time, bookingStatus, service.deposit_amount, invoiceResult.invoice_id || null, invoiceResult.qr_image || null, invoiceResult.short_url || null, bankQrUrl);
 
     return res.json({
       success: true,
@@ -641,8 +647,9 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
       status: 'pending_deposit',
       deposit_amount: service.deposit_amount,
       message: 'Захиалгаа баталгаажуулахын тулд төлбөр төлнө үү',
-      qr_image: invoiceResult.qr_image,
-      qpay_short_url: invoiceResult.short_url,
+      qr_image: invoiceResult.qr_image || null,
+      qpay_short_url: invoiceResult.short_url || null,
+      bank_qr_url: bankQrUrl,
       shop_slug: req.shop.slug
     });
   }
@@ -1236,9 +1243,9 @@ app.get('/api/admin/qpay/status', requireAuth, (req, res) => {
 });
 
 app.post('/api/admin/qpay/save', requireAuth, (req, res) => {
-  const { username, password, invoice_code, deposit_enabled } = req.body;
-  if (!username || !password || !invoice_code) return res.status(400).json({ error: 'Бүх QPay мэдээллийг бөглөнө үү' });
-  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=? WHERE id=?').run(username, password, invoice_code, deposit_enabled ? 1 : 0, req.shop_id);
+  const { username, password, invoice_code, deposit_enabled, bank_qr_url } = req.body;
+  if (invoice_code && (!username || !password)) return res.status(400).json({ error: 'QPay username болон password оруулна уу' });
+  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=?, bank_qr_url=? WHERE id=?').run(username||null, password||null, invoice_code||null, deposit_enabled ? 1 : 0, bank_qr_url||null, req.shop_id);
   res.json({ success: true, message: 'QPay тохиргоо хадгалагдлаа' });
 });
 
@@ -1246,6 +1253,22 @@ app.post('/api/admin/qpay/toggle', requireAuth, (req, res) => {
   const { enabled } = req.body;
   db.prepare('UPDATE shops SET deposit_enabled = ? WHERE id = ?').run(enabled ? 1 : 0, req.shop_id);
   res.json({ success: true, enabled });
+});
+
+// Manual deposit confirmation (for bank QR / admin override)
+app.post('/api/admin/deposit/confirm', requireAuth, (req, res) => {
+  const { booking_id } = req.body;
+  if (!booking_id) return res.status(400).json({ error: 'Booking ID required' });
+  const booking = db.prepare("SELECT * FROM bookings WHERE id = ? AND shop_id = ? AND status = 'pending_deposit'").get(booking_id, req.shop_id);
+  if (!booking) return res.status(404).json({ error: 'Захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан' });
+  db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking_id);
+  // Add to queue
+  const maxQ = db.prepare("SELECT COALESCE(MAX(position),0) as mp FROM queue_entries WHERE shop_id = ? AND status NOT IN ('done','cancelled')").get(req.shop_id);
+  const qid = uuidv4().slice(0, 8);
+  db.prepare('INSERT INTO queue_entries (id,shop_id,barber_id,phone,customer_name,service_name,position,source,booking_id,priority) VALUES (?,?,?,?,?,?,?,?,?,1)')
+    .run(qid, req.shop_id, booking.barber_id, booking.customer_phone, booking.customer_name, '', maxQ.mp + 1, 'booking', booking_id);
+  wsBroadcast(req.shop_id, { type: 'booking:new', booking_id }); wsBroadcast(req.shop_id, { type: 'queue:change' });
+  res.json({ success: true, message: 'Урьдчилгаа баталгаажлаа' });
 });
 
 // ===== ADMIN — COMMISSION REPORT =====

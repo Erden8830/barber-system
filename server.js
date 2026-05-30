@@ -609,17 +609,27 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
   if (needsDeposit) {
     // Create booking with pending_deposit status + QPay invoice
     let invoiceResult;
-    try {
-      const callbackUrl = `${req.protocol}://${req.get('host')}/api/qpay/webhook`;
-      invoiceResult = await qpayCreateInvoice(
-        req.shop,
-        service.deposit_amount,
-        `Барьерын цаг баталгаажуулах — ${service.name}`,
-        id,
-        callbackUrl
-      );
-    } catch (e) {
-      return res.status(500).json({ error: 'Төлбөрийн нэхэмжлэл үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.' });
+
+    // TEST MODE: if invoice_code is "TEST", simulate without real QPay
+    if (req.shop.qpay_invoice_code === 'TEST') {
+      invoiceResult = {
+        invoice_id: 'test-' + id,
+        qr_image: null,
+        short_url: 'test://simulated'
+      };
+    } else {
+      try {
+        const callbackUrl = `${req.protocol}://${req.get('host')}/api/qpay/webhook`;
+        invoiceResult = await qpayCreateInvoice(
+          req.shop,
+          service.deposit_amount,
+          `Барьерын цаг баталгаажуулах — ${service.name}`,
+          id,
+          callbackUrl
+        );
+      } catch (e) {
+        return res.status(500).json({ error: 'Төлбөрийн нэхэмжлэл үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.' });
+      }
     }
 
     db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status,deposit_amount,qpay_invoice_id,qpay_qr_image,qpay_short_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
@@ -741,6 +751,16 @@ app.get('/api/shop/:shop/qpay/check/:booking_id', requireShop, async (req, res) 
   // Still pending — check with QPay
   if (booking.qpay_invoice_id) {
     try {
+      // TEST MODE: auto-confirm simulated bookings immediately
+      if (booking.qpay_invoice_id.startsWith('test-')) {
+        db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking.id);
+        // Add to queue
+        const maxQ = db.prepare("SELECT COALESCE(MAX(position),0) as mp FROM queue_entries WHERE shop_id = ? AND status NOT IN ('done','cancelled')").get(req.shop.id);
+        const qid = uuidv4().slice(0, 8);
+        db.prepare('INSERT INTO queue_entries (id,shop_id,barber_id,phone,customer_name,service_name,position,source,booking_id,priority) VALUES (?,?,?,?,?,?,?,?,?,1)')
+          .run(qid, req.shop.id, booking.barber_id, booking.customer_phone, booking.customer_name, '', maxQ.mp + 1, 'booking', booking.id);
+        return res.json({ paid: true, status: 'confirmed', test: true });
+      }
       const result = await qpayCheckPayment(req.shop, booking.qpay_invoice_id);
       if (result.paid) {
         db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking.id);

@@ -751,8 +751,15 @@ app.get('/api/shop/:shop/qpay/check/:booking_id', requireShop, async (req, res) 
   // Still pending — check with QPay
   if (booking.qpay_invoice_id) {
     try {
-      // TEST MODE: auto-confirm simulated bookings immediately
+      // TEST MODE: auto-confirm simulated bookings after 8 seconds (so user can see UI)
       if (booking.qpay_invoice_id.startsWith('test-')) {
+        // Only confirm after 8 seconds have passed since creation
+        const created = new Date(booking.created_at + ' UTC');
+        const elapsed = (Date.now() - created.getTime()) / 1000;
+        if (elapsed < 8) {
+          res.json({ paid: false, status: 'pending_deposit', test: true });
+          return;
+        }
         db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking.id);
         // Add to queue
         const maxQ = db.prepare("SELECT COALESCE(MAX(position),0) as mp FROM queue_entries WHERE shop_id = ? AND status NOT IN ('done','cancelled')").get(req.shop.id);

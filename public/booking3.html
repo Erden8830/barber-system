@@ -145,16 +145,6 @@ body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;mi
       <div class="btn-wrap"><button class="btn" id="bookBtn">Захиалах</button></div>
     </div>
 
-    <div class="step" id="step-done">
-      <div class="confirm">
-        <div class="check-wrap"><div class="check">✅</div></div>
-        <h2>Захиалга баталгаажлаа</h2>
-        <p class="sub">Танд баталгаажуулах мэдээлэл илгээгдэх болно</p>
-        <div class="details" id="doneDetails"></div>
-        <button class="btn" onclick="resetAll()">Дахиж захиалах</button>
-      </div>
-    </div>
-
     <div class="step" id="step-deposit">
       <div class="confirm">
         <h2>💳 Урьдчилгаа төлбөр</h2>
@@ -165,6 +155,16 @@ body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;mi
         <div id="depTimer" style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:16px">Төлбөр хүлээж байна...</div>
         <div class="details" id="depDetails"></div>
         <button class="btn" onclick="resetAll()" style="margin-top:10px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);box-shadow:none">Цуцлах</button>
+      </div>
+    </div>
+
+    <div class="step" id="step-done">
+      <div class="confirm">
+        <div class="check-wrap"><div class="check">✅</div></div>
+        <h2>Захиалга баталгаажлаа</h2>
+        <p class="sub">Танд баталгаажуулах мэдээлэл илгээгдэх болно</p>
+        <div class="details" id="doneDetails"></div>
+        <button class="btn" onclick="resetAll()">Дахиж захиалах</button>
       </div>
     </div>
 
@@ -333,7 +333,9 @@ document.getElementById('bookBtn').onclick=async function(){
     var price='';services.forEach(function(s){if(s.id==selSvc)price=s.price.toLocaleString()+'₮'});
     // Check if deposit required
     if(d.status==='pending_deposit'){
+      var isTest=d.qpay_short_url==='test://simulated';
       document.getElementById('depAmt').textContent=(d.deposit_amount||0).toLocaleString()+'₮';
+      if(isTest) document.getElementById('depMsg').textContent='🧪 ТУРШИЛТЫН ГОРИМ — 8 секундын дараа автоматаар баталгаажина';
       document.getElementById('depDetails').innerHTML=
         '<div class="row"><span class="lbl">Барбер</span><span class="val">'+barberName+'</span></div>'+
         '<div class="row"><span class="lbl">Үйлчилгээ</span><span class="val">'+svcName+'</span></div>'+

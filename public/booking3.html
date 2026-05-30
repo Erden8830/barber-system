@@ -155,6 +155,19 @@ body{font-family:Inter,-apple-system,sans-serif;background:#0a0a0a;color:#fff;mi
       </div>
     </div>
 
+    <div class="step" id="step-deposit">
+      <div class="confirm">
+        <h2>💳 Урьдчилгаа төлбөр</h2>
+        <p class="sub" id="depMsg">Цагаа баталгаажуулахын тулд урьдчилгаа төлнө үү</p>
+        <div id="depQR" style="margin:0 auto 12px;text-align:center"></div>
+        <div id="depAmt" style="font-size:1.4rem;font-weight:700;color:#d4a017;margin-bottom:8px"></div>
+        <div id="depLink" style="margin-bottom:12px"></div>
+        <div id="depTimer" style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:16px">Төлбөр хүлээж байна...</div>
+        <div class="details" id="depDetails"></div>
+        <button class="btn" onclick="resetAll()" style="margin-top:10px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);box-shadow:none">Цуцлах</button>
+      </div>
+    </div>
+
     <div class="err" id="error"></div>
   </div>
 </div>
@@ -318,6 +331,31 @@ document.getElementById('bookBtn').onclick=async function(){
     var barberName='';barbers.forEach(function(b){if(b.id==selBarber)barberName=b.name});
     var svcName='';services.forEach(function(s){if(s.id==selSvc)svcName=s.name});
     var price='';services.forEach(function(s){if(s.id==selSvc)price=s.price.toLocaleString()+'₮'});
+    // Check if deposit required
+    if(d.status==='pending_deposit'){
+      document.getElementById('depAmt').textContent=(d.deposit_amount||0).toLocaleString()+'₮';
+      document.getElementById('depDetails').innerHTML=
+        '<div class="row"><span class="lbl">Барбер</span><span class="val">'+barberName+'</span></div>'+
+        '<div class="row"><span class="lbl">Үйлчилгээ</span><span class="val">'+svcName+'</span></div>'+
+        '<div class="row"><span class="lbl">Цаг</span><span class="val">'+selDate+' '+selTime+'</span></div>'+
+        '<div class="row"><span class="lbl">Үнэ</span><span class="val" style="color:#d4a017">'+price+'</span></div>'+
+        '<div class="row"><span class="lbl">ID</span><span class="val">#'+d.booking_id+'</span></div>';
+      if(d.qr_image){
+        document.getElementById('depQR').innerHTML='<img src="data:image/png;base64,'+d.qr_image+'" width="180" height="180" style="border-radius:12px;border:1px solid rgba(255,255,255,.06)">';
+      }else{
+        document.getElementById('depQR').innerHTML='<div style="width:180px;height:180px;margin:0 auto;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:rgba(255,255,255,.2)">QR</div>';
+      }
+      if(d.qpay_short_url&&d.qpay_short_url!=='test://simulated'){
+        document.getElementById('depLink').innerHTML='<a href="'+d.qpay_short_url+'" target="_blank" style="color:#d4a017;font-size:.78rem">Төлбөр төлөх холбоос →</a>';
+      }else{
+        document.getElementById('depLink').innerHTML='';
+      }
+      showStep('deposit');
+      pollDeposit(d.booking_id);
+      return;
+    }
+
+    // Normal confirmed booking
     document.getElementById('doneDetails').innerHTML=
       '<div class="row"><span class="lbl">Барбер</span><span class="val">'+barberName+'</span></div>'+
       '<div class="row"><span class="lbl">Үйлчилгээ</span><span class="val">'+svcName+'</span></div>'+
@@ -329,7 +367,38 @@ document.getElementById('bookBtn').onclick=async function(){
   }catch(e){showErr('Алдаа: '+e.message);btn.disabled=false;btn.textContent='Захиалах'}
 };
 
+var _depPoll=null;
+async function pollDeposit(bookingId){
+  if(_depPoll)clearInterval(_depPoll);
+  var secs=0;
+  _depPoll=setInterval(async function(){
+    secs++;
+    document.getElementById('depTimer').textContent='Төлбөр хүлээж байна... ('+secs+'с)';
+    try{
+      var r=await fetch(API+'/api/shop/'+SLUG+'/qpay/check/'+bookingId);
+      var d=await r.json();
+      if(d.status==='confirmed'){
+        clearInterval(_depPoll);_depPoll=null;
+        document.getElementById('depTimer').textContent='✅ Төлбөр төлөгдсөн!';
+        document.getElementById('depMsg').textContent='Захиалга баталгаажлаа';
+        setTimeout(function(){
+          // Switch to done step
+          document.getElementById('doneDetails').innerHTML=document.getElementById('depDetails').innerHTML;
+          showStep('done');
+        },1500);
+        return;
+      }
+      if(d.status==='cancelled'){
+        clearInterval(_depPoll);_depPoll=null;
+        document.getElementById('depTimer').textContent='⏰ Хугацаа дууссан';
+        document.getElementById('depMsg').textContent='Төлбөр төлөгдөөгүй, захиалга цуцлагдсан';
+      }
+    }catch(e){}
+  },2000);
+}
+
 function resetAll(){
+  if(_depPoll){clearInterval(_depPoll);_depPoll=null;}
   selBarber=null;selSvc=null;selDate=null;selTime=null;
   document.querySelectorAll('.barber-card,.svc-item,.slot-btn').forEach(function(x){x.classList.remove('sel')});
   document.getElementById('custName').value='';

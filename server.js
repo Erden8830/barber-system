@@ -181,6 +181,18 @@ try { db.prepare("ALTER TABLE shops ADD COLUMN sms_remind_tomorrow TEXT").run();
 try { db.prepare("ALTER TABLE shops ADD COLUMN sms_retention_30 TEXT").run(); } catch(e) {/* already exists */}
 try { db.prepare("ALTER TABLE shops ADD COLUMN sms_retention_60 TEXT").run(); } catch(e) {/* already exists */}
 
+// Migration: QPay deposit + payment columns (May 2026)
+try { db.prepare("ALTER TABLE shops ADD COLUMN qpay_username TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN qpay_password TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN qpay_invoice_code TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN deposit_enabled INTEGER DEFAULT 0").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE services ADD COLUMN deposit_amount INTEGER DEFAULT 0").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN deposit_amount INTEGER DEFAULT 0").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN deposit_paid INTEGER DEFAULT 0").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_invoice_id TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_qr_image TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_short_url TEXT").run(); } catch(e) {}
+
 // Seed default schedules for barbers without any
 const unscheduledBarbers = db.prepare(`SELECT b.id FROM barbers b WHERE b.active = 1 AND NOT EXISTS (SELECT 1 FROM barber_schedules WHERE barber_id = b.id)`).all();
 if (unscheduledBarbers.length > 0) {
@@ -553,7 +565,7 @@ app.get('/api/shop/:shop/slots', requireShop, requireActiveSub, (req, res) => {
 });
 
 // Create booking
-app.post('/api/shop/:shop/book', requireShop, requireActiveSub, (req, res) => {
+app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res) => {
   const { barber_id, service_id, customer_name, customer_phone, booking_date, booking_time } = req.body;
   if (!barber_id || !service_id || !customer_name || !customer_phone || !booking_date || !booking_time) {
     return res.status(400).json({ error: 'Бүх талбарыг бөглөнө үү' });
@@ -563,13 +575,18 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, (req, res) => {
     .get(req.shop.id, booking_date, booking_time, barber_id, 'confirmed');
   if (existing) return res.status(409).json({ error: 'Энэ цаг аль хэдийн захиалсан' });
 
+  // Also check for pending_deposit bookings occupying the slot
+  const pendingExisting = db.prepare("SELECT id FROM bookings WHERE shop_id = ? AND booking_date = ? AND booking_time = ? AND barber_id = ? AND status = 'pending_deposit' AND created_at > datetime('now','-5 minutes','localtime')")
+    .get(req.shop.id, booking_date, booking_time, barber_id);
+  if (pendingExisting) return res.status(409).json({ error: 'Энэ цаг түр хаагдсан байна. 5 минутын дараа дахин оролдоно уу.' });
+
   // Reject past bookings
   const bookingDT = new Date(booking_date + 'T' + booking_time);
   const now = new Date();
   if (bookingDT < now) return res.status(400).json({ error: 'Энэ цаг аль хэдийн өнгөрсөн. Өөр цаг сонгоно уу.' });
 
   // Same phone, same date — only block if existing booking hasn't passed yet
-  const dupPhone = db.prepare("SELECT id, booking_time FROM bookings WHERE shop_id = ? AND customer_phone = ? AND booking_date = ? AND status = 'confirmed'").get(req.shop.id, customer_phone, booking_date);
+  const dupPhone = db.prepare("SELECT id, booking_time FROM bookings WHERE shop_id = ? AND customer_phone = ? AND booking_date = ? AND status IN ('confirmed','pending_deposit')").get(req.shop.id, customer_phone, booking_date);
   if (dupPhone) {
     const dupDT = new Date(booking_date + 'T' + dupPhone.booking_time);
     if (dupDT > now) return res.status(409).json({ error: `Та ${booking_date} өдөр ${dupPhone.booking_time} цагт захиалгатай байна. Давхар захиалга хийх боломжгүй.` });
@@ -579,9 +596,49 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, (req, res) => {
   const banned = db.prepare('SELECT id FROM customers WHERE shop_id = ? AND phone = ? AND banned = 1').get(req.shop.id, customer_phone);
   if (banned) return res.status(403).json({ error: 'Таны дугаар хаагдсан байна. Дэлгүүртэй холбогдоно уу' });
 
+  // Get service to check deposit
+  const service = db.prepare('SELECT * FROM services WHERE id = ? AND shop_id = ?').get(service_id, req.shop.id);
+  if (!service) return res.status(400).json({ error: 'Үйлчилгээ олдсонгүй' });
+
+  const needsDeposit = req.shop.deposit_enabled && service.deposit_amount > 0;
+
   const id = uuidv4().slice(0, 8);
+  const bookingStatus = needsDeposit ? 'pending_deposit' : 'confirmed';
+
+  if (needsDeposit) {
+    // Create booking with pending_deposit status + QPay invoice
+    let invoiceResult;
+    try {
+      const callbackUrl = `${req.protocol}://${req.get('host')}/api/qpay/webhook`;
+      invoiceResult = await qpayCreateInvoice(
+        req.shop,
+        service.deposit_amount,
+        `Барьерын цаг баталгаажуулах — ${service.name}`,
+        id,
+        callbackUrl
+      );
+    } catch (e) {
+      return res.status(500).json({ error: 'Төлбөрийн нэхэмжлэл үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.' });
+    }
+
+    db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status,deposit_amount,qpay_invoice_id,qpay_qr_image,qpay_short_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+      .run(id, req.shop.id, barber_id, service_id, customer_name, customer_phone, booking_date, booking_time, bookingStatus, service.deposit_amount, invoiceResult.invoice_id, invoiceResult.qr_image, invoiceResult.short_url);
+
+    return res.json({
+      success: true,
+      booking_id: id,
+      status: 'pending_deposit',
+      deposit_amount: service.deposit_amount,
+      message: 'Захиалгаа баталгаажуулахын тулд төлбөр төлнө үү',
+      qr_image: invoiceResult.qr_image,
+      qpay_short_url: invoiceResult.short_url,
+      shop_slug: req.shop.slug
+    });
+  }
+
+  // Normal booking flow (no deposit)
   db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status) VALUES (?,?,?,?,?,?,?,?,?)')
-    .run(id, req.shop.id, barber_id, service_id, customer_name, customer_phone, booking_date, booking_time, 'confirmed');
+    .run(id, req.shop.id, barber_id, service_id, customer_name, customer_phone, booking_date, booking_time, bookingStatus);
 
   const existingC = db.prepare('SELECT id FROM customers WHERE shop_id = ? AND phone = ?').get(req.shop.id, customer_phone);
   if (existingC) {
@@ -613,6 +670,87 @@ app.post('/api/shop/:shop/cancel', requireShop, requireActiveSub, (req, res) => 
   db.prepare("UPDATE queue_entries SET status = 'cancelled' WHERE booking_id = ?").run(booking_id);
   wsBroadcast(req.shop.id, { type: 'queue:change' });
   res.json({ success: true, message: 'Захиалга цуцлагдлаа' });
+});
+
+// ===== QPAY WEBHOOK & POLL =====
+
+// QPay payment callback — auto-confirms booking when deposit paid
+app.post('/api/qpay/webhook', (req, res) => {
+  const { invoice_id, payment_id, status } = req.body;
+  // QPay sends: { invoice_id, payment_id, status: 'PAID' }
+  
+  if (!invoice_id) return res.status(400).json({ error: 'invoice_id required' });
+  if (status !== 'PAID') return res.json({ ok: true });
+
+  const booking = db.prepare("SELECT * FROM bookings WHERE qpay_invoice_id = ? AND status = 'pending_deposit'").get(invoice_id);
+  if (!booking) return res.json({ ok: true }); // already processed or not found
+
+  const shop = db.prepare('SELECT * FROM shops WHERE id = ?').get(booking.shop_id);
+  if (!shop) return res.json({ ok: true });
+
+  // Confirm booking
+  db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking.id);
+
+  // Add to queue with priority
+  const maxQ = db.prepare("SELECT COALESCE(MAX(position),0) as mp FROM queue_entries WHERE shop_id = ? AND status NOT IN ('done','cancelled')").get(booking.shop_id);
+  const qid = uuidv4().slice(0, 8);
+  db.prepare('INSERT INTO queue_entries (id,shop_id,barber_id,phone,customer_name,service_name,position,source,booking_id,priority) VALUES (?,?,?,?,?,?,?,?,?,1)')
+    .run(qid, booking.shop_id, booking.barber_id, booking.customer_phone, booking.customer_name, '', maxQ.mp + 1, 'booking', booking.id);
+
+  // Update customer stats
+  const bookingDate = booking.booking_date;
+  const existingC = db.prepare('SELECT id FROM customers WHERE shop_id = ? AND phone = ?').get(booking.shop_id, booking.customer_phone);
+  if (existingC) {
+    db.prepare('UPDATE customers SET total_visits = total_visits + 1, last_visit = ? WHERE shop_id = ? AND phone = ?').run(bookingDate, booking.shop_id, booking.customer_phone);
+  } else {
+    db.prepare('INSERT INTO customers (id,shop_id,phone,name,last_visit) VALUES (?,?,?,?,?)').run(uuidv4().slice(0,8), booking.shop_id, booking.customer_phone, booking.customer_name, bookingDate);
+  }
+
+  wsBroadcast(booking.shop_id, { type: 'booking:new', booking_id: booking.id, barber_id: booking.barber_id, customer_name: booking.customer_name, time: booking.booking_time });
+  wsBroadcast(booking.shop_id, { type: 'queue:change' });
+  res.json({ ok: true, booking_id: booking.id });
+});
+
+// Frontend polling endpoint — check if deposit has been paid
+app.get('/api/shop/:shop/qpay/check/:booking_id', requireShop, async (req, res) => {
+  const booking = db.prepare("SELECT * FROM bookings WHERE id = ? AND shop_id = ?").get(req.params.booking_id, req.shop.id);
+  if (!booking) return res.status(404).json({ error: 'Захиалга олдсонгүй' });
+
+  if (booking.status === 'confirmed') {
+    return res.json({ paid: true, status: 'confirmed' });
+  }
+
+  if (booking.status === 'cancelled') {
+    return res.json({ paid: false, status: 'cancelled' });
+  }
+
+  // Check if 5 minutes have passed since creation — auto-cancel
+  const createdAt = new Date(booking.created_at + ' UTC');
+  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
+  if (createdAt < fiveMinAgo) {
+    db.prepare("UPDATE bookings SET status = 'cancelled' WHERE id = ?").run(booking.id);
+    // Try to cancel QPay invoice too (fire-and-forget)
+    if (booking.qpay_invoice_id) {
+      const shop = db.prepare('SELECT * FROM shops WHERE id = ?').get(req.shop.id);
+      qpayCancelInvoice(shop, booking.qpay_invoice_id).catch(() => {});
+    }
+    return res.json({ paid: false, status: 'cancelled', reason: 'timeout' });
+  }
+
+  // Still pending — check with QPay
+  if (booking.qpay_invoice_id) {
+    try {
+      const result = await qpayCheckPayment(req.shop, booking.qpay_invoice_id);
+      if (result.paid) {
+        db.prepare("UPDATE bookings SET status = 'confirmed', deposit_paid = 1 WHERE id = ?").run(booking.id);
+        return res.json({ paid: true, status: 'confirmed' });
+      }
+    } catch (e) {
+      // QPay check failed — keep pending
+    }
+  }
+
+  res.json({ paid: false, status: 'pending_deposit' });
 });
 
 // ===== AUTH API =====
@@ -754,6 +892,69 @@ async function sendSms(shop, phone, message) {
       return data.status === 0;
     }
   } catch(e) { return false; }
+}
+
+// ===== QPAY INTEGRATION =====
+// Cache auth tokens per shop to avoid re-auth on every call
+const qpayTokenCache = {};
+
+async function qpayAuth(shop) {
+  const now = Date.now();
+  const cached = qpayTokenCache[shop.id];
+  if (cached && cached.expires > now) return cached.token;
+
+  const resp = await fetch('https://merchant.qpay.mn/v2/auth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: shop.qpay_username, password: shop.qpay_password })
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.message || 'QPay auth failed');
+  qpayTokenCache[shop.id] = { token: data.access_token, expires: now + (data.expires_in || 3600) * 1000 };
+  return data.access_token;
+}
+
+async function qpayCreateInvoice(shop, amount, description, orderId, callbackUrl) {
+  const token = await qpayAuth(shop);
+  const resp = await fetch('https://merchant.qpay.mn/v2/invoice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      invoice_code: shop.qpay_invoice_code,
+      sender_invoice_no: orderId,
+      invoice_receiver_code: 'terminal',
+      invoice_description: description,
+      amount: amount,
+      callback_url: callbackUrl
+    })
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.message || 'QPay invoice creation failed');
+  return {
+    invoice_id: data.invoice_id,
+    qr_image: data.qr_image,
+    short_url: data.qpay_short_url,
+    urls: data.urls || []
+  };
+}
+
+async function qpayCheckPayment(shop, invoiceId) {
+  const token = await qpayAuth(shop);
+  const resp = await fetch('https://merchant.qpay.mn/v2/payment/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ invoice_id: invoiceId })
+  });
+  const data = await resp.json();
+  return { paid: data.paid === true || data.count > 0, count: data.count || 0 };
+}
+
+async function qpayCancelInvoice(shop, invoiceId) {
+  const token = await qpayAuth(shop);
+  await fetch('https://merchant.qpay.mn/v2/invoice/' + invoiceId, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
 }
 
 // ===== ANALYTICS =====
@@ -920,7 +1121,7 @@ app.post('/api/admin/shop/create', requireAuth, (req, res) => {
 
 // Get shop info for editing
 app.get('/api/admin/shop/info', requireAuth, (req, res) => {
-  const shop = db.prepare('SELECT name, slug, tagline, phone, address, instagram, facebook, email, primary_color, accent_color, theme, sub_status, plan, trial_ends_at, sub_ends_at FROM shops WHERE id = ?').get(req.shop_id);
+  const shop = db.prepare('SELECT name, slug, tagline, phone, address, instagram, facebook, email, primary_color, accent_color, theme, sub_status, plan, trial_ends_at, sub_ends_at, deposit_enabled, qpay_invoice_code, qpay_username FROM shops WHERE id = ?').get(req.shop_id);
   res.json(shop);
 });
 
@@ -996,6 +1197,29 @@ app.post('/api/admin/barbers/:id/schedule', requireAuth, (req, res) => {
   res.json({ success: true });
 });
 
+// ===== ADMIN — QPAY DEPOSIT SETTINGS =====
+app.get('/api/admin/qpay/status', requireAuth, (req, res) => {
+  const shop = db.prepare('SELECT deposit_enabled, qpay_invoice_code, qpay_username FROM shops WHERE id = ?').get(req.shop_id);
+  res.json({ 
+    enabled: !!shop.deposit_enabled,
+    configured: !!(shop.qpay_invoice_code && shop.qpay_username),
+    invoice_code: shop.qpay_invoice_code ? shop.qpay_invoice_code.slice(0, 4) + '...' + shop.qpay_invoice_code.slice(-2) : null 
+  });
+});
+
+app.post('/api/admin/qpay/save', requireAuth, (req, res) => {
+  const { username, password, invoice_code, deposit_enabled } = req.body;
+  if (!username || !password || !invoice_code) return res.status(400).json({ error: 'Бүх QPay мэдээллийг бөглөнө үү' });
+  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=? WHERE id=?').run(username, password, invoice_code, deposit_enabled ? 1 : 0, req.shop_id);
+  res.json({ success: true, message: 'QPay тохиргоо хадгалагдлаа' });
+});
+
+app.post('/api/admin/qpay/toggle', requireAuth, (req, res) => {
+  const { enabled } = req.body;
+  db.prepare('UPDATE shops SET deposit_enabled = ? WHERE id = ?').run(enabled ? 1 : 0, req.shop_id);
+  res.json({ success: true, enabled });
+});
+
 // ===== ADMIN — COMMISSION REPORT =====
 app.get('/api/admin/commission', requireAuth, (req, res) => {
   const { range } = req.query; // 'today', 'week', 'month'
@@ -1042,9 +1266,9 @@ app.post('/api/admin/services/add', requireAuth, (req, res) => {
   res.json({ success: true });
 });
 app.post('/api/admin/services/update', requireAuth, (req, res) => {
-  const { id, name, price, duration, description } = req.body;
+  const { id, name, price, duration, description, deposit_amount } = req.body;
   if (!id) return res.status(400).json({ error: 'ID required' });
-  db.prepare('UPDATE services SET name=?, price=?, duration=?, description=? WHERE id=? AND shop_id=?').run(name, price, duration, description||'', id, req.shop_id);
+  db.prepare('UPDATE services SET name=?, price=?, duration=?, description=?, deposit_amount=? WHERE id=? AND shop_id=?').run(name, price, duration, description||'', deposit_amount||0, id, req.shop_id);
   res.json({ success: true });
 });
 app.post('/api/admin/services/remove', requireAuth, (req, res) => {
@@ -1131,6 +1355,12 @@ app.get('/admin', (req, res) => {
 
 app.get('/expired', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'expired.html'));
+});
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
+});
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'terms.html'));
 });
 
 app.get('/admin-login', (req, res) => {

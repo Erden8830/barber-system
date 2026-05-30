@@ -25,6 +25,9 @@ input,select{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);
 .btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#d4a017,#b8922e);color:#0a0a0a;margin-top:8px;font-family:inherit}.btn:hover{opacity:.9}
 .err{color:#e74c3c;font-size:.72rem;margin-top:8px}
 .ok{color:#2ecc71;font-size:.82rem;margin-top:12px;display:none}
+.agree-text{font-size:.62rem;color:rgba(255,255,255,.3);margin-top:12px;text-align:center;line-height:1.5}
+.agree-text a{color:#d4a017;text-decoration:none}
+.agree-text a:hover{text-decoration:underline}
 .back{display:inline-block;margin-top:16px;color:rgba(255,255,255,.3);font-size:.7rem;text-decoration:none}.back:hover{color:#fff}
 </style>
 </head>
@@ -52,6 +55,7 @@ input,select{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.1);
     <input type="password" id="password" placeholder="Нууц үг">
     <div class="err" id="error"></div>
     <button class="btn" onclick="signup()">🚀 Бүртгүүлэх</button>
+    <div class="agree-text">Бүртгүүлснээр <a href="/terms" target="_blank">Үйлчилгээний нөхцөл</a> болон <a href="/privacy" target="_blank">Нууцлалын бодлогыг</a> зөвшөөрч байна</div>
   </div>
   <div class="ok" id="ok"></div>
   <a href="/" class="back">← Буцах</a>

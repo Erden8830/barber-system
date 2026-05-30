@@ -48,8 +48,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .ft-card p{font-size:.76rem;color:var(--dim);line-height:1.7}
 
 /* Product proof blocks */
-.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
-@media(max-width:800px){.proof-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;align-items:start}
+@media(max-width:640px){.proof-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
 .proof-card{text-align:center}
 .phone-wrap{display:flex;justify-content:center;margin-bottom:12px}
 .phone-frame{width:240px;border-radius:24px;border:3px solid #333;overflow:hidden;background:var(--card);box-shadow:0 8px 40px rgba(0,0,0,.4)}
@@ -86,6 +86,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .admin-sc-chart{display:flex;align-items:flex-end;gap:6px;height:40px;margin-bottom:6px}
 .admin-sc-bar-mini{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,.06)}
 .admin-sc-label{font-size:.55rem;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:.5px}
+
+/* Deposit / Payment screen */
+.pay-screen{text-align:center;font-size:.65rem}
+.pay-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem}
+.pay-sc-body{padding:20px 14px}
+.pay-sc-qr{width:100px;height:100px;margin:0 auto 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.pay-sc-amt{font-size:1.1rem;font-weight:900;color:#d4a017;margin-bottom:6px}
+.pay-sc-note{font-size:.58rem;color:var(--dim);margin-bottom:12px;line-height:1.5}
+.pay-sc-btn{display:block;width:100%;padding:10px;background:#d4a017;color:#0a0a0a;text-align:center;font-weight:800;font-size:.72rem;border-radius:8px;margin-bottom:8px}
+.pay-sc-cancel{font-size:.55rem;color:rgba(255,255,255,.15)}
+.pay-sc-done{width:36px;height:36px;margin:0 auto 10px;border-radius:50%;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.pay-sc-check{color:#2ecc71;font-weight:900}
 
 .proof-caption{margin-top:8px}
 .proof-caption h3{font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--text)}
@@ -153,6 +165,10 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
   <div class="pain-grid">
     <div class="pain-item"><div class="pain-num">2-3</div><div class="pain-label">өдөрт их оочиртойгоос болж өөр барбер ордог</div></div>
     <div class="pain-item"><div class="pain-num">₮1.5-2с</div><div class="pain-label">алдсан орлого сард</div></div>
+  </div>
+  <div style="max-width:600px;margin:32px auto 0;text-align:center;padding:24px 0;border-top:1px solid var(--border)">
+    <div style="font-size:.85rem;color:var(--text);margin-bottom:6px"><b>🥲 Захиалга хийсэн хүний 30% нь ирдэггүй</b></div>
+    <div style="font-size:.72rem;color:var(--dim)">Цаг захиалаад ирэхгүй байх нь барбершопуудын хамгийн том өвдөлт. Barber Pro урьдчилгаа төлбөрөөр үүнийг шийднэ.</div>
   </div>
 </section>
 
@@ -247,6 +263,28 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
         <p>Орлого, үйлчлүүлэгч, барберын гүйцэтгэл — бүгд автоматик. Цаасан дэвтэр, Excel-ээ сал.</p>
       </div>
     </div>
+
+    <!-- PROOF 4: Deposit / No-show -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="pay-screen">
+            <div class="pay-sc-header">💳 Урьдчилгаа төлбөр</div>
+            <div class="pay-sc-body">
+              <div class="pay-sc-qr">🔳</div>
+              <div class="pay-sc-amt">₮5,000</div>
+              <div class="pay-sc-note">Сонгосон цагаа <b>баталгаажуулах</b>ын тулд<br>доорх QR-г банкны аппаараа уншуулна уу.</div>
+              <div class="pay-sc-btn">✔️ Төлбөр төлөх</div>
+              <div class="pay-sc-cancel">Цуцлах</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>🎯 No-show-оос сэргийлэх</h3>
+        <p>Үйлчлүүлэгч захиалгаа баталгаажуулахын тулд урьдчилгаа төлнө. Ирэхгүй бол урьдчилгааг барбер авна. Дуудсан цагтаа ирдэг болно.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -301,6 +339,7 @@ footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
         <li>Комисс тооцоолол</li>
         <li>Харилцагчийн бүртгэл</li>
         <li>SMS автоматжуулалт</li>
+        <li><b style="color:#d4a017">🎯</b> No-show хамгаалалт (урьдчилгаа)</li>
       </ul>
       <a href="/signup" class="btn btn-gold" style="width:100%;justify-content:center">7 хоног үнэгүй эхлэх</a>
     </div>

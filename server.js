@@ -13,7 +13,7 @@ process.env.TZ = 'Asia/Ulaanbaatar';
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 // Prevent Safari from caching API responses
 app.use('/api', (req, res, next) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
@@ -195,6 +195,7 @@ try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_qr_image TEXT").run(); } 
 try { db.prepare("ALTER TABLE bookings ADD COLUMN qpay_short_url TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE bookings ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
 try { db.prepare("ALTER TABLE shops ADD COLUMN bank_qr_url TEXT").run(); } catch(e) {}
+try { db.prepare("ALTER TABLE shops ADD COLUMN bank_qr_image TEXT").run(); } catch(e) {}
 
 // Seed default schedules for barbers without any
 const unscheduledBarbers = db.prepare(`SELECT b.id FROM barbers b WHERE b.active = 1 AND NOT EXISTS (SELECT 1 FROM barber_schedules WHERE barber_id = b.id)`).all();
@@ -608,7 +609,7 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
   // Determine deposit method: QPay API, bank QR, or test
   const useQpay = needsDeposit && req.shop.qpay_invoice_code && req.shop.qpay_invoice_code !== 'TEST';
   const useTest = needsDeposit && req.shop.qpay_invoice_code === 'TEST';
-  const useBankQR = needsDeposit && !req.shop.qpay_invoice_code && req.shop.bank_qr_url;
+  const useBankQR = needsDeposit && !req.shop.qpay_invoice_code && (req.shop.bank_qr_url || req.shop.bank_qr_image);
 
   const id = uuidv4().slice(0, 8);
   const bookingStatus = needsDeposit ? 'pending_deposit' : 'confirmed';
@@ -633,9 +634,8 @@ app.post('/api/shop/:shop/book', requireShop, requireActiveSub, async (req, res)
     } else if (useTest) {
       invoiceResult = { invoice_id: 'test-' + id, qr_image: null, short_url: 'test://simulated' };
     } else if (useBankQR) {
-      // Bank QR — no API call, just use shop's static QR
       invoiceResult = { invoice_id: 'bank-' + id, qr_image: null, short_url: null };
-      bankQrUrl = req.shop.bank_qr_url;
+      bankQrUrl = req.shop.bank_qr_image || req.shop.bank_qr_url; // prefer uploaded image
     }
 
     db.prepare('INSERT INTO bookings (id,shop_id,barber_id,service_id,customer_name,customer_phone,booking_date,booking_time,status,deposit_amount,qpay_invoice_id,qpay_qr_image,qpay_short_url,bank_qr_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
@@ -1243,9 +1243,9 @@ app.get('/api/admin/qpay/status', requireAuth, (req, res) => {
 });
 
 app.post('/api/admin/qpay/save', requireAuth, (req, res) => {
-  const { username, password, invoice_code, deposit_enabled, bank_qr_url } = req.body;
+  const { username, password, invoice_code, deposit_enabled, bank_qr_url, bank_qr_image } = req.body;
   if (invoice_code && (!username || !password)) return res.status(400).json({ error: 'QPay username болон password оруулна уу' });
-  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=?, bank_qr_url=? WHERE id=?').run(username||null, password||null, invoice_code||null, deposit_enabled ? 1 : 0, bank_qr_url||null, req.shop_id);
+  db.prepare('UPDATE shops SET qpay_username=?, qpay_password=?, qpay_invoice_code=?, deposit_enabled=?, bank_qr_url=?, bank_qr_image=? WHERE id=?').run(username||null, password||null, invoice_code||null, deposit_enabled ? 1 : 0, bank_qr_url||null, bank_qr_image||null, req.shop_id);
   res.json({ success: true, message: 'QPay тохиргоо хадгалагдлаа' });
 });
 

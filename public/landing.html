@@ -518,92 +518,84 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     gap: 20px !important;
   }
   .phone-mockup {
-    display: block !important;
-    width: 240px !important;
-    height: auto !important;
-    background: #121216 !important;
-    border: 3px solid #2d2d35 !important;
-    border-radius: 24px !important;
-    padding: 12px !important;
+    max-width: 250px !important;
     margin: 16px auto 0 auto !important;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.5) !important;
-    box-sizing: border-box !important;
     animation: none !important;
   }
-  .phone-status {
-    display: flex !important;
-    justify-content: space-between !important;
-    color: #555 !important;
-    font-size: 9px !important;
-    margin-bottom: 8px !important;
+  .phone-body {
+    padding: 6px !important;
   }
-  .phone-shop {
-    font-size: 12px !important;
-    font-weight: bold !important;
-    margin-bottom: 10px !important;
-    text-align: center !important;
+  .phone-notch {
+    height: 22px !important;
+    min-height: 22px !important;
+  }
+  .phone-notch-pill {
+    width: 80px !important;
+    height: 18px !important;
+  }
+  .phone-content {
+    padding: 6px 10px 6px !important;
+  }
+  .phone-card {
+    padding: 10px !important;
+  }
+  .phone-card-progress {
+    margin-bottom: 8px !important;
+    gap: 16px !important;
+  }
+  .phone-step-label {
+    font-size: 7px !important;
+    margin-bottom: 6px !important;
   }
   .phone-slot-label {
-    font-size: 9px !important;
+    font-size: 7px !important;
+    margin: 6px 0 4px !important;
+  }
+  .phone-status {
+    font-size: 8px !important;
     margin-bottom: 4px !important;
+  }
+  .phone-shop {
+    margin-bottom: 6px !important;
+  }
+  .phone-shop-title {
+    font-size: 11px !important;
+  }
+  .phone-svc {
+    gap: 3px !important;
   }
   .phone-svc-item {
-    display: flex !important;
-    justify-content: space-between !important;
-    background: #1c1c24 !important;
-    padding: 6px 8px !important;
-    margin-bottom: 4px !important;
-    border-radius: 4px !important;
+    padding: 5px 8px !important;
     font-size: 10px !important;
   }
+  .phone-svc-name { font-size: 10px !important; }
+  .phone-svc-dur { font-size: 7px !important; }
+  .phone-svc-price { font-size: 10px !important; }
   .time-slot-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
     gap: 4px !important;
-    margin-bottom: 10px !important;
+    padding: 6px !important;
   }
   .time-slot-btn {
-    background: #1c1c24 !important;
-    padding: 4px 2px !important;
-    border-radius: 3px !important;
-    font-size: 9px !important;
-    text-align: center !important;
+    padding: 5px 0 !important;
+    font-size: 11px !important;
   }
   .phone-summary {
-    border-top: 1px solid #2d2d35 !important;
-    padding-top: 8px !important;
-    margin-top: 8px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    font-size: 10px !important;
+    padding: 5px 8px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
   }
   .phone-book-btn {
-    background: #dc2626 !important;
-    border: none !important;
-    color: #fff !important;
-    padding: 4px 8px !important;
-    border-radius: 4px !important;
-    font-size: 10px !important;
-    font-weight: bold !important;
+    padding: 8px 0 !important;
+    font-size: 9px !important;
   }
-  .phone-wrap {
-    max-height: none !important;
-    height: auto !important;
-    background: transparent !important;
-    background-color: transparent !important;
-  }
-  .phone-screen-glass,
-  .phone-notch, .phone-notch-pill, .phone-notch-dot,
-  .phone-card-progress, .phone-card-progress-line, .phone-card-dot,
-  .phone-step-label, .phone-home-bar,
-  .phone-side-btn, .ipad-side-btn {
+  .phone-home-bar {
     display: none !important;
   }
-  .phone-body, .phone-screen-bezel, .phone-screen, .phone-content, .phone-card {
+  .phone-wrap {
     background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+  }
+  .phone-side-btn, .ipad-side-btn {
+    display: none !important;
   }
   .hero-content {
     padding: 40px 20px !important;

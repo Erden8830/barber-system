@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Барбершопын ухаалаг систем</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{color:inherit;font-family:inherit}
+html{scroll-behavior:smooth}
+:root{--bg:#0a0a0a;--card:#111;--border:rgba(255,255,255,.06);--text:#f0f0f0;--dim:#aaa;--gold:#d4a017;--gold-dim:rgba(212,160,23,.1);--red:#e74c3c;--green:#2ecc71}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;width:100%;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-weight:900;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:2px}.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:20px}
+.nav-links a{color:var(--dim);text-decoration:none;font-size:.78rem;font-weight:500;transition:color .2s}.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:8px 20px;background:var(--gold);color:#0a0a0a!important;font-weight:700;font-size:.72rem;text-decoration:none;border-radius:100px;transition:opacity .2s}.nav-cta:hover{opacity:.9}
+@media(max-width:640px){.nav-links{gap:12px}.nav-links a:not(.nav-cta):not(.nav-login){font-size:.68rem}}
+.hero{padding:160px 24px 80px;text-align:center;max-width:800px;margin:0 auto}
+.hero-badge{display:inline-block;padding:10px 24px;background:var(--gold-dim);border:1px solid rgba(212,160,23,.2);border-radius:100px;font-size:.78rem;font-weight:600;color:var(--gold);margin-bottom:28px;letter-spacing:.3px}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-1.5px;margin-bottom:20px}
+.hero h1 .hl{color:var(--gold)}
+.hero p{color:var(--dim);font-size:clamp(.9rem,1.5vw,1.05rem);max-width:580px;margin:0 auto 36px;line-height:1.7;font-weight:400;text-align:left}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.live-num{font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1;transition:transform .2s}.live-lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.live-num.pulse{animation:pulse .4s ease}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;font-weight:700;font-size:.85rem;text-decoration:none;border-radius:100px;border:none;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-gold{background:var(--gold);color:#0a0a0a;box-shadow:0 4px 20px rgba(212,160,23,.2)}.btn-gold:hover{opacity:.9;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.15)}.btn-outline:hover{background:rgba(255,255,255,.04)}
+.pain-bar{padding:60px 24px;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,.01)}
+.pain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;max-width:600px;margin:0 auto}
+@media(max-width:640px){.pain-grid{grid-template-columns:1fr;gap:24px}}
+.pain-item{text-align:center}
+.pain-num{font-size:2.2rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.pain-label{font-size:.78rem;color:var(--dim);font-weight:400;line-height:1.5}
+.section{padding:100px 24px;max-width:1100px;margin:0 auto;border-top:1px solid var(--border)}
+.section-header{text-align:center;margin-bottom:56px}
+.section-header h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:10px;letter-spacing:-.5px}
+.section-header p{color:var(--dim);font-size:.88rem;max-width:500px;margin:0 auto}
+.ft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:720px){.ft-grid{grid-template-columns:1fr}}
+.ft-card{padding:32px 24px;background:var(--card);border:1px solid var(--border);border-radius:14px;transition:border-color .2s}
+.ft-card:hover{border-color:rgba(212,160,23,.2)}
+.ft-card h3{font-size:.9rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.ft-card p{font-size:.76rem;color:var(--dim);line-height:1.7}
+
+/* Product proof blocks */
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;align-items:start}
+@media(max-width:640px){.proof-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+.proof-card{text-align:center}
+.phone-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.phone-frame{width:240px;border-radius:24px;border:3px solid #333;overflow:hidden;background:var(--card);box-shadow:0 8px 40px rgba(0,0,0,.4)}
+@media(max-width:800px){.phone-frame{width:220px}}
+
+/* Barber screen */
+.barber-screen{text-align:left;font-size:.65rem}
+.barber-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem;letter-spacing:-.2px}
+.barber-sc-body{padding:10px 12px 14px}
+.barber-sc-queue{padding:8px 10px;border:1px solid rgba(255,255,255,.04);border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.02)}
+.barber-sc-name{font-weight:700;font-size:.75rem;color:var(--text);margin-bottom:2px}
+.barber-sc-pos{font-size:.6rem;color:var(--dim)}
+.barber-sc-btn{display:block;width:100%;padding:12px;background:#d4a017;color:#0a0a0a;text-align:center;font-weight:800;font-size:.78rem;border-radius:10px;margin-top:8px}
+
+/* Queue status screen */
+.queue-screen{text-align:center;font-size:.65rem}
+.queue-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem}
+.queue-sc-body{padding:20px 14px}
+.queue-sc-num{font-size:1.8rem;font-weight:900;color:#d4a017;line-height:1}
+.queue-sc-sub{font-size:.65rem;color:var(--dim);margin-bottom:16px}
+.queue-sc-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin:0 8px 12px;overflow:hidden}
+.queue-sc-bar-fill{height:100%;border-radius:3px;background:#d4a017}
+.queue-sc-time{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.queue-sc-note{font-size:.6rem;color:var(--dim);line-height:1.4}
+
+/* Admin mini screen */
+.admin-screen{text-align:left;font-size:.65rem}
+.admin-sc-top{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;font-size:.68rem}
+.admin-sc-body{padding:14px}
+.admin-sc-row{display:flex;justify-content:space-between;margin-bottom:12px}
+.admin-sc-stat{text-align:center}
+.admin-sc-val{font-size:1.2rem;font-weight:900;color:#d4a017;line-height:1}
+.admin-sc-lbl{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.admin-sc-chart{display:flex;align-items:flex-end;gap:6px;height:40px;margin-bottom:6px}
+.admin-sc-bar-mini{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,.06)}
+.admin-sc-label{font-size:.55rem;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:.5px}
+
+/* Deposit / Payment screen */
+.pay-screen{text-align:center;font-size:.65rem}
+.pay-sc-header{background:#0d0d0d;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-weight:600;color:#d4a017;font-size:.68rem}
+.pay-sc-body{padding:20px 14px}
+.pay-sc-qr{width:100px;height:100px;margin:0 auto 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.pay-sc-amt{font-size:1.1rem;font-weight:900;color:#d4a017;margin-bottom:6px}
+.pay-sc-note{font-size:.58rem;color:var(--dim);margin-bottom:12px;line-height:1.5}
+.pay-sc-btn{display:block;width:100%;padding:10px;background:#d4a017;color:#0a0a0a;text-align:center;font-weight:800;font-size:.72rem;border-radius:8px;margin-bottom:8px}
+.pay-sc-cancel{font-size:.55rem;color:rgba(255,255,255,.15)}
+.pay-sc-done{width:36px;height:36px;margin:0 auto 10px;border-radius:50%;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.pay-sc-check{color:#2ecc71;font-weight:900}
+
+.proof-caption{margin-top:8px}
+.proof-caption h3{font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.proof-caption p{font-size:.72rem;color:var(--dim);line-height:1.6;max-width:280px;margin:0 auto}
+.demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.demo-grid{grid-template-columns:1fr}}
+.demo-link{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);transition:all .2s}
+.demo-link:hover{border-color:var(--gold);background:rgba(212,160,23,.04)}
+.demo-link .d-title{font-size:.82rem;font-weight:600}
+.demo-link .d-sub{font-size:.65rem;color:var(--dim)}
+.demo-link .d-arrow{color:var(--gold);font-size:.9rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:720px){.steps{grid-template-columns:1fr 1fr;gap:12px}}
+.step{padding:28px 20px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(212,160,23,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--gold);font-weight:800;font-size:1rem}
+.step h3{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.step p{font-size:.72rem;color:var(--dim);line-height:1.6}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;margin:0 auto}@media(max-width:600px){.pricing-grid{grid-template-columns:1fr;max-width:400px}}
+.price-card{padding:32px 24px;background:var(--card);border:1px solid rgba(212,160,23,.3);border-radius:14px;text-align:center;position:relative;background:linear-gradient(180deg,rgba(212,160,23,.04),transparent)}
+.price-card .plan-name{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:8px}
+.price-card.basic{border-color:rgba(255,255,255,.1);background:var(--card)}.price-card.basic .plan-price{color:#fff}
+.price-card .plan-price{font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:4px}
+.price-card .plan-sub{font-size:.7rem;color:var(--dim);margin-bottom:16px}
+.price-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);padding:3px 14px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.62rem;border-radius:100px;white-space:nowrap}
+.plan-list{list-style:none;text-align:left;margin-bottom:20px}
+.plan-list li{padding:5px 0;font-size:.72rem;color:var(--dim);display:flex;align-items:center;gap:8px}
+.plan-list li::before{content:'✓';color:var(--gold);font-weight:800;flex-shrink:0;font-size:.75rem}
+.cta{padding:100px 24px;text-align:center;border-top:1px solid var(--border);background:linear-gradient(180deg,transparent,rgba(212,160,23,.02),transparent)}
+.cta h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:10px}
+.cta p{color:var(--dim);margin-bottom:28px;font-size:.9rem}
+footer{padding:40px 24px;text-align:center;border-top:1px solid var(--border);color:rgba(255,255,255,.3);font-size:.7rem}
+footer a{color:var(--gold);text-decoration:none}footer a:hover{opacity:.8}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Barber<span>.</span>Pro</a>
+    <div class="nav-links">
+      <a href="/blog">Блог</a>
+      <a href="/admin-login" class="nav-login">Нэвтрэх</a>
+      <a href="/signup" class="nav-cta">Үнэгүй эхлэх</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🚶 Монголын барбершопуудад</div>
+  <h1>Үйлчлүүлэгчээ<br><span class="hl">битгий хүлээлгэ</span>.</h1>
+  <p>Үйлчлүүлэгч хаалгаар орж ирээд 6 хүний оочир харвал буцдаг. QR уншуул, оочироо ав, бусад ажилаа амжуул. Барбер нэг товч дарж дараагийн үйлчлүүлэгчээ дуудна. Дараалал, захиалга, тоон мэдээ — нэг системд.</p>
+  <div class="live-stats" id="liveStats" style="display:flex;justify-content:center;gap:32px;margin-bottom:28px;flex-wrap:wrap">
+    <div class="live-stat"><div class="live-num" id="ls-shops">—</div><div class="live-lbl">Идэвхтэй салон</div></div>
+    <div class="live-stat"><div class="live-num" id="ls-bookings">—</div><div class="live-lbl">Өнөөдрийн захиалга</div></div>
+  </div>
+  <div class="hero-actions">
+    <a href="/demo" class="btn btn-gold">🚶 Демо үзэх</a>
+    <a href="/signup" class="btn btn-outline">7 хоног үнэгүй турших →</a>
+  </div>
+  <div style="margin-top:14px;font-size:.65rem;color:rgba(255,255,255,.25)">Карт шаардлагагүй · 30 секундэд бүртгүүлнэ</div>
+</section>
+
+<section class="pain-bar">
+  <div class="pain-grid">
+    <div class="pain-item"><div class="pain-num">2-3</div><div class="pain-label">өдөрт их оочиртойгоос болж өөр барбер ордог</div></div>
+    <div class="pain-item"><div class="pain-num">₮1.5-2с</div><div class="pain-label">алдсан орлого сард</div></div>
+  </div>
+  <div style="max-width:600px;margin:32px auto 0;text-align:center;padding:24px 0;border-top:1px solid var(--border)">
+    <div style="font-size:.85rem;color:var(--text);margin-bottom:6px"><b>🥲 Захиалга хийсэн хүний 30% нь ирдэггүй</b></div>
+    <div style="font-size:.72rem;color:var(--dim)">Цаг захиалаад ирэхгүй байх нь барбершопуудын хамгийн том өвдөлт. Barber Pro урьдчилгаа төлбөрөөр үүнийг шийднэ.</div>
+  </div>
+</section>
+
+<section id="features" class="section" style="border-top:none">
+  <div class="section-header fade-in"><h2>Системийн <span class="hl">харагдах байдал</span></h2><p>Доорх дэлгэцүүд — таны гар утсан дээр яг адилхан харагдана.</p></div>
+  <div class="proof-grid">
+    <!-- PROOF 1: Barber page -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="barber-screen">
+            <div class="barber-sc-header">✂️ Бат-Эрдэнэ</div>
+            <div class="barber-sc-body">
+              <div class="barber-sc-queue">
+                <div class="barber-sc-name">Ганболд</div>
+                <div class="barber-sc-pos">✂️ ҮСЧИЛГЭЭ: Үс засах · 25мин</div>
+              </div>
+              <div class="barber-sc-queue">
+                <div class="barber-sc-name">Болормаа</div>
+                <div class="barber-sc-pos">✂️ ҮСЧИЛГЭЭ: Үс засах · 35мин</div>
+              </div>
+              <div class="barber-sc-btn">Дараагийнх</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>Нэг товч дуудах</h3>
+        <p>Барбер утаснаасаа "Дараагийнх" товчийг л дарна. Дараалал автоматаар урагшилна. Сургалт 0 минут.</p>
+      </div>
+    </div>
+
+    <!-- PROOF 2: Queue status -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="queue-screen">
+            <div class="queue-sc-header">🚶 barber-pro</div>
+            <div class="queue-sc-body">
+              <div class="queue-sc-pos">
+                <div class="queue-sc-num">4-р</div>
+                <div class="queue-sc-sub">байранд</div>
+              </div>
+              <div class="queue-sc-bar">
+                <div class="queue-sc-bar-fill" style="width:40%"></div>
+              </div>
+              <div class="queue-sc-time">~25 минут хүлээнэ</div>
+              <div class="queue-sc-note">Та дараалалд байна. Ээлж ойртоход мэдэгдэх болно.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>24/7 Дарааллын төлөв</h3>
+        <p>Үйлчлүүлэгч QR уншуулаад дугаар авч, хүрээлэн буй орчиндоо тав тухтай хүлээнэ. Гарч явахгүй.</p>
+      </div>
+    </div>
+
+    <!-- PROOF 3: Admin stats -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="admin-screen">
+            <div class="admin-sc-top">🔑 Админ · barber-pro</div>
+            <div class="admin-sc-body">
+              <div class="admin-sc-row">
+                <div class="admin-sc-stat">
+                  <div class="admin-sc-val" id="pf-shops">0</div>
+                  <div class="admin-sc-lbl">Өнөөдөр</div>
+                </div>
+                <div class="admin-sc-stat">
+                  <div class="admin-sc-val">&nbsp;</div>
+                  <div class="admin-sc-lbl">&nbsp;</div>
+                </div>
+              </div>
+              <div class="admin-sc-chart">
+                <div class="admin-sc-bar-mini" style="height:20px"></div>
+                <div class="admin-sc-bar-mini" style="height:32px"></div>
+                <div class="admin-sc-bar-mini" style="height:18px;background:#d4a017"></div>
+                <div class="admin-sc-bar-mini" style="height:28px;background:#d4a017"></div>
+                <div class="admin-sc-bar-mini" style="height:14px"></div>
+                <div class="admin-sc-bar-mini" style="height:24px"></div>
+                <div class="admin-sc-bar-mini" style="height:30px;background:#d4a017"></div>
+              </div>
+              <div class="admin-sc-label">7 хоногийн график</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>Бодит тоон мэдээ</h3>
+        <p>Орлого, үйлчлүүлэгч, барберын гүйцэтгэл — бүгд автоматик. Цаасан дэвтэр, Excel-ээ сал.</p>
+      </div>
+    </div>
+
+    <!-- PROOF 4: Deposit / No-show -->
+    <div class="proof-card fade-in">
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="pay-screen">
+            <div class="pay-sc-header">💳 Урьдчилгаа төлбөр</div>
+            <div class="pay-sc-body">
+              <div class="pay-sc-qr">🔳</div>
+              <div class="pay-sc-amt">₮5,000</div>
+              <div class="pay-sc-note">Сонгосон цагаа <b>баталгаажуулах</b>ын тулд<br>доорх QR-г банкны аппаараа уншуулна уу.</div>
+              <div class="pay-sc-btn">✔️ Төлбөр төлөх</div>
+              <div class="pay-sc-cancel"><span style="color:rgba(46,204,113,.4)">🔒 QPay secured</span> · Цуцлах</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-caption">
+        <h3>🎯 Хоосон захиалгаас сэргийлэх</h3>
+        <p>Үйлчлүүлэгч захиалгаа баталгаажуулахын тулд урьдчилгаа төлнө. Ирэхгүй бол урьдчилгааг барбер авна. Дуудсан цагтаа ирдэг болно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="section" style="border-top:none">
+  <div class="section-header fade-in"><h2><span class="hl">Өөрөө</span> туршиж үз</h2><p>Доорх холбооснууд руу орж үзээрэй. Нууц үггүй, шууд орно.</p></div>
+  <div class="demo-grid">
+    <a href="/shop/barber-pro" class="demo-link fade-in"><div><div class="d-title">📅 Цаг захиалга</div><div class="d-sub">Үйлчлүүлэгчийн захиалгын хуудас</div></div><span class="d-arrow">→</span></a>
+    <a href="/shop/barber-pro/queue" class="demo-link fade-in"><div><div class="d-title">🚶 Дараалалд зогсох</div><div class="d-sub">QR уншуулсан хүний хуудас</div></div><span class="d-arrow">→</span></a>
+    <a href="/shop/barber-pro/queue-status" class="demo-link fade-in"><div><div class="d-title">📊 Дарааллын төлөв</div><div class="d-sub">Хэдэн хүн хүлээж байгааг харах</div></div><span class="d-arrow">→</span></a>
+    <a href="/shop/barber-pro/barber?token=demo-permanent&barber_id=b1&barber_name=%D0%91%D0%B0%D1%82-%D0%AD%D1%80%D0%B4%D1%8D%D0%BD%D1%8D" class="demo-link fade-in"><div><div class="d-title">✂️ Барбер хуудас</div><div class="d-sub">Нэг товч дуудах — шууд орно</div></div><span class="d-arrow">→</span></a>
+    <a href="/admin?token=demo-permanent&shop=barber-pro" class="demo-link fade-in"><div><div class="d-title">🔑 Админ самбар</div><div class="d-sub">Бүх тохиргоо — шууд орно</div></div><span class="d-arrow">→</span></a>
+    <a href="/demo" class="demo-link fade-in"><div><div class="d-title">🖥️ Бүх демо</div><div class="d-sub">Бүрэн танилцуулга хуудас</div></div><span class="d-arrow">→</span></a>
+  </div>
+</section>
+
+<section id="how" class="section">
+  <div class="section-header fade-in"><h2><span class="hl">3</span> минутад эхэлнэ</h2></div>
+  <div class="steps">
+    <div class="step fade-in"><div class="step-num">1</div><h3>Бүртгүүлэх</h3><p>Барбершопынхоо нэр, хаяг, нууц үгээ оруулна. 30 секунд.</p></div>
+    <div class="step fade-in"><div class="step-num">2</div><h3>QR хэвлэх</h3><p>Админ самбараас QR кодоо татаж аваад хаалгандаа наана.</p></div>
+    <div class="step fade-in"><div class="step-num">3</div><h3>Ажиллаж эхлэх</h3><p>Үйлчлүүлэгч уншуулна, барбер дуудна, систем ажиллана.</p></div>
+    <div class="step fade-in"><div class="step-num">4</div><h3>Өсөх</h3><p>Тоон мэдээгээр дүн шинжилгээ хий. Хэн сайн ажиллаж байгааг мэд. Илүү их орлого ол.</p></div>
+  </div>
+</section>
+
+<section id="pricing" class="section">
+  <div class="section-header fade-in"><h2><span class="hl">Үнэ</span></h2><p>7 хоног үнэгүй туршина. Дараа нь өөрт тохирох төлөвлөгөөгөө сонго.</p></div>
+  <div class="pricing-grid">
+    <div class="price-card basic fade-in">
+      <div class="price-badge">7 ХОНОГ ҮНЭГҮЙ</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">₮49,000</div>
+      <div class="plan-sub">сард</div>
+      <ul class="plan-list">
+        <li>QR дараалал систем</li>
+        <li>Олон барбер</li>
+        <li>Админ самбар</li>
+        <li>Үндсэн тоон мэдээ</li>
+      </ul>
+      <a href="/signup" class="btn btn-outline" style="width:100%;justify-content:center">7 хоног үнэгүй эхлэх</a>
+    </div>
+    <div class="price-card fade-in">
+      <div class="price-badge">САЙН СОНГОЛТ</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">₮99,000</div>
+      <div class="plan-sub">сард</div>
+      <ul class="plan-list">
+        <li>Basic бүх боломжууд</li>
+        <li>Онлайн цаг захиалга</li>
+        <li>Өөрийн захиалгын вэбсайт</li>
+        <li>Тоон мэдээ, график</li>
+        <li>Комисс тооцоолол</li>
+        <li>Харилцагчийн бүртгэл</li>
+        <li>SMS автоматжуулалт</li>
+        <li><b style="color:#d4a017">🎯</b> No-show хамгаалалт (урьдчилгаа)</li>
+      </ul>
+      <a href="/signup" class="btn btn-gold" style="width:100%;justify-content:center">7 хоног үнэгүй эхлэх</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 class="fade-in">Барбершопоо <span class="hl">дижитал</span> болго</h2>
+  <p class="fade-in">7 хоног үнэгүй. Ямар ч эрсдэлгүй. Дахиж хүлээлгээгээ алдсангүй.</p>
+  <a href="/signup" class="btn btn-gold fade-in">🚀 Үнэгүй бүртгүүлэх</a>
+  <div style="margin-top:20px;font-size:.7rem;color:rgba(255,255,255,.3)"><span style="color:rgba(46,204,113,.5)">🔒 SSL encrypted</span> · <span style="color:rgba(46,204,113,.5)">💰 QPay төлбөрийн систем</span> · Хүссэн үедээ цуцлах боломжтой · <a href="/terms" style="color:rgba(212,160,23,.4)">Нөхцөл</a></div>
+</section>
+
+<footer>
+  <p style="font-weight:700;margin-bottom:4px">Barber<span style="color:var(--gold)">.</span>Pro</p>
+  <p style="margin-bottom:8px">Velo Grid Systems LLC</p>
+  <a href="/signup">Бүртгүүлэх</a> · <a href="/privacy">Нууцлал</a> · <a href="/terms">Нөхцөл</a> · <a href="tel:85279299">📞 85279299</a>
+</footer>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
+},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+(async function liveStats(){try{const r=await fetch('/api/stats/live');const d=await r.json();const e=document.getElementById('ls-shops');if(e)e.textContent=d.shops||'—';const b=document.getElementById('ls-bookings');const box=document.getElementById('liveStats');if(b){b.textContent=d.todayBookings||'—';if(!d.todayBookings&&!d.shops)box.style.opacity='0';else box.style.opacity='1'}}catch(e){}setTimeout(liveStats,30000)})();
+(function(){try{const t=localStorage.getItem('barber_token'),s=localStorage.getItem('barber_shop');if(t&&s)location.href='/admin?token='+t+'&shop='+s}catch(e){}})();
+</script>
+</body>
+</html>

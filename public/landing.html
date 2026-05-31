@@ -1,89 +1,885 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BarberPro — Монголын барбершопуудын систем</title>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-      background-color:#0b0b0c;color:#f3f4f6;line-height:1.5;
-      overflow-x:hidden;width:100vw;-webkit-font-smoothing:antialiased;
-    }
-    
-    .navbar{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid #1f2937;
-      background:rgba(11,11,12,.8);backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      position:sticky;top:0;z-index:100;
-    }
-    .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
-    .logo span{color:#e63946}
-    .nav-cta-btn{
-      background:#e63946;color:#fff;text-decoration:none;
-      padding:8px 16px;border-radius:6px;font-weight:600;font-size:14px;
-    }
-    
-    .hero{padding:48px 20px;text-align:center}
-    .hero h1{font-size:28px;font-weight:800;line-height:1.25;margin-bottom:16px;letter-spacing:-.5px}
-    .hero p{color:#9ca3af;font-size:16px;margin-bottom:32px}
-    
-    .cta-group{display:flex;flex-direction:column;gap:12px}
-    .btn-main,.btn-sub{
-      display:flex;align-items:center;justify-content:center;
-      width:100%;min-height:48px;text-decoration:none;border-radius:8px;
-      font-weight:600;font-size:16px;
-    }
-    .btn-main{background-color:#fff;color:#000}
-    .btn-sub{border:1px solid #374151;color:#fff}
-    
-    .features{padding:24px 20px;display:flex;flex-direction:column;gap:16px}
-    .card{background:#111827;border:1px solid #1f2937;padding:20px;border-radius:12px}
-    .card h3{margin:8px 0;font-size:18px}
-    .card p{color:#9ca3af;font-size:14px}
-    
-    @media(min-width:768px){
-      .hero{padding:80px 40px;max-width:800px;margin:0 auto}
-      .hero h1{font-size:48px}
-      .cta-group{flex-direction:row;justify-content:center}
-      .btn-main,.btn-sub{width:auto;padding:0 32px}
-      .features{flex-direction:row;max-width:1200px;margin:0 auto}
-      .card{flex:1}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Монголын барбершопуудын систем</title>
+<meta name="description" content="QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол — Монголын барбершопуудад зориулсан бүрэн систем.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a' rx='6'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='22' fill='%23d4a017'%3E✂%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   CSS VARIABLES
+   ============================================ */
+:root {
+  --black: #0a0a0a;
+  --charcoal: #4a4a4a;
+  --meta: #7a7a7a;
+  --light: #f8f9fa;
+  --border: #e8e8e8;
+  --white: #fff;
+  --gold: #d4a017;
+  --gold-dim: rgba(212, 160, 23, 0.1);
+  --dark-card: #111;
+  --dark-surface: #161616;
+  --dark-border: rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================
+   RESET & BASE (mobile-first)
+   ============================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family: Inter, -apple-system, sans-serif;
+  background: var(--white);
+  color: var(--charcoal);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+.container{
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+@media(min-width:768px){ .container{ padding: 0 40px; } }
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1,h2,h3{ font-family: Inter, -apple-system, sans-serif; font-weight: 800; line-height: 1.15; color: var(--black); letter-spacing: -.03em; }
+h1{ font-size: clamp(1.6rem, 5vw, 3.5rem); }
+h2{ font-size: clamp(1.3rem, 3.5vw, 2.5rem); }
+p,li{ color: var(--charcoal); line-height: 1.7; }
+a{ color: var(--black); text-decoration: none; transition: color .2s; }
+.section-label{
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .15rem;
+  color: var(--meta);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+@media(min-width:768px){ .section-label{ font-size: 11px; letter-spacing: .2rem; margin-bottom: 18px; } }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .08rem;
+  border: 1px solid var(--black);
+  cursor: pointer;
+  transition: all .2s;
+  min-height: 48px;
+  width: 100%;
+}
+.btn-dark{ background: var(--black); color: var(--white); }
+.btn-dark:hover{ background: var(--white); color: var(--black); }
+.btn-outline{ background: transparent; color: var(--black); }
+.btn-outline:hover{ background: var(--black); color: var(--white); }
+.btn-gold{ background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 700; }
+@media(min-width:768px){
+  .btn{ padding: 16px 36px; font-size: 14px; width: auto; letter-spacing: .1rem; }
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 56px;
+  background: rgba(255, 255, 255, .95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.nav.scrolled{ background: var(--white); }
+.nav-brand{ font-weight: 800; font-size: .85rem; letter-spacing: .12rem; color: var(--black); flex-shrink: 0; }
+.nav-links{ display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.nav-links a{
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08rem;
+  color: var(--meta);
+  font-weight: 500;
+  white-space: nowrap;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.nav-links a:hover{ color: var(--black); }
+.nav-cta{
+  padding: 8px 16px;
+  background: var(--black);
+  color: var(--white)!important;
+  font-weight: 700;
+  font-size: .7rem;
+  letter-spacing: .07rem;
+  border: 1px solid var(--black);
+  border-radius: 6px;
+  transition: all .2s;
+  min-height: 36px;
+}
+.nav-cta:hover{ background: var(--white); color: var(--black)!important; }
+@media(min-width:768px){
+  .nav{ padding: 0 40px; height: 64px; overflow: visible; }
+  .nav-links{ gap: 24px; }
+  .nav-links a{ font-size: 13px; letter-spacing: .12rem; }
+}
+
+/* ============================================
+   SECTION SPACING
+   ============================================ */
+.section{ padding: 60px 0; }
+.section-dark{ background: var(--black); }
+.section-light{ background: var(--light); }
+@media(min-width:768px){ .section{ padding: 100px 0; } }
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.hero-content{ padding-top: 56px; }
+.hero-title{ margin-bottom: 20px; }
+.hero-desc, .hero-text{ font-size: 15px; line-height: 1.75; margin-bottom: 28px; }
+@media(min-width:768px){
+  .hero-grid{ grid-template-columns: 1fr 1fr; gap: 48px; }
+  .hero-content{ padding-top: 100px; }
+  .hero-desc{ font-size: 17px; }
+  .phone-mockup{ max-width: 290px; }
+}
+
+/* ============================================
+   PHONE MOCKUP (Hero)
+   ============================================ */
+.phone-wrap{ overflow: hidden; width: 100%; display: flex; justify-content: center; align-items: center; }
+.phone-mockup{ position: relative; width: 100%; max-width: 320px; animation: float 4s ease-in-out infinite; }
+.phone-mockup .side-btn{ display: none; }
+.phone-body{
+  border-radius: 38px; padding: 10px; width: 100%;
+  background: linear-gradient(145deg, #2c2c2e, #1c1c1e);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 30px 60px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.15);
+}
+.phone-screen-bezel{ border-radius: 30px; overflow: hidden; background: var(--black); width: 100%; }
+.phone-screen{ position: relative; background: var(--black); display: flex; flex-direction: column; width: 100%; }
+.phone-screen-glass{
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 75%, rgba(255,255,255,.08) 100%);
+}
+.phone-notch{
+  position: relative; z-index: 3; height: 30px; min-height: 30px;
+  background: var(--black); display: flex; align-items: center; justify-content: center;
+}
+.phone-notch-pill{
+  width: 110px; height: 24px; background: #1a1a1a; border-radius: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.phone-notch-dot{ width: 6px; height: 6px; background: #2a2a2a; border-radius: 50%; }
+.phone-content{ padding: 8px 14px 10px; display: flex; flex-direction: column; flex: 1; position: relative; z-index: 1; }
+.phone-home-bar{ width: 100px; height: 3px; background: rgba(255,255,255,.12); border-radius: 2px; margin: 8px auto 0; }
+
+/* Phone content: status bar */
+.phone-status{
+  display: flex; justify-content: space-between;
+  font-size: 8px; font-weight: 600; color: #fff; opacity: .5;
+  letter-spacing: .3px; margin-bottom: 6px;
+}
+/* Phone content: shop header */
+.phone-shop{ text-align: center; margin-bottom: 2px; }
+.phone-shop-name{ font-size: 7px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,.1); text-transform: uppercase; margin-bottom: 2px; }
+.phone-shop-name .gold{ color: var(--gold); }
+.phone-shop-title{ font-size: 13px; font-weight: 700; color: #fff; }
+/* Phone content: booking card */
+.phone-card{
+  background: linear-gradient(180deg, #141414 0%, #111 100%);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 16px; padding: 14px;
+}
+.phone-card-progress{
+  display: flex; justify-content: center; gap: 24px;
+  margin-bottom: 14px; position: relative;
+}
+.phone-card-progress-line{
+  position: absolute; top: 4px; left: 50%;
+  transform: translateX(-50%); width: calc(100% - 48px);
+  height: 1px; background: rgba(255,255,255,.06); z-index: 0;
+}
+.phone-card-dot{ width: 10px; height: 10px; border-radius: 50%; position: relative; z-index: 1; border: 2px solid rgba(255,255,255,.08); background: #1a1a1a; }
+.phone-card-dot.done{ background: var(--gold); border-color: var(--gold); box-shadow: 0 0 6px rgba(212,160,23,.3); }
+.phone-step-label{ font-size: 7px; font-weight: 600; color: rgba(255,255,255,.25); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
+/* Phone service items */
+.phone-svc{ display: flex; flex-direction: column; gap: 4px; }
+.phone-svc-item{
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 12px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.05); background: rgba(255,255,255,.01);
+}
+.phone-svc-item.selected{ border-color: rgba(212,160,23,.3); background: rgba(212,160,23,.04); }
+.phone-svc-left{ display: flex; align-items: center; gap: 8px; }
+.phone-svc-icon{ font-size: 12px; }
+.phone-svc-name{ font-size: 10px; font-weight: 600; color: rgba(255,255,255,.9); }
+.phone-svc-dur{ font-size: 8px; color: rgba(255,255,255,.28); }
+.phone-svc-price{ font-weight: 700; font-size: 11px; color: var(--gold); }
+.phone-slot-label{ font-size: 7px; font-weight: 600; color: rgba(255,255,255,.25); text-transform: uppercase; letter-spacing: 2px; margin: 10px 0 7px; text-align: center; }
+.time-slot-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; padding: 12px; }
+.time-slot-btn{ padding: 10px 0; text-align: center; font-size: 14px; border-radius: 6px; touch-action: manipulation; border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.55); background: rgba(255,255,255,.02); font-weight: 500; }
+.time-slot-btn.selected{ border-color: var(--gold); color: var(--gold); background: linear-gradient(135deg, rgba(212,160,23,.22), rgba(212,160,23,.08)); font-weight: 700; }
+
+/* Phone content: booking card */
+.phone-summary{
+  margin-top: 10px;
+  background: rgba(255,255,255,.015); border: 1px solid rgba(255,255,255,.04);
+  border-radius: 8px; padding: 7px 10px;
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+}
+.phone-summary-text{ font-size: 8px; color: rgba(255,255,255,.35); }
+.phone-summary-price{ font-weight: 700; color: var(--gold); font-size: 10px; }
+.phone-book-btn{
+  padding: 11px 0;
+  background: linear-gradient(135deg, var(--gold), #c49014);
+  color: var(--black); text-align: center;
+  font-size: 10px; font-weight: 700; border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(212,160,23,.15); letter-spacing: -.2px;
+}
+
+@media(min-width:768px){
+  .phone-mockup{ max-width: 350px; transition: transform .3s ease; }
+  .phone-mockup:hover{ transform: scale(1.04); }
+  .phone-mockup .side-btn{ display: block; }
+}
+
+/* ============================================
+   FEATURES SECTION (dark)
+   ============================================ */
+.features-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+.features-content{ }
+.features-title{ font-size: clamp(1.4rem, 3vw, 2rem); color: #fff; margin-bottom: 14px; }
+.features-desc{ font-size: 15px; color: rgba(255,255,255,.5); line-height: 1.7; margin-bottom: 32px; max-width: 480px; }
+.feature-list{ display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+.feature-item{
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; color: rgba(255,255,255,.85); font-weight: 500;
+}
+.feature-item svg{ flex-shrink: 0; }
+.feature-cta{
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; background: var(--gold); color: var(--black);
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; text-decoration: none;
+}
+
+.features-content > * { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.features-content > .is-visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* === iPad TABLET MOCKUP === */
+.ipad-panel{ position: relative; display: flex; align-items: center; justify-content: center; }
+.ipad-mockup{ position: relative; max-width: 280px; width: 100%; opacity: 0; }
+.ipad-mockup.slide-in{ animation: slideFromRight .8s cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipad-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite; opacity: 1; }
+.ipad-mockup .side-btn{ display: none; }
+.ipad-body{
+  border-radius: 24px; padding: 8px;
+  background: linear-gradient(145deg, #2c2c2e, #1c1c1e);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 40px 80px rgba(0,0,0,.4), 0 10px 24px rgba(0,0,0,.2);
+}
+.ipad-screen-bezel{ border-radius: 18px; overflow: hidden; background: var(--black); position: relative; display: flex; flex-direction: column; }
+.ipad-glass{
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 75%, rgba(255,255,255,.05) 100%);
+}
+.ipad-camera{
+  position: absolute; top: 10px; left: 50%; margin-left: -3px; z-index: 3;
+  width: 6px; height: 6px; background: #1a1a1a;
+  border: 1px solid #2a2a2a; border-radius: 50%;
+}
+.ipad-content{ flex: 1; padding: 16px 14px 14px; overflow-y: auto; position: relative; z-index: 1; background: var(--black); }
+
+/* Admin UI inside iPad */
+.admin-header{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.admin-shop-name{ font-size: 12px; font-weight: 800; color: #fff; }
+.admin-shop-name .gold{ color: var(--gold); }
+.admin-shop-sub{ font-size: 8px; color: rgba(255,255,255,.35); margin-top: 1px; }
+.admin-shop-sub strong{ color: var(--gold); }
+.admin-logout{ padding: 5px 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 6px; font-size: 8px; color: rgba(255,255,255,.6); cursor: default; }
+.admin-stat-row{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px; }
+.admin-stat{ background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 6px; padding: 6px 7px; text-align: center; }
+.admin-stat .num{ font-size: 13px; font-weight: 800; }
+.admin-stat .num.gold{ color: var(--gold); }
+.admin-stat .num.white{ color: #fff; }
+.admin-stat .lbl{ font-size: 6px; color: rgba(255,255,255,.4); margin-top: 1px; }
+.admin-tabs{ display: flex; gap: 4px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 2px; }
+.admin-tab{
+  flex-shrink: 0; padding: 6px 10px; border-radius: 6px;
+  font-size: 7px; font-weight: 600; white-space: nowrap;
+  border: 1px solid var(--dark-border); color: rgba(255,255,255,.4);
+}
+.admin-tab.active{ border-color: var(--gold); color: var(--gold); background: rgba(212,160,23,.1); }
+.admin-grid-2{ display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.admin-panel{ background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 8px; padding: 10px; }
+.admin-panel-title{ font-size: 8px; font-weight: 600; color: rgba(255,255,255,.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.admin-queue-row{ display: flex; justify-content: space-between; padding: 4px 0; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.admin-queue-row:last-child{ border-bottom: 0; }
+.admin-queue-id{ color: rgba(255,255,255,.25); }
+.admin-queue-name{ color: rgba(255,255,255,.85); }
+.admin-queue-status{ font-size: 7px; background: rgba(212,160,23,.12); color: var(--gold); padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+.admin-queue-status.dim{ background: transparent; color: rgba(255,255,255,.25); }
+.admin-next-btn{
+  display: block; margin-top: 6px; padding: 6px 0;
+  background: linear-gradient(135deg, var(--gold), #c49014);
+  color: var(--black); text-align: center;
+  font-size: 8px; font-weight: 700; border-radius: 6px;
+}
+.admin-sched-item{
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 0 4px 7px; border-left: 3px solid var(--gold);
+  margin-bottom: 2px; font-size: 9px;
+}
+.admin-sched-time{ font-weight: 600; color: var(--gold); min-width: 32px; }
+.admin-sched-name{ flex: 1; color: rgba(255,255,255,.85); font-weight: 500; }
+.admin-sched-svc{ color: rgba(255,255,255,.35); font-size: 7px; }
+.admin-bottom-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.admin-comm-row{ display: flex; justify-content: space-between; padding: 3px 0; font-size: 9px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.admin-comm-row:last-child{ border-bottom: 0; }
+.admin-comm-name{ color: rgba(255,255,255,.55); }
+.admin-comm-val{ color: var(--gold); font-weight: 600; }
+.admin-svc-row{ display: flex; justify-content: space-between; padding: 3px 0; font-size: 9px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.admin-svc-row:last-child{ border-bottom: 0; }
+.admin-svc-name{ color: rgba(255,255,255,.55); }
+.admin-svc-ct{ color: rgba(255,255,255,.5); }
+
+@media(min-width:768px){
+  .features-grid{ grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .features-desc{ font-size: 16px; }
+  .ipad-panel{ position: sticky; top: 8%; height: 90vh; }
+  .ipad-mockup{ max-width: 360px; transition: transform .3s ease; }
+  .ipad-mockup:hover{ transform: scale(1.03); }
+  .ipad-mockup .side-btn{ display: block; }
+}
+
+/* ============================================
+   NO-SHOW SECTION
+   ============================================ */
+.noshow-grid{ display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+.noshow-stat-num{ font-weight: 800; font-size: 2.6rem; color: var(--black); line-height: 1; }
+.noshow-stat-lbl{ font-size: 12px; text-transform: uppercase; letter-spacing: .12rem; color: var(--meta); margin-top: 4px; }
+.noshow-source{ font-size: 12px; color: #bbb; font-style: italic; margin-top: 24px; }
+.noshow-solution{ padding: 0; border: none; }
+.noshow-sol-tag{ font-size: 11px; font-weight: 600; color: var(--black); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.noshow-sol-title{ font-size: clamp(1.2rem, 2.5vw, 1.6rem); margin-bottom: 12px; }
+.noshow-sol-desc{ font-size: 15px; line-height: 1.7; color: var(--charcoal); margin-bottom: 20px; }
+.noshow-sol-badge{ display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--white); border: 1px solid var(--border); }
+.noshow-sol-badge .check{ font-size: 20px; }
+.noshow-sol-badge .text{ font-size: 14px; font-weight: 600; color: var(--black); }
+@media(min-width:768px){
+  .noshow-grid{ grid-template-columns: 1fr 1fr; gap: 60px; }
+  .noshow-solution{ border-left: 2px solid var(--black); padding-left: 48px; }
+}
+
+/* ============================================
+   MARQUEE
+   ============================================ */
+.marquee{ background: var(--black); overflow: hidden; }
+.marquee-inner{ padding: 24px 0; white-space: nowrap; }
+.marquee-text{
+  display: inline-block;
+  animation: scroll-right 50s linear infinite;
+  font-size: .9rem; color: rgba(255,255,255,.55); font-weight: 400;
+}
+@media(min-width:768px){ .marquee-text{ font-size: 1.2rem; } }
+
+/* ============================================
+   PRICING
+   ============================================ */
+.pricing-grid{ display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 720px; margin: 0 auto; }
+.pricing-card{
+  padding: 32px 24px; text-align: center;
+  border: 2px solid var(--black); background: var(--white);
+  position: relative;
+}
+.pricing-card.featured{ }
+.pricing-badge{
+  position: absolute; top: -1px; left: -1px; right: -1px;
+  padding: 5px 0; background: var(--black); color: var(--white);
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .15rem;
+}
+.pricing-name{ font-size: 12px; text-transform: uppercase; letter-spacing: .2rem; color: var(--meta); font-weight: 600; margin-bottom: 10px; }
+.pricing-card.featured .pricing-name{ margin-top: 16px; }
+.pricing-price{ font-weight: 800; font-size: 2.4rem; color: var(--black); margin-bottom: 4px; }
+.pricing-price small{ font-size: .6rem; font-weight: 400; color: var(--meta); text-transform: uppercase; }
+.pricing-sub{ font-size: 13px; color: var(--meta); margin-bottom: 24px; }
+.pricing-list{ list-style: none; text-align: left; font-size: 14px; color: var(--charcoal); margin-bottom: 28px; max-width: 220px; margin-left: auto; margin-right: auto; }
+.pricing-list li{ padding: 6px 0 6px 16px; position: relative; }
+.pricing-list li::before{ content: '\2014'; position: absolute; left: 0; color: var(--meta); }
+@media(min-width:768px){
+  .pricing-grid{ grid-template-columns: 1fr 1fr; gap: 0; }
+  .pricing-card{ padding: 44px 36px; }
+  .pricing-card.featured{ border-left: 0; }
+}
+
+/* ============================================
+   FAQ ACCORDION
+   ============================================ */
+.faq-header{ text-align: center; margin-bottom: 40px; }
+.faq-inner{ max-width: 768px; margin: 0 auto; }
+.faq-item{ border-top: 1px solid var(--border); cursor: pointer; }
+.faq-item:first-child{ border-top-width: 2px; border-color: var(--black); }
+.faq-item:last-child{ border-bottom: 2px solid var(--black); }
+.faq-question{
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; min-height: 48px;
+  font-size: .85rem; font-weight: 600; color: var(--black);
+  user-select: none;
+}
+.faq-arrow{ font-size: 1.2rem; color: var(--meta); font-weight: 300; transition: transform .3s; }
+.faq-item.open .faq-arrow{ transform: rotate(45deg); }
+.faq-answer{
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s ease, padding .4s ease;
+  padding: 0;
+  font-size: .76rem; color: var(--charcoal); line-height: 1.7;
+}
+.faq-item.open .faq-answer{ max-height: 300px; padding: 0 0 16px 0; }
+
+/* ============================================
+   TRUST STRIP & FOOTER
+   ============================================ */
+.trust-strip{
+  text-align: center; padding: 20px 16px;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  font-size: 12px; line-height: 2;
+}
+.trust-strip .bold{ color: var(--black); font-weight: 600; }
+.footer{ padding: 32px 16px; text-align: center; font-size: 11px; color: var(--meta); line-height: 2; }
+.footer a{ color: var(--meta); } .footer a:hover{ color: var(--black); }
+@media(min-width:768px){
+  .trust-strip{ padding: 32px 0; font-size: 13px; }
+  .footer{ padding: 48px 0; font-size: 13px; line-height: 1.8; }
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes float{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+@keyframes scroll-right{ 0%{ transform: translateX(-100%); } 100%{ transform: translateX(100%); } }
+@keyframes slideFromRight{ from{ opacity:0; transform:translateX(60px) } to{ opacity:1; transform:translateX(0) } }
+
+/* Side button elements for phone mockup */
+.phone-side-btn{
+  position: absolute; width: 4px; background: #3a3a3c; border-radius: 2px;
+}
+.phone-side-btn-r1{ right:-6px; top:80px; height:28px; }
+.phone-side-btn-r2{ right:-6px; top:115px; height:40px; }
+.phone-side-btn-l{ left:-6px; top:95px; height:30px; }
+
+.ipad-side-btn{
+  position: absolute; width: 3px; background: #3a3a3c; border-radius: 2px;
+}
+.ipad-side-btn-r1{ right:-5px; top:90px; height:32px; }
+.ipad-side-btn-r2{ right:-5px; top:130px; height:48px; }
+</style>
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="logo">BARBER<span>PRO</span></div>
-    <a href="#pricing" class="nav-cta-btn">Бүртгүүлэх</a>
-  </header>
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<header class="nav" id="nav">
+  <a href="#" class="nav-brand">BARBERPRO</a>
+  <nav class="nav-links">
+    <a href="#pricing">Үнэ</a>
+    <a href="#faq">FAQ</a>
+    <a href="/blog">Блог</a>
+    <a href="/admin-login">Нэвтрэх</a>
+    <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
+  </nav>
+</header>
 
-  <main>
-    <section class="hero">
-      <h1>Монголын барбершопуудын нэгдсэн систем</h1>
-      <p>Но-шоуг 80% бууруулж, урьдчилгаа төлбөр болон дарааллыг ухаалгаар шийднэ.</p>
-      <div class="cta-group">
-        <a href="/signup" class="btn-main">Үнийн нөхцөл харах</a>
-        <a href="tel:85279299" class="btn-sub">Шууд залгах</a>
+<!-- ============================================
+     HERO SECTION
+     ============================================ -->
+<section class="section hero-content">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="section-label">01 // БАРБЕРШОПЫН СИСТЕМ</div>
+        <h1 class="hero-title">Дараалал, захиалга, аналитик — нэг цэвэрхэн системд.</h1>
+        <p class="hero-desc">QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол, SMS сануулагч. Монголын барбершопуудад тусгайлан зохион бүтээсэн. Барбер нэг товч дарна — үлдсэн бүх зүйлийг систем автоматаар шийднэ. Сургалт 0 минут. Төвөгтэй тохиргоо гэж байхгүй.</p>
+        <a href="/signup" class="btn btn-dark">7 хоног үнэгүй турших</a>
       </div>
-    </section>
 
-    <section class="features">
-      <div class="card">
-        <div class="icon" style="font-size:1.5rem">💸</div>
-        <h3>Урьдчилгаа төлбөр</h3>
-        <p>QPay-ээр урьдчилгаа авч но-шоуг огцом бууруулна.</p>
-      </div>
-      <div class="card">
-        <div class="icon" style="font-size:1.5rem">🚶</div>
-        <h3>Дараалал харах</h3>
-        <p>Үйлчлүүлэгчид хүлээлгийн дарааллаа утсаараа шууд хянана.</p>
-      </div>
-    </section>
-  </main>
+      <!-- Phone mockup -->
+      <div class="phone-wrap">
+        <div class="phone-mockup">
+          <div class="phone-side-btn phone-side-btn-r1"></div>
+          <div class="phone-side-btn phone-side-btn-r2"></div>
+          <div class="phone-side-btn phone-side-btn-l"></div>
+          <div class="phone-body">
+            <div class="phone-screen-bezel">
+              <div class="phone-screen">
+                <div class="phone-screen-glass"></div>
+                <div class="phone-notch">
+                  <div class="phone-notch-pill">
+                    <div class="phone-notch-dot"></div>
+                    <div class="phone-notch-dot"></div>
+                  </div>
+                </div>
 
+                <div class="phone-content">
+                  <div class="phone-status"><span>10:28</span><span>📶 🔋</span></div>
+                  <div class="phone-shop">
+                    <div class="phone-shop-name">Barber<span class="gold">.</span>Pro</div>
+                    <div class="phone-shop-title">Цаг захиалга</div>
+                  </div>
+                  <div class="phone-card">
+                    <div class="phone-card-progress">
+                      <div class="phone-card-progress-line"></div>
+                      <div class="phone-card-dot done"></div>
+                      <div class="phone-card-dot done"></div>
+                      <div class="phone-card-dot"></div>
+                    </div>
+                    <div class="phone-step-label">Үйлчилгээ сонгох</div>
+                    <div class="phone-svc">
+                      <div class="phone-svc-item">
+                        <div class="phone-svc-left"><span class="phone-svc-icon" style="opacity:.5">💇</span><div><div class="phone-svc-name">Үс засах</div><div class="phone-svc-dur">45 мин</div></div></div>
+                        <span class="phone-svc-price">₮25,000</span>
+                      </div>
+                      <div class="phone-svc-item">
+                        <div class="phone-svc-left"><span class="phone-svc-icon" style="opacity:.5">💇</span><div><div class="phone-svc-name">Сахал засах</div><div class="phone-svc-dur">20 мин</div></div></div>
+                        <span class="phone-svc-price">₮15,000</span>
+                      </div>
+                      <div class="phone-svc-item selected">
+                        <div class="phone-svc-left"><span class="phone-svc-icon">💇</span><div><div class="phone-svc-name">Үс + Сахал</div><div class="phone-svc-dur">60 мин</div></div></div>
+                        <span class="phone-svc-price">₮40,000</span>
+                      </div>
+                    </div>
+                    <div class="phone-slot-label">Цагаа сонгох</div>
+                    <div class="time-slot-grid">
+                      <div class="time-slot-btn">10:00</div>
+                      <div class="time-slot-btn">10:30</div>
+                      <div class="time-slot-btn selected">11:00</div>
+                      <div class="time-slot-btn">11:30</div>
+                      <div class="time-slot-btn">12:00</div>
+                      <div class="time-slot-btn">12:30</div>
+                    </div>
+                    <div class="phone-summary">
+                      <span class="phone-summary-text">Үс + Сахал · 11:00</span>
+                      <span class="phone-summary-price">₮40,000</span>
+                    </div>
+                    <div class="phone-book-btn">Захиалах</div>
+                  </div>
+                  <div class="phone-home-bar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FEATURES + iPad
+     ============================================ -->
+<section id="features" class="section section-dark">
+  <div class="container">
+    <div class="features-grid">
+      <div class="features-content">
+        <div class="section-label" style="color:var(--gold)">02 // БОЛОМЖУУД</div>
+        <h2 class="features-title">Барбершопын өдөр тутмын үйл ажиллагааг бүрэн хянах зургаан хэрэгсэл.</h2>
+        <p class="features-desc">Хашгираад дуудах, цаасан дэвтэр, Excel файл, маргаантай комисс — энэ бүгдийг нэг цэвэрхэн самбараар соль.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>QR дараалал систем</span>
+          </div>
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Онлайн цаг захиалга</span>
+          </div>
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Урьдчилгаа төлбөр / Deposit</span>
+          </div>
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Бүрэн аналитик, график</span>
+          </div>
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Комисс тооцоолол</span>
+          </div>
+          <div class="feature-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>SMS автомат сануулга</span>
+          </div>
+        </div>
+        <a href="/signup" class="feature-cta">БҮРТГҮҮЛЭХ →</a>
+      </div>
+
+      <!-- iPad Admin Dashboard -->
+      <div class="ipad-panel">
+        <div class="ipad-mockup" id="ipad-mockup">
+          <div class="ipad-side-btn ipad-side-btn-r1 side-btn"></div>
+          <div class="ipad-side-btn ipad-side-btn-r2 side-btn"></div>
+          <div class="ipad-body">
+            <div class="ipad-screen-bezel">
+              <div class="ipad-glass"></div>
+              <div class="ipad-camera"></div>
+              <div class="ipad-content">
+                <div class="admin-header">
+                  <div>
+                    <div class="admin-shop-name">Barber<span class="gold">.</span>Pro</div>
+                    <div class="admin-shop-sub">Дэлгүүр: <strong>Гранд Барбер</strong></div>
+                  </div>
+                  <span class="admin-logout">Гарах</span>
+                </div>
+                <div class="admin-stat-row">
+                  <div class="admin-stat"><div class="num gold">14</div><div class="lbl">Өнөөдөр</div></div>
+                  <div class="admin-stat"><div class="num white">287</div><div class="lbl">Нийт захиалга</div></div>
+                  <div class="admin-stat"><div class="num white">156</div><div class="lbl">Харилцагчид</div></div>
+                  <div class="admin-stat"><div class="num gold">₮4.2M</div><div class="lbl">Орлого</div></div>
+                </div>
+                <div class="admin-tabs">
+                  <div class="admin-tab active">🚶 Дараалал</div>
+                  <div class="admin-tab">📋 Өнөөдөр</div>
+                  <div class="admin-tab">📅 Захиалга</div>
+                  <div class="admin-tab">💈 Барбер</div>
+                  <div class="admin-tab">📊 Тоон мэдээ</div>
+                </div>
+                <div class="admin-grid-2">
+                  <div class="admin-panel">
+                    <div class="admin-panel-title">🚶 Дараалал</div>
+                    <div class="admin-queue-row">
+                      <span class="admin-queue-id">#14</span>
+                      <span class="admin-queue-name">Анхмаа</span>
+                      <span class="admin-queue-status">Үйлчилгээнд</span>
+                    </div>
+                    <div class="admin-queue-row">
+                      <span class="admin-queue-id">#15</span>
+                      <span class="admin-queue-name">Тэмүүлэн</span>
+                      <span class="admin-queue-status dim">Хүлээж байна</span>
+                    </div>
+                    <div class="admin-next-btn">▶️ Дараагийнх</div>
+                  </div>
+                  <div class="admin-panel">
+                    <div class="admin-panel-title">📋 Өнөөдөр</div>
+                    <div class="admin-sched-item"><span class="admin-sched-time">09:00</span><span class="admin-sched-name">Бат-Эрдэнэ</span><span class="admin-sched-svc">Үс засах</span></div>
+                    <div class="admin-sched-item"><span class="admin-sched-time">10:00</span><span class="admin-sched-name">Ганболд</span><span class="admin-sched-svc">Сахал засах</span></div>
+                    <div class="admin-sched-item"><span class="admin-sched-time">11:00</span><span class="admin-sched-name">Тэмүүлэн</span><span class="admin-sched-svc">Үс + Сахал</span></div>
+                  </div>
+                </div>
+                <div class="admin-bottom-row">
+                  <div class="admin-panel">
+                    <div class="admin-panel-title">💰 Комисс</div>
+                    <div class="admin-comm-row"><span class="admin-comm-name">Бат-Эрдэнэ (50%)</span><span class="admin-comm-val">₮21,000</span></div>
+                    <div class="admin-comm-row"><span class="admin-comm-name">Ганболд (40%)</span><span class="admin-comm-val">₮16,000</span></div>
+                  </div>
+                  <div class="admin-panel">
+                    <div class="admin-panel-title">🔢 Үйлчилгээ</div>
+                    <div class="admin-svc-row"><span class="admin-svc-name">Үс засах</span><span class="admin-svc-ct">×6</span></div>
+                    <div class="admin-svc-row"><span class="admin-svc-name">Сахал засах</span><span class="admin-svc-ct">×4</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     NO-SHOW
+     ============================================ -->
+<section id="noshow" class="section section-light">
+  <div class="container">
+    <div class="noshow-grid">
+      <div>
+        <div class="section-label">03 // НО-ШОУ ШИЙДЭЛ</div>
+        <h2 style="margin-bottom:16px">Үйлчлүүлэгчид цаг захиалаад ирэхгүй байна уу?</h2>
+        <p class="hero-text">Олон улсын судалгаагаар барбершопуудад цаг захиалсан хүмүүсийн <b style="color:var(--black)">20-30%</b> нь ирдэггүй. Энэ нь сар бүр хэдэн зуун мянган төгрөгийн алдагдал.</p>
+        <div style="display:flex;gap:32px;margin-bottom:32px">
+          <div><div class="noshow-stat-num">~25%</div><div class="noshow-stat-lbl">Но-шоу хувь</div></div>
+          <div><div class="noshow-stat-num">₮3.6 сая</div><div class="noshow-stat-lbl">Сард алдсан орлого</div></div>
+        </div>
+        <div class="noshow-source">Эх сурвалж: Fresha, Mindbody, Square — олон улсын барбер/салоны салбарын судалгаа (2023-2024)</div>
+      </div>
+      <div class="noshow-solution">
+        <div class="noshow-sol-tag">ШИЙДЭЛ</div>
+        <h2 class="noshow-sol-title">Урьдчилгаа төлбөр — но-шоуг 80% бууруулна.</h2>
+        <p class="noshow-sol-desc">Үйлчлүүлэгч захиалгаа баталгаажуулахдаа QPay-аар урьдчилгаа төлбөр төлдөг. Ирээгүй тохиолдолд төлбөр нь баригддаг. Но-шоу асуудлыг бүрэн шийднэ.</p>
+        <div class="noshow-sol-badge">
+          <span class="check">✅</span>
+          <span class="text">Pro план дээр идэвхжинэ — ₮99,000/сар</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     MARQUEE TESTIMONIALS
+     ============================================ -->
+<section class="marquee">
+  <div class="marquee-inner">
+    <div class="marquee-text">&ldquo;Дараалал хүлээгээд гарч явах хүн байхгүй болсон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Дараалал хүлээгээд гарч явах хүн байхгүй болсон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон&rdquo; &nbsp; ★ ★ ★ ★ ★</div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRICING
+     ============================================ -->
+<section id="pricing" class="section">
+  <div class="container" style="text-align:center">
+    <div class="section-label">04 // ҮНЭ</div>
+    <h2 style="margin-bottom:8px">7 хоног үнэгүй туршаад шийд.</h2>
+    <p style="margin-bottom:56px;font-size:17px">Карт шаардлагагүй. Гэрээ байхгүй. Хүссэн үедээ болих боломжтой.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Basic</div>
+        <div class="pricing-price">₮49,000 <small>/сар</small></div>
+        <div class="pricing-sub">Дараалал + админ самбар</div>
+        <ul class="pricing-list">
+          <li>QR дараалал систем</li>
+          <li>Олон барбер дэмжинэ</li>
+          <li>Админ самбар</li>
+          <li>Үндсэн тоон мэдээ</li>
+        </ul>
+        <a href="/signup" class="btn btn-outline">Үнэгүй турших</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Шилдэг сонголт</div>
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price">₮99,000 <small>/сар</small></div>
+        <div class="pricing-sub">Бүх боломж, бүрэн хяналт</div>
+        <ul class="pricing-list">
+          <li>Basic-н бүх боломж</li>
+          <li>Онлайн цаг захиалга</li>
+          <li>Урьдчилгаа төлбөр</li>
+          <li>Бүрэн аналитик, график</li>
+          <li>Комисс тооцоолол</li>
+          <li>SMS автоматжуулалт</li>
+        </ul>
+        <a href="/signup" class="btn btn-dark">Үнэгүй турших</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FAQ ACCORDION
+     ============================================ -->
+<section id="faq" class="section section-light">
+  <div class="container faq-inner">
+    <div class="faq-header">
+      <div class="section-label">05 // ТҮГЭЭД АСУУДАГ</div>
+      <h2>Хамгийн түгээмэл асуултууд.</h2>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>Системд суралцахад хэр хугацаа шаардагдах вэ?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Сургалт 0 минут. Барбер нэг товч дарж үйлчлүүлэгчээ дуудахад л болно. Админ самбар нь зөн совинтой, хэрэглэхэд хялбар.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>Гэрээ байгуулах шаардлагатай юу?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Хэрэггүй. Сар бүр төлөх ба хүссэн үедээ цуцлах боломжтой. 7 хоног үнэгүй турших — карт шаардлагагүй.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>QPay-тай холбогддог уу?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Тийм. Pro план дээр QPay урьдчилгаа төлбөр автомат холбогддог. Үйлчлүүлэгч QR уншуулаад төлбөрөө төлчихвөл захиалга баталгаажина.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>Хэдэн барбер дэмждэг вэ?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Хязгааргүй. Basic план дээр ч олон барбер, олон ажлын байр дэмжинэ. Барбер бүр өөрийн дараалал, комиссоо харна.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>SMS сануулагч яаж ажилладаг вэ?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Захиалга баталгаажсаны дараа автоматаар SMS илгээгдэнэ. Мөн дараагийн өдрийн захиалгуудыг сануулах SMS өглөө бүр явагдана. Но-шоу 80%-аар буурна.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question"><span>Data-аа export хийж болох уу?</span><span class="faq-arrow">+</span></div>
+      <div class="faq-answer">Болно. Хүссэн үедээ CSV, Excel форматаар татаж авах боломжтой. Мөн бүх график, тоон мэдээг хэвлэх / PDF болгох боломжтой.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TRUST STRIP + FOOTER
+     ============================================ -->
+<div class="trust-strip">
+  <span class="bold">🔒 SSL encrypted</span> &nbsp;·&nbsp;
+  <span class="bold">💰 QPay төлбөрийн систем</span> &nbsp;·&nbsp;
+  Карт шаардлагагүй &nbsp;·&nbsp; Хүссэн үедээ цуцлах
+</div>
+
+<footer class="footer">
+  <b style="color:var(--black)">BARBERPRO</b> &nbsp;·&nbsp; Velo Grid Systems LLC &nbsp;·&nbsp;
+  <a href="tel:85279299">📞 85279299</a> &nbsp;·&nbsp;
+  <a href="/terms">Нөхцөл</a> &nbsp;·&nbsp;
+  <a href="/privacy">Нууцлал</a>
+</footer>
+
+<script>
+/* Nav scroll effect */
+window.addEventListener('scroll', function(){
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* iPad mockup scroll-triggered animation */
+document.addEventListener('DOMContentLoaded', function(){
+  var section = document.querySelector('#features');
+  var items = document.querySelectorAll('.features-content > *');
+  var device = document.getElementById('ipad-mockup');
+  if(!section || !device) return;
+  var done = false;
+  function go(){
+    if(done) return; done = true;
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+    device.classList.add('slide-in');
+    setTimeout(function(){ device.classList.add('complete'); }, 900);
+  }
+  var obs = new IntersectionObserver(function(e){ if(e[0].isIntersecting) setTimeout(go, 100); }, {threshold: 0.1});
+  obs.observe(section);
+  window.addEventListener('scroll', function(){
+    if(!done && section.getBoundingClientRect().top < window.innerHeight * 0.9) setTimeout(go, 100);
+  });
+});
+</script>
 </body>
 </html>

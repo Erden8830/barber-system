@@ -509,59 +509,63 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     white-space: nowrap !important;
     margin: 0 auto !important;
   }
-  .phone-mockup {
-    width: 280px !important;
-    height: auto !important;
-    min-height: 520px !important;
-    max-height: 560px !important;
+  .hero-grid {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
-    padding: 18px !important;
+    text-align: center !important;
+    padding: 20px 10px !important;
     overflow: hidden !important;
+  }
+  .phone-mockup {
+    width: 320px !important;
+    height: auto !important;
+    padding: 20px !important;
+    margin: 10px auto !important;
+    background: #121216 !important;
+    border: 3px solid #2d2d35 !important;
+    border-radius: 28px !important;
+    transform: scale(0.85) !important;
+    transform-origin: top center !important;
     max-width: none !important;
-    margin: 24px auto 0 auto !important;
+    animation: none !important;
   }
-  .phone-body {
-    flex: 1 !important;
+  .phone-svc-item {
+    font-size: 13px !important;
+    padding: 10px !important;
+    margin-bottom: 8px !important;
     display: flex !important;
-    flex-direction: column !important;
-  }
-  .phone-screen-bezel {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .phone-screen {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .phone-content {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
     justify-content: space-between !important;
   }
-  .phone-card {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 !important;
+  .time-slot-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+    margin-bottom: 14px !important;
   }
-  .phone-shop { margin-bottom: 8px !important; }
-  .phone-shop-title { font-size: 14px !important; }
-  .phone-svc-item { font-size: 12px !important; padding: 8px 10px !important; margin-bottom: 6px !important; }
-  .phone-svc-name { font-size: 12px !important; }
-  .time-slot-grid { gap: 6px !important; margin-bottom: 10px !important; }
-  .time-slot-btn { padding: 6px !important; font-size: 11px !important; }
-  .phone-book-btn { margin-top: auto !important; }
+  .time-slot-btn {
+    padding: 6px !important;
+    font-size: 12px !important;
+  }
   .phone-wrap {
+    max-height: 460px !important;
     background: transparent !important;
-    background-color: transparent !important;
+    border: none !important;
+    overflow: hidden !important;
+  }
+  .phone-screen-glass,
+  .phone-notch, .phone-notch-pill, .phone-notch-dot,
+  .phone-card-progress, .phone-card-progress-line, .phone-card-dot,
+  .phone-step-label, .phone-home-bar,
+  .phone-side-btn, .ipad-side-btn {
+    display: none !important;
+  }
+  .phone-body, .phone-screen-bezel, .phone-screen, .phone-content, .phone-card {
+    background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
   }
   .hero-content {
     padding: 40px 20px !important;

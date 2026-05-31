@@ -807,6 +807,34 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 }
 @media(min-width:768px){.menu-toggle{display:none!important}.nav-menu{display:none!important}}
 @media(max-width:767px){.nav-links{display:none!important}}
+
+/* ============================================
+   BILLING TOGGLE
+   ============================================ */
+.billing-toggle{
+  display:inline-flex;align-items:center;gap:10px;
+  margin:0 auto 32px;justify-content:center;
+  font-size:13px;font-weight:600;
+}
+.billing-label{color:var(--text-main-muted);cursor:pointer;transition:color .2s;user-select:none}
+.billing-label.active{color:var(--text-main-primary)}
+.billing-save{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05rem;color:var(--gold);
+  background:var(--gold-dim);padding:3px 8px;border-radius:4px;
+}
+.toggle-switch{
+  position:relative;width:42px;height:24px;background:#e1e1e6;
+  border-radius:12px;cursor:pointer;transition:background .25s;flex-shrink:0;
+}
+.toggle-switch.active{background:var(--gold)}
+.toggle-knob{
+  position:absolute;top:3px;left:3px;width:18px;height:18px;
+  background:#fff;border-radius:50%;transition:transform .25s;
+  box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+.toggle-switch.active .toggle-knob{transform:translateX(18px)}
+
 /* ============================================
    KEYFRAMES
    ============================================ */
@@ -1100,12 +1128,29 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
   <div class="container" style="text-align:center">
     <div class="section-label">04 // ҮНЭ</div>
     <h2 style="margin-bottom:8px">7 хоног үнэгүй туршаад шийд.</h2>
-    <p style="margin-bottom:56px;font-size:17px">Карт шаардлагагүй. Гэрээ байхгүй. Хүссэн үедээ болих боломжтой.</p>
+    <p style="margin-bottom:32px;font-size:17px">Карт шаардлагагүй. Гэрээ байхгүй. Хүссэн үедээ болих боломжтой.</p>
+
+    <!-- Billing toggle -->
+    <div class="billing-toggle">
+      <span class="billing-label active" data-period="monthly">Сар бүр</span>
+      <div class="toggle-switch" onclick="toggleBilling()">
+        <div class="toggle-knob"></div>
+      </div>
+      <span class="billing-label" data-period="annual">Жилээр</span>
+      <span class="billing-save">20% хэмнэ</span>
+    </div>
+
     <div class="pricing-grid">
       <div class="pricing-card">
         <div class="pricing-name">Basic</div>
-        <div class="pricing-price">₮49,000 <small>/сар</small></div>
-        <div class="pricing-sub">Дараалал + админ самбар</div>
+        <div class="pricing-price">
+          <span class="price-monthly">₮49,000 <small>/сар</small></span>
+          <span class="price-annual" style="display:none">₮39,000 <small>/сар</small></span>
+        </div>
+        <div class="pricing-sub">
+          <span class="price-monthly">Дараалал + админ самбар</span>
+          <span class="price-annual" style="display:none">₮468,000/жил</span>
+        </div>
         <ul class="pricing-list">
           <li>QR дараалал систем</li>
           <li>Олон барбер дэмжинэ</li>
@@ -1117,8 +1162,14 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
       <div class="pricing-card featured">
         <div class="pricing-badge">Шилдэг сонголт</div>
         <div class="pricing-name">Pro</div>
-        <div class="pricing-price">₮99,000 <small>/сар</small></div>
-        <div class="pricing-sub">Бүх боломж, бүрэн хяналт</div>
+        <div class="pricing-price">
+          <span class="price-monthly">₮99,000 <small>/сар</small></span>
+          <span class="price-annual" style="display:none">₮79,000 <small>/сар</small></span>
+        </div>
+        <div class="pricing-sub">
+          <span class="price-monthly">Бүх боломж, бүрэн хяналт</span>
+          <span class="price-annual" style="display:none">₮948,000/жил</span>
+        </div>
         <ul class="pricing-list">
           <li>Basic-н бүх боломж</li>
           <li>Онлайн цаг захиалга</li>
@@ -1195,6 +1246,19 @@ window.addEventListener('scroll', function(){
 function toggleMobileMenu() {
   const menu = document.getElementById("mobileMenu");
   menu.classList.toggle("active");
+}
+
+/* Billing toggle */
+function toggleBilling() {
+  var toggle = document.querySelector('.toggle-switch');
+  var labels = document.querySelectorAll('.billing-label');
+  var isAnnual = toggle.classList.toggle('active');
+  labels.forEach(function(l) {
+    l.classList.toggle('active', l.dataset.period === (isAnnual ? 'annual' : 'monthly'));
+  });
+  document.querySelectorAll('.price-monthly, .price-annual').forEach(function(el) {
+    el.style.display = el.classList.contains(isAnnual ? 'price-annual' : 'price-monthly') ? '' : 'none';
+  });
 }
 
 /* iPad mockup scroll-triggered animation */

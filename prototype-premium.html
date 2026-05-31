@@ -31,13 +31,16 @@
    RESET & BASE (mobile-first)
    ============================================ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
+div,section,.container{max-width:100%!important;box-sizing:border-box!important}
+input,select,textarea{font-size:16px!important}
 body{
   font-family: Inter, -apple-system, sans-serif;
   background: var(--white);
   color: var(--charcoal);
   font-size: 15px;
   line-height: 1.6;
+  max-width:100%;overflow-x:hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -492,6 +495,79 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
 }
 
 /* ============================================
+   MOBILE OVERFLOW FIXES (under 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  .trial-btn, .top-cta-button, [class*="trial"] {
+    width: auto !important;
+    max-width: 90% !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+    margin: 0 auto !important;
+  }
+  .phone-mockup, .hero-image, img[src*="mockup"], [class*="mockup"] {
+    max-width: 260px !important;
+    height: auto !important;
+    margin: 16px auto !important;
+    display: block !important;
+  }
+  .grid-container, .columns, section, div {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    gap: 16px !important;
+  }
+  header, .navbar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 16px !important;
+  }
+}
+/* ============================================
+   HAMBURGER MENU (mobile)
+   ============================================ */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex !important;
+  }
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    background-color: #0a0a0c;
+    border-bottom: 1px solid #1f2937;
+    padding: 20px 0;
+    z-index: 999;
+  }
+  .nav-menu.active {
+    display: flex !important;
+  }
+  .nav-menu li {
+    text-align: center;
+    list-style: none;
+    margin: 12px 0;
+  }
+}
+@media(min-width:768px){.menu-toggle{display:none!important}.nav-menu{display:none!important}}
+@media(max-width:767px){.nav-links{display:none!important}}
+/* ============================================
    KEYFRAMES
    ============================================ */
 @keyframes float{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
@@ -527,6 +603,20 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     <a href="/admin-login">Нэвтрэх</a>
     <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
   </nav>
+  <!-- Hamburger (mobile only) -->
+  <div class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <!-- Dropdown nav (mobile only) -->
+  <ul class="nav-menu" id="mobileMenu">
+    <li><a href="#pricing">Үнэ</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="/blog">Блог</a></li>
+    <li><a href="/admin-login">Нэвтрэх</a></li>
+    <li><a href="/signup">Бүртгүүлэх</a></li>
+  </ul>
 </header>
 
 <!-- ============================================
@@ -860,6 +950,12 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
 window.addEventListener('scroll', function(){
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
 });
+
+/* Mobile menu toggle */
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.classList.toggle("active");
+}
 
 /* iPad mockup scroll-triggered animation */
 document.addEventListener('DOMContentLoaded', function(){

@@ -308,11 +308,14 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
   letter-spacing: 1px; text-decoration: none;
 }
 
-/* ============================================
-   iPad TABLET MOCKUP
-   ============================================ */
+.features-content > * { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.features-content > .is-visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* === iPad TABLET MOCKUP === */
 .ipad-panel{ position: relative; display: flex; align-items: center; justify-content: center; }
-.ipad-mockup{ position: relative; max-width: 280px; width: 100%; animation: float 5s ease-in-out infinite; }
+.ipad-mockup{ position: relative; max-width: 280px; width: 100%; opacity: 0; }
+.ipad-mockup.slide-in{ animation: slideFromRight .8s cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipad-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite; opacity: 1; }
 .ipad-mockup .side-btn{ display: none; }
 .ipad-body{
   border-radius: 24px; padding: 8px;
@@ -495,12 +498,11 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
 }
 
 /* ============================================
-   ANIMATIONS
+   KEYFRAMES
    ============================================ */
 @keyframes float{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
 @keyframes scroll-right{ 0%{ transform: translateX(-100%); } 100%{ transform: translateX(100%); } }
-@keyframes slide-in-right{ from{ opacity:0; transform:translateX(60px) } to{ opacity:1; transform:translateX(0) } }
-@keyframes fade-up{ from{ opacity:0; transform:translateY(20px) } to{ opacity:1; transform:translateY(0) } }
+@keyframes slideFromRight{ from{ opacity:0; transform:translateX(60px) } to{ opacity:1; transform:translateX(0) } }
 
 /* Side button elements for phone mockup */
 .phone-side-btn{
@@ -869,15 +871,15 @@ window.addEventListener('scroll', function(){
 /* iPad mockup scroll-triggered animation */
 document.addEventListener('DOMContentLoaded', function(){
   var section = document.querySelector('#features');
-  var items = document.querySelectorAll('.features-content > div, .features-content > h2, .features-content > p, .features-content > a');
+  var items = document.querySelectorAll('.features-content > *');
   var device = document.getElementById('ipad-mockup');
   if(!section || !device) return;
   var done = false;
   function go(){
     if(done) return; done = true;
-    items.forEach(function(el){ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
-    device.style.opacity = '1';
-    device.style.transform = 'translateX(0)';
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+    device.classList.add('slide-in');
+    setTimeout(function(){ device.classList.add('complete'); }, 900);
   }
   var obs = new IntersectionObserver(function(e){ if(e[0].isIntersecting) setTimeout(go, 100); }, {threshold: 0.1});
   obs.observe(section);

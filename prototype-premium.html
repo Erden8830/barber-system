@@ -510,12 +510,14 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     margin: 0 auto !important;
   }
   .phone-mockup {
-    width: 270px !important;
-    height: 480px !important;
+    width: 280px !important;
+    height: auto !important;
+    min-height: 520px !important;
+    max-height: 560px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: 14px !important;
+    padding: 18px !important;
     overflow: hidden !important;
     max-width: none !important;
     margin: 24px auto 0 auto !important;
@@ -524,19 +526,16 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
-    height: 100% !important;
   }
   .phone-screen-bezel {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
-    height: 100% !important;
   }
   .phone-screen {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
-    height: 100% !important;
   }
   .phone-content {
     flex: 1 !important;
@@ -551,11 +550,19 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
   }
   .phone-shop { margin-bottom: 8px !important; }
   .phone-shop-title { font-size: 14px !important; }
-  .phone-svc-item { padding: 6px 8px !important; margin-bottom: 4px !important; }
-  .phone-svc-name { font-size: 11px !important; }
-  .time-slot-grid { gap: 4px !important; margin-bottom: 10px !important; }
-  .time-slot-btn { padding: 4px !important; font-size: 10px !important; }
+  .phone-svc-item { font-size: 12px !important; padding: 8px 10px !important; margin-bottom: 6px !important; }
+  .phone-svc-name { font-size: 12px !important; }
+  .time-slot-grid { gap: 6px !important; margin-bottom: 10px !important; }
+  .time-slot-btn { padding: 6px !important; font-size: 11px !important; }
   .phone-book-btn { margin-top: auto !important; }
+  .phone-wrap {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
   .hero-content {
     padding: 40px 20px !important;
     text-align: center !important;

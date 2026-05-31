@@ -514,7 +514,6 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
-    padding: 24px 16px !important;
     gap: 20px !important;
   }
   .phone-mockup {
@@ -600,16 +599,61 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
   .phone-side-btn, .ipad-side-btn {
     display: none !important;
   }
+  .hero-text-block {
+    text-align: center !important;
+    padding: 24px 20px !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .hero-text-block .badge {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    color: #88888f !important;
+    margin-bottom: 12px !important;
+  }
+  .hero-text-block h1 {
+    color: #ffffff !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 16px !important;
+  }
+  .hero-text-block p {
+    color: #a1a1aa !important;
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    font-weight: 400 !important;
+    max-width: 310px !important;
+    margin: 0 auto 24px auto !important;
+  }
+  .trial-btn, [class*="trial-btn"], a[href*="trial"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #ffffff !important;
+    color: #0a0a0c !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    padding: 12px 28px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    width: auto !important;
+    min-width: 200px !important;
+    margin: 0 auto !important;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.1s ease !important;
+  }
+  .trial-btn:active {
+    transform: scale(0.96) !important;
+    background-color: #f3f4f6 !important;
+  }
   .hero-content {
-    padding: 40px 20px !important;
-    text-align: center !important;
-  }
-  .hero-content .section-label {
-    text-align: center !important;
-  }
-  .hero-content .btn {
-    margin-left: auto !important;
-    margin-right: auto !important;
+    background: #0a0a0c !important;
   }
   .features-grid, .noshow-grid, .pricing-grid {
     padding-left: 0 !important;
@@ -724,11 +768,11 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
 <section class="section hero-content">
   <div class="container">
     <div class="hero-grid">
-      <div>
-        <div class="section-label">01 // БАРБЕРШОПЫН СИСТЕМ</div>
+      <div class="hero-text-block">
+        <div class="section-label badge">01 // БАРБЕРШОПЫН СИСТЕМ</div>
         <h1 class="hero-title">Дараалал, захиалга, аналитик — нэг цэвэрхэн системд.</h1>
         <p class="hero-desc">QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол, SMS сануулагч. Монголын барбершопуудад тусгайлан зохион бүтээсэн. Барбер нэг товч дарна — үлдсэн бүх зүйлийг систем автоматаар шийднэ. Сургалт 0 минут. Төвөгтэй тохиргоо гэж байхгүй.</p>
-        <a href="/signup" class="btn btn-dark">7 хоног үнэгүй турших</a>
+        <a href="/signup" class="btn btn-dark trial-btn">7 хоног үнэгүй турших</a>
       </div>
 
       <!-- Phone mockup -->

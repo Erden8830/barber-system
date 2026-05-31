@@ -250,19 +250,12 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
 .phone-svc-name{ font-size: 10px; font-weight: 600; color: rgba(255,255,255,.9); }
 .phone-svc-dur{ font-size: 8px; color: rgba(255,255,255,.28); }
 .phone-svc-price{ font-weight: 700; font-size: 11px; color: var(--gold); }
-/* Phone time slots */
 .phone-slot-label{ font-size: 7px; font-weight: 600; color: rgba(255,255,255,.25); text-transform: uppercase; letter-spacing: 2px; margin: 10px 0 7px; text-align: center; }
-.phone-slots{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-.phone-slot{
-  padding: 7px 0; text-align: center; font-size: 9px; font-weight: 500;
-  border: 1px solid rgba(255,255,255,.06); border-radius: 8px;
-  color: rgba(255,255,255,.45); background: rgba(255,255,255,.01);
-}
-.phone-slot.selected{
-  border-color: rgba(212,160,23,.35); color: var(--gold); font-weight: 700;
-  background: linear-gradient(135deg, rgba(212,160,23,.18), rgba(212,160,23,.06));
-}
-/* Phone summary + button */
+.time-slot-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; padding: 12px; }
+.time-slot-btn{ padding: 10px 0; text-align: center; font-size: 14px; border-radius: 6px; touch-action: manipulation; border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.55); background: rgba(255,255,255,.02); font-weight: 500; }
+.time-slot-btn.selected{ border-color: var(--gold); color: var(--gold); background: linear-gradient(135deg, rgba(212,160,23,.22), rgba(212,160,23,.08)); font-weight: 700; }
+
+/* Phone content: booking card */
 .phone-summary{
   margin-top: 10px;
   background: rgba(255,255,255,.015); border: 1px solid rgba(255,255,255,.04);
@@ -595,13 +588,13 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
                       </div>
                     </div>
                     <div class="phone-slot-label">Цагаа сонгох</div>
-                    <div class="phone-slots">
-                      <div class="phone-slot">10:00</div>
-                      <div class="phone-slot">10:30</div>
-                      <div class="phone-slot selected">11:00</div>
-                      <div class="phone-slot">11:30</div>
-                      <div class="phone-slot">12:00</div>
-                      <div class="phone-slot">12:30</div>
+                    <div class="time-slot-grid">
+                      <div class="time-slot-btn">10:00</div>
+                      <div class="time-slot-btn">10:30</div>
+                      <div class="time-slot-btn selected">11:00</div>
+                      <div class="time-slot-btn">11:30</div>
+                      <div class="time-slot-btn">12:00</div>
+                      <div class="time-slot-btn">12:30</div>
                     </div>
                     <div class="phone-summary">
                       <span class="phone-summary-text">Үс + Сахал · 11:00</span>

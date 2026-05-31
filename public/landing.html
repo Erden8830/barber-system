@@ -512,29 +512,50 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
   .hero-grid {
     display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
     text-align: center !important;
-    padding: 20px 10px !important;
-    overflow: hidden !important;
+    padding: 24px 16px !important;
+    gap: 20px !important;
   }
   .phone-mockup {
-    width: 320px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 290px !important;
     height: auto !important;
-    padding: 20px !important;
-    margin: 10px auto !important;
     background: #121216 !important;
-    border: 3px solid #2d2d35 !important;
-    border-radius: 28px !important;
-    transform: scale(0.85) !important;
-    transform-origin: top center !important;
-    max-width: none !important;
+    background-color: #121216 !important;
+    border: 4px solid #2d2d35 !important;
+    border-radius: 32px !important;
+    padding: 16px !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6) !important;
+    margin: 20px auto 0 auto !important;
+    box-sizing: border-box !important;
     animation: none !important;
   }
-  .phone-svc-item {
-    font-size: 13px !important;
-    padding: 10px !important;
-    margin-bottom: 8px !important;
+  .phone-status {
     display: flex !important;
     justify-content: space-between !important;
+    color: #666 !important;
+    margin-bottom: 12px !important;
+    font-size: 11px !important;
+  }
+  .phone-shop {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 14px !important;
+  }
+  .phone-svc-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #1c1c24 !important;
+    padding: 8px 10px !important;
+    margin-bottom: 6px !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
   }
   .time-slot-grid {
     display: grid !important;
@@ -543,14 +564,17 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     margin-bottom: 14px !important;
   }
   .time-slot-btn {
+    background: #1c1c24 !important;
     padding: 6px !important;
-    font-size: 12px !important;
+    border-radius: 4px !important;
+    font-size: 11px !important;
+    text-align: center !important;
   }
   .phone-wrap {
-    max-height: 460px !important;
+    max-height: none !important;
+    height: auto !important;
     background: transparent !important;
-    border: none !important;
-    overflow: hidden !important;
+    background-color: transparent !important;
   }
   .phone-screen-glass,
   .phone-notch, .phone-notch-pill, .phone-notch-dot,
@@ -575,7 +599,7 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     margin-left: auto !important;
     margin-right: auto !important;
   }
-  .hero-grid, .features-grid, .noshow-grid, .pricing-grid {
+  .features-grid, .noshow-grid, .pricing-grid {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }

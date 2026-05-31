@@ -25,6 +25,19 @@
   --dark-card: #111;
   --dark-surface: #161616;
   --dark-border: rgba(255, 255, 255, 0.06);
+  /* Premium eye-comfort tokens */
+  --bg-dark-main: #0b0b0d;
+  --bg-dark-card: #121216;
+  --border-dark: #1f2937;
+  --bg-light-main: #f7f7f9;
+  --bg-light-card: #ffffff;
+  --border-light: #e1e1e6;
+  --text-dark-primary: #f3f4f6;
+  --text-dark-muted: #a1a1aa;
+  --text-light-primary: #1a1a1e;
+  --text-light-muted: #64748b;
+  --accent-red: #dc2626;
+  --accent-red-glow: rgba(220, 38, 38, 0.1);
 }
 
 /* ============================================
@@ -36,8 +49,8 @@ html{scroll-behavior:smooth;overflow-x:hidden}
 input,select,textarea{font-size:16px!important}
 body{
   font-family: Inter, -apple-system, sans-serif;
-  background: var(--white);
-  color: var(--charcoal);
+  background: var(--bg-dark-main);
+  color: var(--text-dark-primary);
   font-size: 15px;
   line-height: 1.6;
   max-width:100%;overflow-x:hidden;
@@ -415,24 +428,24 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
    NO-SHOW GLOBAL — off-white offset theme
    ============================================ */
 #noshow {
-  background-color: #f7f7f9 !important;
-  color: #1a1a1e !important;
+  background-color: var(--bg-light-main) !important;
+  color: var(--text-light-primary) !important;
   padding: 60px 40px !important;
 }
 #noshow h2 {
-  color: #1a1a1e !important;
+  color: var(--text-light-primary) !important;
 }
 #noshow .hero-text {
   color: #52525b !important;
 }
 #noshow .hero-text b {
-  color: #d4a017 !important;
+  color: var(--gold) !important;
 }
 #noshow .section-label {
   color: #71717a !important;
 }
 #noshow .noshow-sol-title {
-  color: #1a1a1e !important;
+  color: var(--text-light-primary) !important;
 }
 #noshow .noshow-sol-desc {
   color: #52525b !important;
@@ -449,33 +462,33 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
   width: 100% !important;
 }
 .metric-card {
-  background-color: #ffffff !important;
-  border: 1px solid #e1e1e6 !important;
+  background-color: var(--bg-light-card) !important;
+  border: 1px solid var(--border-light) !important;
   border-radius: 16px !important;
   padding: 24px 16px !important;
   text-align: center !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02) !important;
 }
 .metric-card .noshow-stat-num {
-  color: #1a1a1e !important;
+  color: var(--text-light-primary) !important;
   font-size: 28px !important;
   font-weight: 800 !important;
   margin-bottom: 6px !important;
 }
 .metric-card .noshow-stat-lbl {
-  color: #64748b !important;
+  color: var(--text-light-muted) !important;
   font-size: 13px !important;
   line-height: 1.4 !important;
 }
 .pro-badge-line {
   display: inline-flex !important;
   align-items: center !important;
-  background: #ffffff !important;
-  border: 1px solid #e1e1e6 !important;
+  background: var(--bg-light-card) !important;
+  border: 1px solid var(--border-light) !important;
   padding: 10px 20px !important;
   border-radius: 100px !important;
   font-size: 13px !important;
-  color: #1a1a1e !important;
+  color: var(--text-light-primary) !important;
   font-weight: 600 !important;
   margin-top: 24px !important;
 }
@@ -721,8 +734,9 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background-color: #d4a017 !important;
-    color: #0a0a0c !important;
+    background-color: #f9f9fb !important;
+    color: #0d0d11 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     font-size: 13.5px !important;
     font-weight: 600 !important;
     text-decoration: none !important;
@@ -732,15 +746,15 @@ a{ color: var(--black); text-decoration: none; transition: color .2s; }
     width: auto !important;
     min-width: 200px !important;
     margin: 0 auto !important;
-    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05) !important;
     transition: transform 0.1s ease !important;
   }
   .trial-btn:active {
     transform: scale(0.96) !important;
-    background-color: #c49014 !important;
+    background-color: #e8e8ec !important;
   }
   .hero-content {
-    background: #0a0a0c !important;
+    background: var(--bg-dark-main) !important;
   }
   .features-grid, .noshow-grid, .pricing-grid {
     padding-left: 0 !important;

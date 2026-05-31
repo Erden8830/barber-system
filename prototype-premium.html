@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Монголын барбершопуудын систем</title>
+<meta name="description" content="QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол, SMS сануулагч — Монголын барбершопуудад зориулсан бүрэн систем. 7 хоног үнэгүй.">
+<meta property="og:title" content="Barber Pro — Монголын барбершопуудын систем">
+<meta property="og:description" content="Дараалал, захиалга, аналитик, урьдчилгаа төлбөр — нэг цэвэрхэн системд. 7 хоног үнэгүй турших.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://barberpro.mn">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a' rx='6'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='22' fill='%23d4a017'%3E✂%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* === MOBILE-FIRST RESET === */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,-apple-system,sans-serif;background:#fff;color:#4a4a4a;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+:root{--black:#0a0a0a;--charcoal:#4a4a4a;--meta:#7a7a7a;--light:#f8f9fa;--border:#eee;--white:#fff}
+h1,h2,h3{font-family:Inter,-apple-system,sans-serif;font-weight:800;line-height:1.15;color:var(--black);letter-spacing:-.03em}
+h1{font-size:clamp(1.6rem,5vw,3.5rem)}
+h2{font-size:clamp(1.3rem,3.5vw,2.5rem)}
+p,li{color:var(--charcoal);line-height:1.7}
+a{color:var(--black);text-decoration:none;transition:all .3s ease-in-out}
+
+/* === FLUID CONTAINER === */
+.wrap{width:100%;max-width:1280px;margin:0 auto;padding:0 20px}
+@media(min-width:768px){.wrap{padding:0 40px}}
+
+/* === NAV (mobile-first) === */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav.scrolled{background:var(--white)}
+.logo{font-weight:800;font-size:.85rem;letter-spacing:.12rem;color:var(--black);flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.nav-links a{font-size:11px;text-transform:uppercase;letter-spacing:.08rem;color:var(--meta);font-weight:500;white-space:nowrap;min-height:44px;display:flex;align-items:center}
+.nav-links a:hover{color:var(--black)}
+.nav-cta{padding:8px 16px;background:var(--black);color:var(--white)!important;font-weight:700;font-size:.7rem;letter-spacing:.07rem;border:1px solid var(--black);border-radius:6px;transition:all .2s;min-height:36px}
+.nav-cta:hover{background:var(--white);color:var(--black)!important}
+@media(min-width:768px){nav{padding:0 40px;height:64px;overflow:visible}.nav-links{gap:24px}.nav-links a{font-size:13px;letter-spacing:.12rem}}
+
+/* === SECTION SPACING (mobile-first) === */
+section{padding:60px 0}
+@media(min-width:768px){section{padding:100px 0}}
+
+/* === HERO GRID (1-col mobile, 2-col md+) === */
+.hero-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:center}
+@media(min-width:768px){.hero-grid{grid-template-columns:1fr 1fr;gap:48px}}
+.hero-phone-wrap{overflow:hidden;width:100%;display:flex;justify-content:center;align-items:center}
+.hero-phone{max-width:260px}
+.hero-phone [style*="right:-6px"],.hero-phone [style*="left:-6px"]{display:none}
+@media(min-width:768px){.hero-phone{max-width:100%}.hero-phone [style*="right:-6px"],.hero-phone [style*="left:-6px"]{display:block}}
+.hero p{font-size:15px;line-height:1.75;margin-bottom:28px}
+@media(min-width:768px){.hero p{font-size:17px}}
+.hero h1{margin-bottom:20px}
+
+/* === META TAG === */
+.meta-tag{font-size:10px;text-transform:uppercase;letter-spacing:.15rem;color:var(--meta);margin-bottom:14px;font-weight:500}
+@media(min-width:768px){.meta-tag{font-size:11px;letter-spacing:.2rem}}
+
+/* === BUTTONS (48px min touch target on mobile) === */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;font-family:Inter,sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.08rem;border:1px solid var(--black);transition:all .2s;cursor:pointer;min-height:48px;width:100%}
+.btn-fill{background:var(--black);color:var(--white)}.btn-fill:hover{background:var(--white);color:var(--black)}
+.btn-outline{background:transparent;color:var(--black)}.btn-outline:hover{background:var(--black);color:var(--white)}
+@media(min-width:768px){.btn{padding:16px 36px;font-size:14px;width:auto;letter-spacing:.1rem}}
+
+/* === FEATURES SECTION (dark) === */
+.features-grid{display:grid;grid-template-columns:1fr;gap:32px}
+@media(min-width:768px){.features-grid{grid-template-columns:1fr 1fr;gap:60px;align-items:start}}
+.enc-right{position:relative!important;top:0!important;height:auto!important;display:flex;align-items:center;justify-content:center;padding:0!important}
+@media(min-width:768px){.enc-right{position:sticky!important;top:8%!important;height:90vh!important}}
+.enc-device-slide{width:100%!important;max-width:280px;opacity:0;transform:translateX(40px)}
+.enc-device-slide.is-visible{animation:slideFromRight .8s cubic-bezier(0.16,1,0.3,1) forwards}
+.enc-device-slide [style*="right:-5px"]{display:none}
+@media(min-width:768px){.enc-device-slide{max-width:360px}.enc-device-slide [style*="right:-5px"]{display:block}}
+.enc-left > *{opacity:0;transform:translateY(20px)}
+.enc-left > .is-visible{animation:fadeUp .6s cubic-bezier(0.16,1,0.3,1) forwards}
+
+/* === NS-GRID (no-show) === */
+.ns-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:center}
+@media(min-width:768px){.ns-grid{grid-template-columns:1fr 1fr;gap:60px}}
+.ns-grid>div:last-child{border-left:none;padding-left:0}
+@media(min-width:768px){.ns-grid>div:last-child{border-left:2px solid var(--black);padding-left:48px}}
+
+/* === PRICING GRID === */
+.pc-grid{display:grid;grid-template-columns:1fr;gap:12px;max-width:720px;margin:0 auto}
+@media(min-width:768px){.pc-grid{grid-template-columns:1fr 1fr;gap:0}}
+.pc-grid>div{padding:32px 24px!important}
+@media(min-width:768px){.pc-grid>div{padding:44px 36px}}
+.pc-grid>div:last-child{border:2px solid var(--black)!important;border-top:2px!important}
+@media(min-width:768px){.pc-grid>div:last-child{border-left:0!important}}
+
+/* === MARQUEE === */
+@keyframes scroll-right{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.marquee-text{font-size:.9rem!important}
+@media(min-width:768px){.marquee-text{font-size:1.2rem!important}}
+
+/* === TRUST STRIP / FOOTER === */
+.trust-strip{text-align:center;padding:20px 16px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:12px;line-height:2}
+.trust-strip span{color:var(--black);font-weight:600}
+footer{padding:32px 16px;text-align:center;font-size:11px;color:var(--meta);line-height:2}
+footer a{color:var(--meta)}footer a:hover{color:var(--black)}
+@media(min-width:768px){.trust-strip{padding:32px 0;font-size:13px}footer{padding:48px 0;font-size:13px;line-height:1.8}}
+
+/* === FAQ === */
+.faq-answer.open{max-height:300px!important;padding:12px 0 4px!important}
+.faq-q{min-height:48px;display:flex;align-items:center}
+
+/* === ANIMATIONS === */
+@keyframes slideFromRight{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* === DEVICE MOCKUP FLOATING === */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.device-mockup{animation:float 4s ease-in-out infinite}
+.device-mockup-ipad{animation:float 5s ease-in-out infinite}
+@media(min-width:768px){
+  .device-mockup{transition:transform .3s ease}
+  .device-mockup:hover{transform:scale(1.04)}
+  .device-mockup-ipad{transition:transform .3s ease}
+  .device-mockup-ipad:hover{transform:scale(1.03)}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="logo">BARBERPRO</div>
+  <div class="nav-links">
+    <a href="#features">Боломжууд</a>
+    <a href="#noshow">Но-шоу</a>
+    <a href="#pricing">Үнэ</a>
+    <a href="#faq">FAQ</a>
+    <a href="/demo">Демо</a>
+    <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
+  </div>
+</nav>
+
+<section>
+<div class="wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="meta-tag">01 //&nbsp; БАРБЕРШОПЫН СИСТЕМ</div>
+      <h1>Дараалал, захиалга, аналитик — нэг цэвэрхэн системд.</h1>
+      <p>QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол, SMS сануулагч. Монголын барбершопуудад тусгайлан зохион бүтээсэн. Барбер нэг товч дарна — үлдсэн бүх зүйлийг систем автоматаар шийднэ. Сургалт 0 минут. Төвөгтэй тохиргоо гэж байхгүй.</p>
+      <a href="/signup" class="btn btn-fill">7 хоног үнэгүй турших</a>
+    </div>
+    <div class="hero-phone-wrap" style="display:flex;justify-content:center;align-items:center">
+      <!-- Ultra-realistic smartphone mockup -->
+      <div class="hero-phone device-mockup" style="position:relative;width:290px;max-width:100%">
+        <!-- side buttons -->
+        <div style="position:absolute;right:-6px;top:80px;width:4px;height:28px;background:#3a3a3c;border-radius:2px"></div>
+        <div style="position:absolute;right:-6px;top:115px;width:4px;height:40px;background:#3a3a3c;border-radius:2px"></div>
+        <div style="position:absolute;left:-6px;top:95px;width:4px;height:30px;background:#3a3a3c;border-radius:2px"></div>
+        <!-- phone body with curved edges -->
+        <div style="border-radius:38px;padding:10px;background:linear-gradient(145deg,#2c2c2e,#1c1c1e);box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 30px 60px rgba(0,0,0,0.3),0 10px 20px rgba(0,0,0,0.15)">
+          <!-- screen bezel inner -->
+          <div style="border-radius:30px;overflow:hidden;background:#0a0a0a">
+            <!-- screen -->
+            <div style="position:relative;background:#0a0a0a;display:flex;flex-direction:column">
+              <!-- glass reflection overlay -->
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,0) 75%,rgba(255,255,255,0.08) 100%);pointer-events:none;z-index:2"></div>
+              <!-- notch -->
+              <div style="position:relative;z-index:3;height:30px;min-height:30px;background:#0a0a0a;display:flex;align-items:center;justify-content:center">
+                <div style="width:110px;height:24px;background:#1a1a1a;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:8px">
+                  <div style="width:6px;height:6px;background:#2a2a2a;border-radius:50%"></div>
+                  <div style="width:6px;height:6px;background:#2a2a2a;border-radius:50%"></div>
+                </div>
+              </div>
+              <!-- screen content matching real booking3.html UI -->
+              <div style="padding:8px 14px 10px;display:flex;flex-direction:column;flex:1;position:relative;z-index:1">
+                <!-- status bar -->
+                <div style="display:flex;justify-content:space-between;font-size:8px;font-weight:600;color:#fff;letter-spacing:0.3px;margin-bottom:6px;opacity:0.5">
+                  <span>10:28</span>
+                  <span>📶 🔋</span>
+                </div>
+                <!-- shoptitle -->
+                <div style="text-align:center;margin-bottom:2px">
+                  <div style="font-size:7px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.1);text-transform:uppercase;margin-bottom:2px">Barber<span style="color:#d4a017">.</span>Pro</div>
+                  <div style="font-size:13px;font-weight:700;color:#fff">Цаг захиалга</div>
+                </div>
+                <!-- card bg matching booking3 style -->
+                <div style="background:linear-gradient(180deg,#141414 0%,#111 100%);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:14px 14px">
+                  <!-- progress dots -->
+                  <div style="display:flex;justify-content:center;gap:24px;margin-bottom:14px;position:relative">
+                    <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);width:calc(100% - 48px);height:1px;background:rgba(255,255,255,0.06);z-index:0"></div>
+                    <div style="width:10px;height:10px;border-radius:50%;background:#d4a017;border:2px solid #d4a017;position:relative;z-index:1;box-shadow:0 0 6px rgba(212,160,23,0.3)"></div>
+                    <div style="width:10px;height:10px;border-radius:50%;background:#d4a017;border:2px solid #d4a017;position:relative;z-index:1;box-shadow:0 0 6px rgba(212,160,23,0.3)"></div>
+                    <div style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;border:2px solid rgba(255,255,255,0.08);position:relative;z-index:1"></div>
+                  </div>
+                  <!-- step label -->
+                  <div style="font-size:7px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;text-align:center">Үйлчилгээ сонго</div>
+                  <!-- service list -->
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border:1px solid rgba(255,255,255,0.05);border-radius:10px;background:rgba(255,255,255,0.01)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:12px;opacity:0.5">💇</span>
+                        <div>
+                          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)">Үс засах</div>
+                          <div style="font-size:8px;color:rgba(255,255,255,0.28);margin-top:0">45 мин</div>
+                        </div>
+                      </div>
+                      <span style="font-weight:700;font-size:11px;color:#d4a017">₮25,000</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border:1px solid rgba(255,255,255,0.05);border-radius:10px;background:rgba(255,255,255,0.01)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:12px;opacity:0.5">💇</span>
+                        <div>
+                          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)">Сахал засах</div>
+                          <div style="font-size:8px;color:rgba(255,255,255,0.28);margin-top:0">20 мин</div>
+                        </div>
+                      </div>
+                      <span style="font-weight:700;font-size:11px;color:#d4a017">₮15,000</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border:1px solid rgba(212,160,23,0.3);border-radius:10px;background:rgba(212,160,23,0.04)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:12px;opacity:1">💇</span>
+                        <div>
+                          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)">Үс + Сахал</div>
+                          <div style="font-size:8px;color:rgba(255,255,255,0.28);margin-top:0">60 мин</div>
+                        </div>
+                      </div>
+                      <span style="font-weight:700;font-size:11px;color:#d4a017">₮40,000</span>
+                    </div>
+                  </div>
+                  <!-- time slot grid -->
+                  <div style="font-size:7px;font-weight:600;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin:10px 0 7px;text-align:center">Цагаа сонгох</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.01);font-weight:500">10:00</div>
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.01);font-weight:500">10:30</div>
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(212,160,23,0.35);border-radius:8px;color:#d4a017;font-weight:700;background:linear-gradient(135deg,rgba(212,160,23,0.18),rgba(212,160,23,0.06))">11:00</div>
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.01);font-weight:500">11:30</div>
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.01);font-weight:500">12:00</div>
+                    <div style="padding:7px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.01);font-weight:500">12:30</div>
+                  </div>
+                  <!-- summary bar + book button -->
+                  <div style="margin-top:10px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                    <span style="font-size:8px;color:rgba(255,255,255,0.35)">Үс + Сахал · 11:00</span>
+                    <span style="font-weight:700;color:#d4a017;font-size:10px">₮40,000</span>
+                  </div>
+                  <div style="padding:11px 0;background:linear-gradient(135deg,#d4a017,#c49014);color:#0a0a0a;text-align:center;font-size:10px;font-weight:700;border-radius:10px;box-shadow:0 4px 16px rgba(212,160,23,0.15);letter-spacing:-0.2px">Захиалах</div>
+                </div>
+                <!-- home indicator -->
+                <div style="width:100px;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;margin:8px auto 0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="features" style="background:#0a0a0a">
+<div style="width:100%;max-width:1280px;margin:0 auto;padding:0 20px">
+
+  <div class="features-grid">
+
+    <!-- LEFT: scrollable content -->
+    <div class="enc-left">
+      <div style="font-size:11px;font-weight:600;color:#d4a017;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">02 // БОЛОМЖУУД</div>
+      <h2 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-1.5px;line-height:1.1">Барбершопын өдөр тутмын үйл ажиллагааг бүрэн хянах зургаан хэрэгсэл.</h2>
+      <p style="font-size:16px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:40px;max-width:480px">Хашгираад дуудах, цаасан дэвтэр, Excel файл, маргаантай комисс — энэ бүгдийг нэг цэвэрхэн самбараар соль.</p>
+
+      <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:40px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">QR дараалал систем</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">Онлайн цаг захиалга</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">Урьдчилгаа төлбөр / Deposit</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">Бүрэн аналитик, график</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">Комисс тооцоолол</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500">SMS автомат сануулга</span>
+        </div>
+      </div>
+
+      <a href="#" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:#d4a017;color:#0a0a0a;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none">БҮРТГҮҮЛЭХ →</a>
+    </div>
+
+    <!-- RIGHT: sticky device panel -->
+    <div class="enc-device-wrap"><div class="enc-right" style="position:sticky;top:8%;height:90vh;display:flex;align-items:center;justify-content:center">
+      <!-- Ultra-realistic iPad mockup -->
+      <div class="enc-device-slide device-mockup-ipad" style="position:relative;width:360px;max-width:100%">
+        <!-- side buttons (right side) -->
+        <div style="position:absolute;right:-5px;top:90px;width:3px;height:32px;background:#3a3a3c;border-radius:2px"></div>
+        <div style="position:absolute;right:-5px;top:130px;width:3px;height:48px;background:#3a3a3c;border-radius:2px"></div>
+        <!-- tablet body -->
+        <div style="border-radius:24px;padding:8px;background:linear-gradient(145deg,#2c2c2e,#1c1c1e);box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 40px 80px rgba(0,0,0,0.4),0 10px 24px rgba(0,0,0,0.2)">
+          <!-- screen bezel -->
+          <div style="border-radius:18px;overflow:hidden;background:#0a0a0a;position:relative;min-height:470px;display:flex;flex-direction:column">
+            <!-- glass reflection -->
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.35) 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,0) 75%,rgba(255,255,255,0.05) 100%);pointer-events:none;z-index:2"></div>
+            <!-- front camera dot -->
+            <div style="position:absolute;top:10px;left:50%;margin-left:-3px;width:6px;height:6px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:50%;z-index:3"></div>
+            <!-- content area matching real admin.html UI -->
+            <div style="flex:1;padding:16px 14px 14px;overflow-y:auto;position:relative;z-index:1;background:#0a0a0a">
+              <!-- header matching real admin -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div>
+                  <div style="font-size:12px;font-weight:800;color:#fff">Barber<span style="color:#d4a017">.</span>Pro</div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.35);margin-top:1px">Дэлгүүр: <strong style="color:#d4a017">Гранд Барбер</strong></div>
+                </div>
+                <div style="padding:5px 10px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;font-size:8px;color:rgba(255,255,255,0.6);cursor:default">Гарах</div>
+              </div>
+              <!-- real stats from admin.js: 4 columns -->
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px">
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:6px 7px;text-align:center">
+                  <div style="font-size:13px;font-weight:800;color:#d4a017">14</div>
+                  <div style="font-size:6px;color:rgba(255,255,255,0.4);margin-top:1px">Өнөөдөр</div>
+                </div>
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:6px 7px;text-align:center">
+                  <div style="font-size:13px;font-weight:800;color:#fff">287</div>
+                  <div style="font-size:6px;color:rgba(255,255,255,0.4);margin-top:1px">Нийт захиалга</div>
+                </div>
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:6px 7px;text-align:center">
+                  <div style="font-size:13px;font-weight:800;color:#fff">156</div>
+                  <div style="font-size:6px;color:rgba(255,255,255,0.4);margin-top:1px">Харилцагчид</div>
+                </div>
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:6px 7px;text-align:center">
+                  <div style="font-size:13px;font-weight:800;color:#d4a017">₮4.2M</div>
+                  <div style="font-size:6px;color:rgba(255,255,255,0.4);margin-top:1px">Орлого</div>
+                </div>
+              </div>
+              <!-- real tab bar -->
+              <div style="display:flex;gap:4px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px">
+                <div style="flex-shrink:0;padding:6px 10px;border:1px solid #d4a017;border-radius:6px;font-size:7px;color:#d4a017;background:rgba(212,160,23,0.1);font-weight:600;white-space:nowrap">🚶 Дараалал</div>
+                <div style="flex-shrink:0;padding:6px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:7px;color:rgba(255,255,255,0.4);white-space:nowrap">📋 Өнөөдөр</div>
+                <div style="flex-shrink:0;padding:6px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:7px;color:rgba(255,255,255,0.4);white-space:nowrap">📅 Захиалга</div>
+                <div style="flex-shrink:0;padding:6px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:7px;color:rgba(255,255,255,0.4);white-space:nowrap">💈 Барберууд</div>
+                <div style="flex-shrink:0;padding:6px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:7px;color:rgba(255,255,255,0.4);white-space:nowrap">📊 Тоон мэдээ</div>
+              </div>
+              <!-- Queue + Schedule 2-column layout -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+                <!-- Queue panel (matching real queue tab) -->
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px">
+                  <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">🚶 Дараалал</div>
+                  <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,0.03)">
+                    <span style="color:rgba(255,255,255,0.25)">#14</span>
+                    <span style="color:rgba(255,255,255,0.85)">Анхмаа</span>
+                    <span style="font-size:7px;background:rgba(212,160,23,0.12);color:#d4a017;padding:1px 6px;border-radius:3px;font-weight:600">Үйлчилгээнд</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:10px">
+                    <span style="color:rgba(255,255,255,0.25)">#15</span>
+                    <span style="color:rgba(255,255,255,0.85)">Тэмүүлэн</span>
+                    <span style="color:rgba(255,255,255,0.25);font-size:7px">Хүлээж байна</span>
+                  </div>
+                  <div style="margin-top:6px;padding:6px 0;background:linear-gradient(135deg,#d4a017,#c49014);color:#0a0a0a;text-align:center;font-size:8px;font-weight:700;border-radius:6px;cursor:default">▶️ Дараагийнх</div>
+                </div>
+                <!-- Schedule panel -->
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px">
+                  <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📋 Өнөөдөр</div>
+                  <div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-left:3px solid #d4a017;margin-bottom:2px;font-size:9px;padding-left:7px">
+                    <span style="font-weight:600;color:#d4a017;min-width:32px">09:00</span>
+                    <span style="flex:1;color:rgba(255,255,255,0.85);font-weight:500">Бат-Эрдэнэ</span>
+                    <span style="color:rgba(255,255,255,0.35);font-size:7px">Үс засах</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-left:3px solid #d4a017;margin-bottom:2px;font-size:9px;padding-left:7px">
+                    <span style="font-weight:600;color:#d4a017;min-width:32px">10:00</span>
+                    <span style="flex:1;color:rgba(255,255,255,0.85);font-weight:500">Ганболд</span>
+                    <span style="color:rgba(255,255,255,0.35);font-size:7px">Сахал засах</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-left:3px solid #d4a017;margin-bottom:2px;font-size:9px;padding-left:7px">
+                    <span style="font-weight:600;color:#d4a017;min-width:32px">11:00</span>
+                    <span style="flex:1;color:rgba(255,255,255,0.85);font-weight:500">Тэмүүлэн</span>
+                    <span style="color:rgba(255,255,255,0.35);font-size:7px">Үс + Сахал</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Commission + Payment bottom row -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px">
+                  <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">💰 Комисс</div>
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:9px;border-bottom:1px solid rgba(255,255,255,0.03)">
+                    <span style="color:rgba(255,255,255,0.55)">Бат-Эрдэнэ (50%)</span>
+                    <span style="color:#d4a017;font-weight:600">₮21,000</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:9px">
+                    <span style="color:rgba(255,255,255,0.55)">Ганболд (40%)</span>
+                    <span style="color:#d4a017;font-weight:600">₮16,000</span>
+                  </div>
+                </div>
+                <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px">
+                  <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">🔢 Үйлчилгээ</div>
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:9px;border-bottom:1px solid rgba(255,255,255,0.03)">
+                    <span style="color:rgba(255,255,255,0.55)">Үс засах</span>
+                    <span style="color:rgba(255,255,255,0.5)">×6</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:9px">
+                    <span style="color:rgba(255,255,255,0.55)">Сахал засах</span>
+                    <span style="color:rgba(255,255,255,0.5)">×4</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="noshow" style="background:var(--light)">
+<div class="wrap">
+  <div class="ns-grid">
+    <div>
+      <div class="meta-tag">03 //&nbsp; НО-ШОУ ШИЙДЭЛ</div>
+      <h2 style="margin-bottom:16px">Үйлчлүүлэгчид цаг захиалаад ирэхгүй байна уу?</h2>
+      <p style="font-size:17px;line-height:1.75;margin-bottom:24px">Олон улсын судалгаагаар барбершопуудад цаг захиалсан хүмүүсийн <b style="color:var(--black)">20-30%</b> нь ирдэггүй. Энэ нь сар бүр хэдэн зуун мянган төгрөгийн алдагдал.</p>
+      <div style="display:flex;gap:32px;margin-bottom:32px">
+        <div>
+          <div style="font-weight:800;font-size:2.8rem;color:var(--black);line-height:1">~25%</div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.15rem;color:var(--meta);margin-top:4px">Но-шоу хувь</div>
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:2.8rem;color:var(--black);line-height:1">₮3.6 сая</div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.15rem;color:var(--meta);margin-top:4px">Сард алдсан орлого</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#bbb;font-style:italic">Эх сурвалж: Fresha, Mindbody, Square — олон улсын барбер/салоны салбарын судалгаа (2023-2024)</div>
+    </div>
+    <div style="border-left:2px solid var(--black);padding-left:60px">
+      <div style="font-size:11px;font-weight:600;color:var(--black);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px">ШИЙДЭЛ</div>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);margin-bottom:12px">Урьдчилгаа төлбөр — но-шоуг 80% бууруулна.</h2>
+      <p style="font-size:15px;line-height:1.7;color:var(--charcoal);margin-bottom:20px">Үйлчлүүлэгч захиалгаа баталгаажуулахдаа QPay-аар урьдчилгаа төлбөр төлдөг. Ирээгүй тохиолдолд төлбөр нь баригддаг. Но-шоу асуудлыг бүрэн шийднэ.</p>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#fff;border:1px solid var(--border)">
+        <span style="font-size:20px">✅</span>
+        <span style="font-size:14px;font-weight:600;color:var(--black)">Pro план дээр идэвхжинэ — ₮99,000/сар</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section style="padding:0;overflow:hidden;background:var(--black)">
+  <div style="padding:24px 0;white-space:nowrap">
+    <div style="display:inline-block;animation:scroll-right 50s linear infinite;font-size:1.2rem;color:rgba(255,255,255,0.55);letter-spacing:0;font-weight:400">&ldquo;Дараалал хүлээгээд гарч явах хүн байхгүй болсон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Дараалал хүлээгээд гарч явах хүн байхгүй болсон&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг&rdquo; &nbsp; ★ ★ ★ ★ ★ &nbsp; &ldquo;Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон&rdquo; &nbsp; ★ ★ ★ ★ ★</div>
+  </div>
+</section>
+
+<section id="pricing">
+<div class="wrap" style="text-align:center">
+  <div class="meta-tag">04 //&nbsp; ҮНЭ</div>
+  <h2 style="margin-bottom:8px">7 хоног үнэгүй туршаад шийд.</h2>
+  <p style="margin-bottom:56px;font-size:17px">Карт шаардлагагүй. Гэрээ байхгүй. Хүссэн үедээ болих боломжтой.</p>
+  <div class="pc-grid">
+    <div style="padding:48px 40px;text-align:center;border:2px solid var(--black);background:var(--white);position:relative">
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:.2rem;color:var(--meta);font-weight:600;margin-bottom:10px">Basic</div>
+      <div style="font-weight:800;font-size:2.4rem;color:var(--black);margin-bottom:4px">₮49,000 <span style="font-size:.6rem;font-weight:400;color:var(--meta);text-transform:uppercase">/сар</span></div>
+      <div style="font-size:13px;color:var(--meta);margin-bottom:24px">Дараалал + админ самбар</div>
+      <ul style="list-style:none;text-align:left;font-size:14px;color:var(--charcoal);margin-bottom:28px;max-width:220px;margin-left:auto;margin-right:auto">
+        <li style="padding:6px 0 6px 16px;position:relative">— QR дараалал систем</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Олон барбер дэмжинэ</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Админ самбар</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Үндсэн тоон мэдээ</li>
+      </ul>
+      <a href="/signup" class="btn btn-outline" style="width:100%">Үнэгүй турших</a>
+    </div>
+    <div style="padding:48px 40px;text-align:center;border:2px solid var(--black);border-left:0;background:var(--white);position:relative">
+      <div style="position:absolute;top:-1px;left:-1px;right:-1px;padding:5px 0;background:var(--black);color:var(--white);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15rem">Шилдэг сонголт</div>
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:.2rem;color:var(--meta);font-weight:600;margin-top:16px;margin-bottom:10px">Pro</div>
+      <div style="font-weight:800;font-size:2.4rem;color:var(--black);margin-bottom:4px">₮99,000 <span style="font-size:.6rem;font-weight:400;color:var(--meta);text-transform:uppercase">/сар</span></div>
+      <div style="font-size:13px;color:var(--meta);margin-bottom:24px">Бүх боломж, бүрэн хяналт</div>
+      <ul style="list-style:none;text-align:left;font-size:14px;color:var(--charcoal);margin-bottom:28px;max-width:220px;margin-left:auto;margin-right:auto">
+        <li style="padding:6px 0 6px 16px;position:relative">— Basic-н бүх боломж</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Онлайн цаг захиалга</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Урьдчилгаа төлбөр</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Бүрэн аналитик, график</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— Комисс тооцоолол</li>
+        <li style="padding:6px 0 6px 16px;position:relative">— SMS автоматжуулалт</li>
+      </ul>
+      <a href="/signup" class="btn btn-fill" style="width:100%">Үнэгүй турших</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="padding:100px 0;background:var(--light)">
+<div class="wrap">
+  <div class="meta-tag" style="text-align:center">05 //&nbsp; ТҮГЭЭД АСУУДАГ</div>
+  <h2 style="text-align:center;margin-bottom:56px">Хамгийн түгээмэл асуултууд.</h2>
+  <div style="display:flex;flex-direction:column;gap:0">
+    <div style="border-top:2px solid var(--black);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">Системд суралцахад хэр хугацаа шаардагдах вэ?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Сургалт 0 минут. Барбер нэг товч дарж үйлчлүүлэгчээ дуудахад л болно. Админ самбар нь зөн совинтой, хэрэглэхэд хялбар.
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">Гэрээ байгуулах шаардлагатай юу?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Хэрэггүй. Сар бүр төлөх ба хүссэн үедээ цуцлах боломжтой. 7 хоног үнэгүй турших — карт шаардлагагүй.
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">QPay-тай холбогддог уу?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Тийм. Pro план дээр QPay урьдчилгаа төлбөр автомат холбогддог. Үйлчлүүлэгч QR уншуулаад төлбөрөө төлчихвөл захиалга баталгаажина.
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">Хэдэн барбер дэмждэг вэ?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Хязгааргүй. Basic план дээр ч олон барбер, оон ажлын байр дэмжинэ. Барбер бүр өөрийн дараалал, комиссоо харна.
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">SMS сануулагч яаж ажилладаг вэ?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Захиалга баталгаажсаны дараа автоматаар SMS илгээгдэнэ. Мөн дараагийн өдрийн захиалгуудыг сануулах SMS өглөө бүр явагдана. Но-шоу 80%-аар буурна.
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);border-bottom:2px solid var(--black);padding:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:16px;font-weight:700;color:var(--black)">Data-аа export хийж болох уу?</span>
+        <span style="font-size:18px;font-weight:300;color:var(--meta);transition:transform .3s">+</span>
+      </div>
+      <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0;color:var(--charcoal);font-size:15px;line-height:1.7">
+        Болно. Хүссэн үедээ CSV, Excel форматаар татаж авах боломжтой. Мөн бүх график, тоон мэдээг хэвлэх / PDF болгох боломжтой.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Final CTA -->
+<section style="padding:120px 0;text-align:center">
+<div class="wrap">
+  <div class="meta-tag">06 //&nbsp; ЭХЛЭХ</div>
+  <h2 style="margin-bottom:16px">Өнөөдөр эхэл. 7 хоног үнэгүй.</h2>
+  <p style="max-width:500px;margin:0 auto 40px;font-size:17px">Карт шаардлагагүй. Тохиргоо 5 минут. Монголын шилдэг барбершопууд Barber Pro-г сонгосон.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="/signup" class="btn btn-fill">7 хоног үнэгүй турших</a>
+    <a href="tel:85279299" class="btn btn-outline">📞 85279299 залгах</a>
+  </div>
+</div>
+</section>
+
+<div class="trust-strip">
+  <span>🔒 SSL encrypted</span> &nbsp;·&nbsp; <span>💰 QPay төлбөрийн систем</span> &nbsp;·&nbsp; Карт шаардлагагүй &nbsp;·&nbsp; Хүссэн үедээ цуцлах
+</div>
+
+<footer>
+  <b style="color:#0a0a0a">BARBERPRO</b> &nbsp;·&nbsp; Velo Grid Systems LLC &nbsp;·&nbsp; <a href="tel:85279299">📞 85279299</a> &nbsp;·&nbsp; <a href="/terms">Нөхцөл</a> &nbsp;·&nbsp; <a href="/privacy">Нууцлал</a>
+</footer>
+
+<script>
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50)})
+
+document.addEventListener('DOMContentLoaded',function(){
+  var section=document.querySelector('#features');
+  var leftItems=document.querySelectorAll('.enc-left > *');
+  var device=document.querySelector('.enc-device-slide');
+  if(!section)return;
+  var done=false;
+  function go(){
+    if(done)return;
+    done=true;
+    for(var i=0;i<leftItems.length;i++)leftItems[i].classList.add('is-visible');
+    device.classList.add('is-visible');
+  }
+  var obs=new IntersectionObserver(function(e){
+    if(e[0].isIntersecting)setTimeout(go,100);
+  },{threshold:0.1});
+  obs.observe(section);
+  window.addEventListener('scroll',function(){
+    if(!done&&section.getBoundingClientRect().top<window.innerHeight*0.9)setTimeout(go,100);
+  });
+});
+</script>
+</body>
+</html>

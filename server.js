@@ -821,9 +821,12 @@ app.get('/api/admin/stats', requireAuth, (req, res) => {
 // Get bookings
 app.get('/api/admin/bookings', requireAuth, (req, res) => {
   const { date } = req.query;
+  // Auto-clean expired pending_deposit (older than 5 min)
+  db.prepare("UPDATE bookings SET status = 'cancelled' WHERE status = 'pending_deposit' AND created_at < datetime('now','-5 minutes','localtime')").run();
+  
   const sql = date
-    ? `SELECT b.*, br.name as barber_name, s.name as service_name, s.price FROM bookings b JOIN barbers br ON b.barber_id = br.id JOIN services s ON b.service_id = s.id WHERE b.shop_id = ? AND b.booking_date = ? ORDER BY b.booking_time DESC`
-    : `SELECT b.*, br.name as barber_name, s.name as service_name, s.price FROM bookings b JOIN barbers br ON b.barber_id = br.id JOIN services s ON b.service_id = s.id WHERE b.shop_id = ? ORDER BY b.booking_date DESC, b.booking_time`;
+    ? `SELECT b.*, br.name as barber_name, s.name as service_name, s.price FROM bookings b JOIN barbers br ON b.barber_id = br.id JOIN services s ON b.service_id = s.id WHERE b.shop_id = ? AND b.booking_date = ? AND b.status != 'cancelled' ORDER BY b.booking_time DESC`
+    : `SELECT b.*, br.name as barber_name, s.name as service_name, s.price FROM bookings b JOIN barbers br ON b.barber_id = br.id JOIN services s ON b.service_id = s.id WHERE b.shop_id = ? AND b.status != 'cancelled' ORDER BY b.booking_date DESC, b.booking_time`;
   const params = date ? [req.shop_id, date] : [req.shop_id];
   res.json(db.prepare(sql).all(...params));
 });

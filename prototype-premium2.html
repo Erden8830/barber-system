@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Монголын барбершопуудын систем</title>
+<link rel="preconnect" href="https://googleapis.com">
+<link rel="preconnect" href="https://gstatic.com" crossorigin>
+<link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#4a4a4a;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;font-weight:400}
+:root{--black:#0a0a0a;--charcoal:#4a4a4a;--meta:#7a7a7a;--light:#f8f9fa;--border:#eee;--white:#fff}
+h1,h2,h3{font-family:'Inter',-apple-system,sans-serif;font-weight:800;line-height:1.15;color:var(--black);letter-spacing:-1.5px}
+h1{font-size:clamp(2.4rem,5vw,4.5rem)}
+h2{font-size:clamp(1.8rem,3.5vw,3rem)}
+p,li{color:var(--charcoal);font-size:16px;line-height:1.7}
+a{color:var(--black);text-decoration:none;transition:all .3s ease-in-out}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:72px;transition:background .3s}
+nav.scrolled{background:var(--white);border-bottom:1px solid var(--border)}
+.logo{font-weight:800;font-size:.9rem;letter-spacing:.15rem;color:var(--black)}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:14px;text-transform:uppercase;letter-spacing:.15rem;color:var(--meta);font-weight:500}
+.nav-links a:hover{color:var(--black)}
+.nav-cta{padding:10px 26px;background:var(--black);color:var(--white)!important;font-weight:600;letter-spacing:.1rem;border:1px solid var(--black);transition:all .3s ease-in-out}
+.nav-cta:hover{background:var(--white);color:var(--black)!important}
+
+section{padding:140px 0}
+@media(max-width:768px){section{padding:80px 0}nav{padding:0 24px}}
+.wrap{max-width:1200px;margin:0 auto;padding:0 60px}
+@media(max-width:768px){.wrap{padding:0 24px}}
+.alt-bg{background:var(--light)}
+
+.hero-grid{display:grid;grid-template-columns:60% 40%;gap:60px;align-items:center}
+@media(max-width:768px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+.meta-tag{font-size:11px;text-transform:uppercase;letter-spacing:.25rem;color:var(--meta);margin-bottom:18px;font-weight:500}
+.hero h1{margin-bottom:24px}
+.hero p{max-width:520px;margin-bottom:36px;font-size:17px;line-height:1.75}
+.hero-img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#e8e5de}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.1rem;border:1px solid var(--black);transition:all .3s ease-in-out;cursor:pointer}
+.btn-fill{background:var(--black);color:var(--white)}.btn-fill:hover{background:var(--white);color:var(--black)}
+.btn-outline{background:transparent;color:var(--black)}.btn-outline:hover{background:var(--black);color:var(--white)}
+
+.encode-agency-section {
+  width: 100%;
+  background: #0A0A0A;
+  color: #FFFFFF;
+  padding: 160px 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+.agency-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 100px;
+  padding: 0 40px;
+}
+.agency-left-panel {
+  display: flex;
+  flex-direction: column;
+}
+.agency-feature-row {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.row-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.row-num {
+  font-size: 18px;
+  font-weight: 300;
+  color: #7A7A7A;
+}
+.row-tag {
+  font-size: 11px;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  color: #7A7A7A;
+}
+.agency-head {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04rem;
+  margin: 0 0 24px 0;
+  line-height: 1.1;
+  color: #FFFFFF;
+}
+.agency-desc {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #A0A0A0;
+  max-width: 500px;
+  margin: 0 0 40px 0;
+}
+.agency-line-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.agency-right-canvas {
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.canvas-sticky-wrapper {
+  width: 100%;
+  height: 500px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.giant-outline-text {
+  position: absolute;
+  font-size: 10rem;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.03);
+  bottom: 10px;
+  right: -20px;
+  user-select: none;
+  letter-spacing: 0.5rem;
+}
+.interactive-showcase-box {
+  width: 80%;
+  height: 320px;
+  position: relative;
+}
+.canvas-view {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+.canvas-view.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  z-index: 2;
+}
+.canvas-header {
+  font-size: 12px;
+  letter-spacing: 0.15rem;
+  color: #7A7A7A;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+.minimal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.m-slot {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+.m-slot.active-slot {
+  background: #FFFFFF;
+  color: #0A0A0A;
+  font-weight: 700;
+  border-color: #FFFFFF;
+}
+.barber-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.b-strip-item {
+  padding: 20px;
+  background: #1C1C1C;
+  border-left: 3px solid #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+.b-strip-item span { color: #FFD700; }
+.sms-card-minimal {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  padding: 20px;
+  border-top: 2px solid #00E676;
+}
+.sms-card-minimal strong { display: block; font-size: 11px; margin-bottom: 8px; color: #00E676;}
+.sms-card-minimal p { margin: 0; font-size: 14px; color: #D0D0D0; line-height: 1.4; }
+
+@media (max-width: 992px) {
+  .agency-container { grid-template-columns: 1fr; gap: 5px; padding: 0 20px; }
+  .agency-right-canvas { position: relative; top: 0; height: auto; margin-top: 40px; }
+  .agency-feature-row { min-height: auto; margin-bottom: 80px; }
+}
+
+.stats-row{display:flex;justify-content:center;gap:80px;text-align:center}
+@media(max-width:768px){.stats-row{flex-direction:column;gap:40px}}
+.stat-big{font-weight:800;font-size:3.5rem;color:var(--black);line-height:1}
+.stat-lbl{font-size:13px;text-transform:uppercase;letter-spacing:.15rem;color:var(--meta);margin-top:8px}
+.stat-src{font-size:12px;color:#bbb;font-style:italic;margin-top:28px}
+
+.marquee-wrap{overflow:hidden;width:100%;background:var(--light);padding:40px 0}
+.marquee-track{display:flex;gap:80px;animation:marquee 35s linear infinite;width:max-content}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{font-weight:700;font-size:2rem;color:#e8e5de;white-space:nowrap;transition:color .3s;letter-spacing:-.5px}
+.marquee-item:hover{color:var(--black)}
+.marquee-item b{color:var(--black)}
+
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);max-width:720px;margin:0 auto}
+@media(max-width:600px){.price-grid{grid-template-columns:1fr}}
+.plan{padding:48px 40px;background:var(--white);text-align:center}
+.plan .tag{display:inline-block;padding:5px 14px;border:1px solid var(--black);background:var(--black);color:var(--white);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15rem;margin-bottom:16px}
+.plan .plan-name{font-size:12px;text-transform:uppercase;letter-spacing:.2rem;color:var(--meta);font-weight:600;margin-bottom:10px}
+.plan .plan-price{font-weight:800;font-size:2.4rem;color:var(--black);margin-bottom:4px}
+.plan .plan-price sub{font-size:.6rem;font-weight:400;color:var(--meta);text-transform:uppercase}
+.plan .plan-per{font-size:13px;color:var(--meta);margin-bottom:24px}
+.plan ul{list-style:none;text-align:left;font-size:14px;color:var(--charcoal);margin-bottom:28px;max-width:220px;margin-left:auto;margin-right:auto}
+.plan ul li{padding:6px 0;padding-left:16px;position:relative}
+.plan ul li::before{content:'—';position:absolute;left:0;color:var(--meta)}
+
+.trust-strip{text-align:center;padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.trust-strip span{color:var(--black);font-weight:600}
+
+footer{padding:60px 0;text-align:center;font-size:13px;color:var(--meta)}
+footer a{color:var(--meta)}footer a:hover{color:var(--black)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="logo">BARBERPRO</div>
+  <div class="nav-links">
+    <a href="#features">Боломжууд</a>
+    <a href="#noshow">Но-шоу</a>
+    <a href="#pricing">Үнэ</a>
+    <a href="/demo">Демо</a>
+    <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
+  </div>
+</nav>
+
+<section style="padding-top:200px;padding-bottom:120px">
+<div class="wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="meta-tag">01 //&nbsp; БАРБЕРШОПЫН СИСТЕМ</div>
+      <h1>Дараалал, захиалга, аналитик — нэг цэвэрхэн системд.</h1>
+      <p>QR дараалал, онлайн захиалга, урьдчилгаа төлбөр, комисс тооцоолол, SMS сануулагч. Монголын барбершопуудад тусгайлан зохион бүтээсэн. Барбер нэг товч дарна — үлдсэн бүх зүйлийг систем автоматаар шийднэ. Сургалт 0 минут. Төвөгтэй тохиргоо гэж байхгүй.</p>
+      <a href="/signup" class="btn btn-fill">7 хоног үнэгүй турших</a>
+    </div>
+    <div>
+```html
+<section id="features" class="encode-agency-section">
+  <div class="agency-container">
+    
+    <div class="agency-left-panel">
+      <div class="agency-feature-row" id="row-booking">
+        <div class="row-meta">
+          <span class="row-num">01 /</span>
+          <span class="row-tag">24/7 AUTOMATION</span>
+        </div>
+        <h2 class="agency-head">ШУУРХАЙ ЗАХИАЛГА.</h2>
+        <p class="agency-desc">Үйлчлүүлэгч таны захиалгын хуудсанд орж, барбераа сонгоод, боломжтой цагаа дарахад л захиалга баталгаажина. Бүх процесс 3 товч, 15 секунд.</p>
+        <div class="agency-line-divider"></div>
+      </div>
+
+      <div class="agency-feature-row" id="row-barber">
+        <div class="row-meta">
+          <span class="row-num">02 /</span>
+          <span class="row-tag">TEAM MANAGEMENT</span>
+        </div>
+        <h2 class="agency-head">БАРБЕР СОНГОЛТ.</h2>
+        <p class="agency-desc">Барбер бүрийн профайл, мэргэжил, туршлага, үнэлгээ — бүгд харагдана. Үйлчлүүлэгч өмнө нь үйлчлүүлж байсан барбераа хадгалах боломжтой.</p>
+        <div class="agency-line-divider"></div>
+      </div>
+
+      <div class="agency-feature-row" id="row-reminder">
+        <div class="row-meta">
+          <span class="row-num">03 /</span>
+          <span class="row-tag">RETENTION ENGINE</span>
+        </div>
+        <h2 class="agency-head">УХААЛАГ САНУУЛГА.</h2>
+        <p class="agency-desc">Маргааш цагтай үйлчлүүлэгч бүрт автомат SMS сануулга илгээгдэнэ. Өдөр, цаг, барберын нэр, хаяг — бүх мэдээлэл нэг мессежид.</p>
+        <div class="agency-line-divider"></div>
+      </div>
+    </div>
+
+    <div class="agency-right-canvas">
+      <div class="canvas-sticky-wrapper">
+        <div class="giant-outline-text">FADE</div>
+        <div class="interactive-showcase-box">
+          
+          <div class="canvas-view view-booking active">
+            <div class="canvas-header">CHOOSE YOUR TIME</div>
+            <div class="minimal-grid">
+              <div class="m-slot">09:00</div>
+              <div class="m-slot active-slot">10:00 ✓</div>
+              <div class="m-slot">11:00</div>
+              <div class="m-slot">13:00</div>
+            </div>
+          </div>
+
+          <div class="canvas-view view-barber">
+            <div class="canvas-header">CHOOSE YOUR BARBER</div>
+            <div class="barber-strip">
+              <div class="b-strip-item">Бат-Эрдэнэ (8+ жил) <span>★★★★★</span></div>
+              <div class="b-strip-item">Ганболд (5+ жил) <span>★★★★★</span></div>
+            </div>
+          </div>
+
+          <div class="canvas-view view-reminder">
+            <div class="canvas-header">SMART NOTIFICATION</div>
+            <div class="sms-card-minimal">
+              <strong>💬 SMS REMINDER</strong>
+              <p>Маргааш 10:00 цагт Бат-Эрдэнэ барбер таныг хүлээж байна. Хаяг: Ард кинотеатрын чанх ард.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="noshow">
+<div class="wrap">
+  <div class="meta-tag">04 //&nbsp; НО-ШОУ ШИЙДЭЛ</div>
+  <h2 style="margin-bottom:36px;max-width:700px">Таны цаг захиалсан үйлчлүүлэгчдийн хэд нь ирдэг вэ?</h2>
+  <p style="max-width:700px;margin-bottom:60px;font-size:17px">Олон улсын судалгаагаар барбершопуудад цаг захиалсан хүмүүсийн 20-30% нь ирдэггүй. Энэ нь таны сар бүр хэдэн зуун мянган төгрөгийн орлого алдаж байна гэсэн үг. Бид үүнийг бүрэн автомат урьдчилгаа төлбөрийн системээр шийдсэн.</p>
+  
+  <div class="stats-row">
+    <div>
+      <div class="stat-big">~25%</div>
+      <div class="stat-lbl">Но-шоу хувь</div>
+    </div>
+    <div>
+      <div class="stat-big">₮3.6с</div>
+      <div class="stat-lbl">Сард алдсан орлого</div>
+    </div>
+    <div>
+      <div class="stat-big">₮99к</div>
+      <div class="stat-lbl">Pro план · сард</div>
+    </div>
+  </div>
+  <div style="text-align:center"><div class="stat-src">Эх сурвалж: Fresha, Mindbody, Square — олон улсын барбер/салоны салбарын судалгаа (2023-2024)</div></div>
+</div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">"Дараалал хүлээгээд гарч явах хүн байхгүй болсон" <b>★★★★★</b></div>
+    <div class="marquee-item">"Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг" <b>★★★★★</b></div>
+    <div class="marquee-item">"Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон" <b>★★★★★</b></div>
+    <div class="marquee-item">"Дараалал хүлээгээд гарч явах хүн байхгүй болсон" <b>★★★★★</b></div>
+    <div class="marquee-item">"Барбер маань нэг товч дараад л дараагийн хүнээ дууддаг" <b>★★★★★</b></div>
+    <div class="marquee-item">"Сургалт 0 минут — ахмад барбер хүртэл шууд ойлгосон" <b>★★★★★</b></div>
+  </div>
+</div>
+
+<section id="pricing">
+<div class="wrap">
+  <div style="text-align:center;margin-bottom:60px">
+    <div class="meta-tag">05 //&nbsp; ҮНЭ</div>
+    <h2 style="margin-bottom:16px">7 хоног үнэгүй туршаад шийд.</h2>
+    <p>Карт шаардлагагүй. Гэрээ байхгүй. Хүссэн үедээ болих боломжтой.</p>
+  </div>
+
+  <div class="price-grid">
+    <div class="plan">
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">₮49,000<sub>/сар</sub></div>
+      <div class="plan-per">Дараалал + админ самбар</div>
+      <ul>
+        <li>QR дараалал систем</li>
+        <li>Олон барбер дэмжинэ</li>
+        <li>Админ самбар</li>
+        <li>Үндсэн тоон мэдээ</li>
+      </ul>
+      <a href="/signup" class="btn btn-outline" style="width:100%;justify-content:center">Үнэгүй турших</a>
+    </div>
+
+    <div class="plan" style="position:relative;border:2px solid var(--black)">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%)"><span class="tag">Шилдэг сонголт</span></div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">₮99,000<sub>/сар</sub></div>
+      <div class="plan-per">Бүх боломж, бүрэн хяналт</div>
+      <ul>
+        <li>Basic-н бүх боломж</li>
+        <li>Онлайн цаг захиалга</li>
+        <li>Урьдчилгаа төлбөр</li>
+        <li>Бүрэн аналитик, график</li>
+        <li>Комисс тооцоолол</li>
+        <li>SMS автоматжуулалт</li>
+      </ul>
+      <a href="/signup" class="btn btn-fill" style="width:100%;justify-content:center">Үнэгүй турших</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="trust-strip">
+  <div class="wrap">
+    Монголын <span>50+ шилдэг барбершоп</span> манай системийг ашиглаж байна.
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p style="margin-bottom:12px">&copy; 2026 Barber Pro. Бүх эрх хуулиар хамгаалагдсан.</p>
+    <p><a href="/privacy">Нууцлалын бодлого</a> &nbsp;&middot;&nbsp; <a href="/terms">Үйлчилгээний нөхцөл</a></p>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  const nav = document.getElementById('nav');
+  if (window.scrollY > 50) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rows = document.querySelectorAll('.agency-feature-row');
+  const views = document.querySelectorAll('.canvas-view');
+
+  const agencyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        const id = entry.target.getAttribute('id').replace('row-', 'view-');
+        views.forEach(view => {
+          view.classList.remove('active');
+          if(view.classList.contains(id)) {
+            view.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  rows.forEach(row => agencyObserver.observe(row));
+});
+</script>
+
+</body>
+</html>

@@ -881,7 +881,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
     <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
   </nav>
   <!-- Hamburger (mobile only) -->
-  <div class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
+  <div class="menu-toggle" id="menuToggle">
     <span></span>
     <span></span>
     <span></span>
@@ -1357,10 +1357,11 @@ window.addEventListener('scroll', function(){
 });
 
 /* Mobile menu toggle */
-function toggleMobileMenu() {
-  const menu = document.getElementById("mobileMenu");
-  menu.classList.toggle("active");
-}
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('menuToggle').addEventListener('click', function(){
+    document.getElementById('mobileMenu').classList.toggle('active');
+  });
+});
 
 /* Billing toggle */
 function toggleBilling() {

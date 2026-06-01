@@ -848,9 +848,9 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 @keyframes scroll-right{ 0%{ transform: translateX(-100%); } 100%{ transform: translateX(100%); } }
 @keyframes slideFromRight{ from{ opacity:0; transform:translateX(60px) } to{ opacity:1; transform:translateX(0) } }
 @keyframes slideFromLeft{ from{ opacity:0; transform:translateX(-80px) } to{ opacity:1; transform:translateX(0) } }
-.queue-mockup{ opacity:0 }
-.queue-mockup.slide-in{ animation: slideFromLeft .8s cubic-bezier(0.16,1,0.3,1) forwards; }
-.queue-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite; opacity:1; }
+.queue-mockup{ opacity:0 !important }
+.queue-mockup.slide-in{ animation: slideFromLeft .8s cubic-bezier(0.16,1,0.3,1) forwards !important; }
+.queue-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite !important; opacity:1 !important; }
 
 /* Side button elements for phone mockup */
 .phone-side-btn{

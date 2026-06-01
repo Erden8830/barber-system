@@ -768,6 +768,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
   }
   header.nav {
     padding: 10px 16px !important;
+    overflow-x: visible !important;
   }
 }
 /* ============================================
@@ -881,7 +882,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
     <a href="/signup" class="nav-cta">Бүртгүүлэх</a>
   </nav>
   <!-- Hamburger (mobile only) -->
-  <div class="menu-toggle" id="menuToggle">
+  <div class="menu-toggle" id="menuToggle" onclick="this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('active')">
     <span></span>
     <span></span>
     <span></span>
@@ -1356,12 +1357,7 @@ window.addEventListener('scroll', function(){
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-/* Mobile menu toggle */
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('menuToggle').addEventListener('click', function(){
-    document.getElementById('mobileMenu').classList.toggle('active');
-  });
-});
+/* Mobile menu toggle - inline onclick handles it */
 
 /* Billing toggle */
 function toggleBilling() {

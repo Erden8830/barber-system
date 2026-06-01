@@ -846,6 +846,10 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 @keyframes float{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
 @keyframes scroll-right{ 0%{ transform: translateX(-100%); } 100%{ transform: translateX(100%); } }
 @keyframes slideFromRight{ from{ opacity:0; transform:translateX(60px) } to{ opacity:1; transform:translateX(0) } }
+@keyframes slideFromLeft{ from{ opacity:0; transform:translateX(-80px) } to{ opacity:1; transform:translateX(0) } }
+.queue-mockup{ opacity:0 }
+.queue-mockup.slide-in{ animation: slideFromLeft .8s cubic-bezier(0.16,1,0.3,1) forwards; }
+.queue-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite; opacity:1; }
 
 /* Side button elements for phone mockup */
 .phone-side-btn{
@@ -979,13 +983,13 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 <!-- ============================================
      DIGITAL QUEUE SHOWCASE
      ============================================ -->
-<section class="section section-dark">
+<section id="queue-showcase" class="section section-dark">
   <div class="container">
     <div class="hero-grid">
 
       <!-- Queue phone mockup (left side) -->
       <div class="phone-wrap">
-        <div class="phone-mockup" style="max-width:300px">
+        <div class="phone-mockup queue-mockup" id="queuePhone" style="max-width:300px">
           <div class="phone-body" style="height:520px;display:flex;flex-direction:column">
             <div class="phone-screen-bezel" style="flex:1;display:flex;flex-direction:column">
               <div class="phone-screen" style="flex:1;display:flex;flex-direction:column">
@@ -1360,6 +1364,26 @@ document.addEventListener('DOMContentLoaded', function(){
   obs.observe(section);
   window.addEventListener('scroll', function(){
     if(!done && section.getBoundingClientRect().top < window.innerHeight * 0.9) setTimeout(go, 100);
+  });
+});
+
+/* Queue showcase scroll-triggered animation */
+document.addEventListener('DOMContentLoaded', function(){
+  var section = document.getElementById('queue-showcase');
+  var items = section.querySelectorAll('.features-content > *');
+  var device = document.getElementById('queuePhone');
+  if(!section || !device) return;
+  var done = false;
+  function go(){
+    if(done) return; done = true;
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+    device.classList.add('slide-in');
+    setTimeout(function(){ device.classList.add('complete'); }, 900);
+  }
+  var obs = new IntersectionObserver(function(e){ if(e[0].isIntersecting) setTimeout(go, 100); }, {threshold: 0.15});
+  obs.observe(section);
+  window.addEventListener('scroll', function(){
+    if(!done && section.getBoundingClientRect().top < window.innerHeight * 0.85) setTimeout(go, 100);
   });
 });
 </script>

@@ -526,7 +526,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 /* ============================================
    PRICING
    ============================================ */
-.pricing-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 600px; margin: 0 auto; }
+.pricing-grid{ display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 600px; margin: 0 auto; }
 .pricing-card{
   padding: 24px 20px; text-align: center;
   border: 2px solid var(--black); background: var(--white);
@@ -553,7 +553,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 .pricing-list li{ padding: 6px 0 6px 16px; position: relative; }
 .pricing-list li::before{ content: '\2014'; position: absolute; left: 0; color: var(--meta); }
 @media(min-width:768px){
-  .pricing-grid{ gap: 0; }
+  .pricing-grid{ grid-template-columns: 1fr 1fr; gap: 0; }
   .pricing-card{ padding: 44px 36px; }
   .pricing-card.featured{ border-left: 0; }
 }

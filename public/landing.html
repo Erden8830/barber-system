@@ -322,26 +322,21 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
 
 /* === iPad TABLET MOCKUP === */
 .ipad-panel{ position: relative; display: flex; align-items: center; justify-content: center; }
-.ipad-mockup{ position: relative; max-width: 280px; width: 100%; opacity: 0; }
+.ipad-mockup{ position: relative; max-width: 340px; width: 100%; opacity: 0; }
 .ipad-mockup.slide-in{ animation: slideFromRight .8s cubic-bezier(0.16,1,0.3,1) forwards; }
 .ipad-mockup.slide-in.complete{ animation: float 5s ease-in-out infinite; opacity: 1; }
 .ipad-mockup .side-btn{ display: none; }
 .ipad-body{
-  border-radius: 24px; padding: 8px;
+  border-radius: 16px; padding: 6px;
   background: linear-gradient(145deg, #2c2c2e, #1c1c1e);
   box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 40px 80px rgba(0,0,0,.4), 0 10px 24px rgba(0,0,0,.2);
 }
-.ipad-screen-bezel{ border-radius: 18px; overflow: hidden; background: var(--black); position: relative; display: flex; flex-direction: column; }
+.ipad-screen-bezel{ border-radius: 12px; overflow: hidden; background: var(--black); position: relative; display: flex; flex-direction: column; }
 .ipad-glass{
   position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background: linear-gradient(135deg, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 75%, rgba(255,255,255,.05) 100%);
 }
-.ipad-camera{
-  position: absolute; top: 10px; left: 50%; margin-left: -3px; z-index: 3;
-  width: 6px; height: 6px; background: #1a1a1a;
-  border: 1px solid #2a2a2a; border-radius: 50%;
-}
-.ipad-content{ flex: 1; padding: 16px 14px 14px; overflow-y: auto; position: relative; z-index: 1; background: var(--black); }
+.ipad-content{ flex: 1; padding: 20px 18px 18px; overflow-y: auto; position: relative; z-index: 1; background: var(--black); }
 
 /* Admin UI inside iPad */
 .admin-header{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -400,7 +395,7 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
   .features-grid{ grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
   .features-desc{ font-size: 16px; }
   .ipad-panel{ position: sticky; top: 8%; height: 90vh; }
-  .ipad-mockup{ max-width: 360px; transition: transform .3s ease; }
+  .ipad-mockup{ max-width: 480px; transition: transform .3s ease; }
   .ipad-mockup:hover{ transform: scale(1.03); }
   .ipad-mockup .side-btn{ display: block; }
 }
@@ -1104,7 +1099,6 @@ a{ color: var(--text-main-primary); text-decoration: none; transition: color .2s
           <div class="ipad-body">
             <div class="ipad-screen-bezel">
               <div class="ipad-glass"></div>
-              <div class="ipad-camera"></div>
               <div class="ipad-content">
                 <div class="admin-header">
                   <div>

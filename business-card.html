@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Pro — Business Card</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:#f0f0f0;
+  font-family:Inter,-apple-system,sans-serif;
+  padding:20px;
+}
+.business-card{
+  width:420px;height:240px;
+  background:linear-gradient(145deg, #0d0d11, #161620);
+  border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3),0 8px 20px rgba(0,0,0,.15);
+  padding:28px 30px;
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+.business-card::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle, rgba(212,160,23,.08) 0%, transparent 70%);
+  border-radius:50%;
+}
+.card-brand{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:auto;
+}
+.card-logo{
+  font-size:13px;font-weight:800;letter-spacing:2px;
+  color:#fff;text-transform:uppercase;
+}
+.card-logo span{color:#d4a017}
+.card-label{
+  font-size:8px;text-transform:uppercase;
+  letter-spacing:2px;color:rgba(255,255,255,.25);
+  border:1px solid rgba(255,255,255,.08);
+  padding:3px 8px;border-radius:4px;
+}
+.card-name{
+  font-size:20px;font-weight:700;color:#fff;
+  letter-spacing:-.3px;margin-bottom:2px;
+}
+.card-title{
+  font-size:10px;color:rgba(255,255,255,.4);
+  letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.card-contact{
+  display:flex;gap:16px;
+}
+.card-contact-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:9px;color:rgba(255,255,255,.55);
+}
+.card-contact-item .icon{font-size:11px}
+.card-body{
+  display:flex;justify-content:space-between;align-items:center;
+  flex:1;
+}
+.card-info{flex:1}
+.card-qr img{
+  width:64px;height:64px;
+  border-radius:6px;
+  display:block;
+}
+.card-footer{
+  margin-top:auto;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.card-tagline{
+  font-size:8px;color:rgba(255,255,255,.2);
+  font-style:italic;letter-spacing:.3px;
+}
+@media(max-width:460px){
+  .business-card{width:100%;height:auto;min-height:220px;padding:24px}
+  .card-qr img{width:50px;height:50px}
+}
+</style>
+</head>
+<body>
+
+<div class="business-card">
+  <div class="card-brand">
+    <div class="card-logo">Barber<span>.</span>Pro</div>
+    <div class="card-label">CEO</div>
+  </div>
+
+  <div class="card-body">
+    <div class="card-info">
+      <div class="card-name">Bolor-Erdene</div>
+      <div class="card-title">Үүсгэн байгуулагч</div>
+      <div class="card-contact">
+        <div class="card-contact-item"><span class="icon">📞</span> 8527-9299</div>
+        <div class="card-contact-item"><span class="icon">📧</span> bolor-erdene@ubagarage.mn</div>
+      </div>
+    </div>
+    <div class="card-qr">
+      <img src="/qr-landing.png" alt="QR">
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="card-tagline">"Барбершопын бүх үйл ажиллагаа нэг системд"</div>
+  </div>
+</div>
+
+</body>
+</html>
